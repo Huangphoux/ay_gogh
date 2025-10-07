@@ -1,0 +1,3 @@
+- Press/Double-click a word
+- Use Piper to generate beforehand audio readings of the texts.
+- Let the user download the models, so that they can adjust the speed.

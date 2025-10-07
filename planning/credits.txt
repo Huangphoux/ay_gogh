@@ -1,0 +1,15 @@
+Svelte / React
+Django / Express / RoR
+PWA
+Extract SVGs from illustrations: https://www.pdf2svgsnipper.com/
+Extract pages with illustrations: https://www.ilovepdf.com/split_pdf#split,extract
+
+Calculate reading ease, reading time and CEFR levels beforehand.
+Determine words that are not in the NGSL beforehand.
+Determine CEFR level of a word beforehand.
+
+https://www.newgeneralservicelist.com/tools
+
+Internet Archive: https://archive.org/details/english-by-the-nature-method/
+
+1942: 83 years ago
