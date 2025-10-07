@@ -1,6 +1,6 @@
 # Ay Gogh !
 
-A website dedicated to digitalize the book "English by the Nature Method" by Authur Jensen.
+A website dedicated to digitalize the book "English by the Nature Method" (1942) by Authur Jensen.
 
 # Name origin
 
