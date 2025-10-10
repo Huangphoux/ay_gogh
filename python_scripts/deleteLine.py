@@ -16,7 +16,7 @@ theChapterPattern = r"The.+\(\d+.+\).+Chapter"
 def loadBanList():
     global banList
 
-    banListFile = os.path.join(os.path.dirname(__file__), "ban_list.txt")
+    banListFile = os.path.join(os.path.dirname(__file__), "banList.txt")
 
     try:
         with open(banListFile, mode="r", encoding="utf-8") as f:
@@ -36,6 +36,7 @@ def isLineSkippable(line):
 
 def deleteLine(inputFile):
     loadBanList()
+    weirdString = makeWeirdString(6)
 
     with open(inputFile, mode="r", encoding="utf-8") as f:
         allLines = f.readlines()
@@ -52,7 +53,7 @@ def deleteLine(inputFile):
         for line in content:
             if isLineSkippable(line):
                 continue
-            
+
             try:
                 isLineShort = len(line.strip()) <= maxLineLength // 3
                 isLineEnglish = detect(line.strip()) == "en"
@@ -61,17 +62,19 @@ def deleteLine(inputFile):
                     f.write(line)
                     continue
 
-                tabNumber = 6
-                weirdString = ""
-                for _ in range(tabNumber):
-                    weirdString += "\t"
-                weirdString += "WEIRD"
-                for _ in range(tabNumber):
-                    weirdString += "\t"
-
                 f.write(weirdString + line)
             except Exception:
                 f.write(weirdString + line)
+
+
+def makeWeirdString(tabNum):
+    weirdString = ""
+    for _ in range(tabNum):
+        weirdString += "\t"
+    weirdString += "WEIRD"
+    for _ in range(tabNum):
+        weirdString += "\t"
+    return weirdString
 
 
 if __name__ == "__main__":

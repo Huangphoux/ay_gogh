@@ -25,18 +25,14 @@ def deleteTestFiles(path):
     os.mkdir(path)
 
 
-def splitChapter(inputFile, testNumber):
+def splitChapter(inputFile, testNumber = None):
     currentChapter = 0
 
     with open(inputFile, mode="r", encoding="utf-8") as f:
         content = f.readlines()
 
     for line in tqdm(content):
-        if testNumber <= 60 - 1 or testNumber is not None:
-            if currentChapter == testNumber + 1:
-                break
-        else:
-            print(f"Test number ({testNumber}) invalid.")
+        if testNumber is not None and currentChapter == testNumber + 1:
             break
 
         # Determine if the line include "Chapter" and (n)

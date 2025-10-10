@@ -23,7 +23,7 @@ def addHeading(inputFile):
 
         for line in content:
             if "WORDS" in line:
-                f.write("# Words")
+                f.write("# Words\n")
                 continue
 
             f.write(line)
