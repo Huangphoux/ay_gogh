@@ -1,6 +1,3 @@
-Svelte / React
-Django / Express / RoR
-PWA
 Extract SVGs from illustrations: https://www.pdf2svgsnipper.com/
 Extract pages with illustrations: https://www.ilovepdf.com/split_pdf#split,extract
 
