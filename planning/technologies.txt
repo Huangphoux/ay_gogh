@@ -1,5 +1,6 @@
 PWA, offline
 Lightweight, fast on mobile, most important
+recordTrimEdi
 
 Đồ án 2:
 React Native
