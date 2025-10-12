@@ -4,6 +4,7 @@ from changeFileExtension import changeFileExtension
 from addHeading import addHeading
 from deleteLine import deleteLine
 from deleteCodeBlock import deleteCodeBlock
+from piperTTS import TTSProcessor, generateTTS
 
 import os
 from tqdm import tqdm
@@ -16,7 +17,9 @@ def main():
     print("Deleted test files.")
     print("Splitting chapters:")
 
-    splitChapter("full.txt")
+    splitChapter("full.txt", 2)
+
+    tts = TTSProcessor()
 
     for root, _, files in os.walk(savePath):
         print("Processing on each file:")
@@ -25,10 +28,15 @@ def main():
             filePath = os.path.join(root, filename)
             try:
                 deleteLine(filePath)
+
+                # generateTTS(filePath, tts)
+
                 addHeading(filePath)
                 addCodeBlock(filePath)
                 deleteCodeBlock(filePath)
+
                 changeFileExtension(filePath)
+
             except Exception as e:
                 print(f"Error!! {filename}: {str(e)}")
 
