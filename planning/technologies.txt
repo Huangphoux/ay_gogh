@@ -1,6 +1,11 @@
 PWA, offline
-Lightweight, fast on mobile, most important
-recordTrimEdi
+Lightweight, fast on mobile and 3G (most important!!!)
+recordTrimEdit
+No comments
+PWABuilder
+FSRS
 
-Đồ án 2:
-React Native
+Assumptions:
+- Children (9-13 yo)
+- Android phone
+- 3G
