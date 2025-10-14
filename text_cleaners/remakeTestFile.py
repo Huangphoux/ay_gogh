@@ -4,12 +4,13 @@ from changeFileExtension import changeFileExtension
 from addHeading import addHeading
 from deleteLine import deleteLine
 from deleteCodeBlock import deleteCodeBlock
-from piperTTS import TTSProcessor, generateTTS
+from generateAudio import TTSProcessor, generateTTS
 
 import os
 from tqdm import tqdm
 
 savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
+weirdPath = os.path.join(os.path.dirname(__file__), "weirdList.txt")
 
 
 def main():
@@ -17,9 +18,12 @@ def main():
     print("Deleted test files.")
     print("Splitting chapters:")
 
-    splitChapter("full.txt", 2)
+    splitChapter("full.txt", 10)
 
     tts = TTSProcessor()
+
+    with open(weirdPath, mode="a", encoding="utf-8") as f:
+        f.write("")
 
     for root, _, files in os.walk(savePath):
         print("Processing on each file:")

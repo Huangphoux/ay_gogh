@@ -1,6 +1,16 @@
-def main():
-    print("Hello from ay-gogh!")
+from fasthtml.common import *
+from monsterui.all import *
 
 
-if __name__ == "__main__":
-    main()
+hdrs = Theme.blue.headers()
+app, rt = fast_app(hdrs=hdrs)
+
+
+@app.get("/")
+def home():
+    return Title("Page Demo"), Div(
+        H1("Hello, World"), P("Some text"), P("Some more text")
+    )
+
+
+serve()

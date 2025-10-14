@@ -4,6 +4,8 @@ from tqdm import tqdm
 from langdetect import detect
 
 savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
+weirdPath = os.path.join(os.path.dirname(__file__), "weirdList.txt")
+
 
 # Initialize global exclude_char list
 banList = []
@@ -37,6 +39,7 @@ def isLineSkippable(line):
 def deleteLine(inputFile):
     loadBanList()
     weirdString = makeWeirdString(6)
+    weirdList = {""}
 
     with open(inputFile, mode="r", encoding="utf-8") as f:
         allLines = f.readlines()
@@ -61,10 +64,16 @@ def deleteLine(inputFile):
                 if isLineShort or isLineEnglish:
                     f.write(line)
                     continue
-
-                f.write(weirdString + line)
+                else:
+                    weirdList.add(line)
+                    f.write(weirdString + line)
             except Exception:
+                weirdList.add(line)
                 f.write(weirdString + line)
+
+    with open(weirdPath, mode="a", encoding="utf-8") as f:
+        for item in weirdList:
+            f.write(item)
 
 
 def makeWeirdString(tabNum):
