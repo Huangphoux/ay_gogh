@@ -11,19 +11,20 @@ from tqdm import tqdm
 
 savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
 weirdPath = os.path.join(os.path.dirname(__file__), "weirdList.txt")
+fullPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "full.txt")
 
 
-def main():
+def remakeTestFile():
     deleteTestFiles(savePath)
     print("Deleted test files.")
+
+    os.remove(weirdPath)
+    
     print("Splitting chapters:")
 
-    splitChapter("full.txt", 10)
+    splitChapter(fullPath, 20)
 
-    tts = TTSProcessor()
-
-    with open(weirdPath, mode="a", encoding="utf-8") as f:
-        f.write("")
+    # tts = TTSProcessor()
 
     for root, _, files in os.walk(savePath):
         print("Processing on each file:")
@@ -46,4 +47,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    remakeTestFile()

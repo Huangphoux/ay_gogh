@@ -38,8 +38,10 @@ def isLineSkippable(line):
 
 def deleteLine(inputFile):
     loadBanList()
+    
     weirdString = makeWeirdString(6)
-    weirdList = {""}
+    
+    weirdList = []
 
     with open(inputFile, mode="r", encoding="utf-8") as f:
         allLines = f.readlines()
@@ -58,20 +60,20 @@ def deleteLine(inputFile):
                 continue
 
             try:
-                isLineShort = len(line.strip()) <= maxLineLength // 3
+                isLineShort = len(line.strip()) < maxLineLength / 3
                 isLineEnglish = detect(line.strip()) == "en"
 
                 if isLineShort or isLineEnglish:
                     f.write(line)
                     continue
                 else:
-                    weirdList.add(line)
+                    weirdList.append(line)
                     f.write(weirdString + line)
             except Exception:
-                weirdList.add(line)
+                weirdList.append(line)
                 f.write(weirdString + line)
 
-    with open(weirdPath, mode="a", encoding="utf-8") as f:
+    with open(weirdPath, mode="a+", encoding="utf-8") as f:
         for item in weirdList:
             f.write(item)
 

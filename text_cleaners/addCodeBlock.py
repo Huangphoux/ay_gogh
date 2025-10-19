@@ -27,7 +27,7 @@ def addCodeBlock(inputFile):
         isCodeBlockOpen = False
 
         for line in content:
-            if len(line.strip()) <= maxLineLength // 3:
+            if len(line.strip()) < maxLineLength / 3:
                 if not isCodeBlockOpen:
                     isCodeBlockOpen = True
                     f.write("```\n")
