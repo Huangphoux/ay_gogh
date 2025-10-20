@@ -1,6 +1,5 @@
 from splitChapter import deleteTestFiles, splitChapter
 from addCodeBlock import addCodeBlock
-from changeFileExtension import changeFileExtension
 from addHeading import addHeading
 from deleteLine import deleteLine
 from deleteCodeBlock import deleteCodeBlock
@@ -22,7 +21,7 @@ def remakeTestFile():
     if os.path.exists(weirdPath):
         os.remove(weirdPath)
 
-    splitChapter(fullPath, 20)
+    splitChapter(fullPath)
 
     for root, _, files in os.walk(savePath):
         print("Processing on each file:")
@@ -35,8 +34,6 @@ def remakeTestFile():
                 addHeading(filePath)
                 addCodeBlock(filePath)
                 deleteCodeBlock(filePath)
-
-                changeFileExtension(filePath)
 
             except Exception as e:
                 print(f"Error!! {filename}: {str(e)}")

@@ -6,22 +6,16 @@ savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
 
 
 def addHeading(inputFile):
-    # First read the content
     with open(inputFile, mode="r", encoding="utf-8") as f:
-        allLines = f.readlines()
-        first3Lines = allLines[:3]
-        content = allLines[3:]
+        content = f.readlines()
 
-        # Skip empty files
-        if not content:
-            return
-
-    # Then write the processed content
     with open(inputFile, mode="w", encoding="utf-8") as f:
-        for line in first3Lines:
+        for line in content[:10]:
             f.write("# " + line)
+            if line.isupper():
+                break
 
-        for line in content:
+        for line in content[10:]:
             if "WORDS" in line:
                 f.write("# Words\n")
                 continue

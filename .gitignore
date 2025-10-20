@@ -14,3 +14,7 @@ wheels/
 
 # Virtual environments
 .venv
+
+weird_line.txt
+
+uv.lock
