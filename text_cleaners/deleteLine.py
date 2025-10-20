@@ -1,11 +1,12 @@
 import os
 import re
 from tqdm import tqdm
-from langdetect import detect
 
-savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
-weirdPath = os.path.join(os.path.dirname(__file__), "weirdList.txt")
+rootProjectPath = os.path.dirname(os.path.dirname(__file__))
 
+savePath = os.path.join(rootProjectPath, "test")
+weirdPath = os.path.join(rootProjectPath, "weird_line.txt")
+banPath = os.path.join(rootProjectPath, "ban_list.txt")
 
 # Initialize global exclude_char list
 banList = []
@@ -18,60 +19,43 @@ theChapterPattern = r"The.+\(\d+.+\).+Chapter"
 def loadBanList():
     global banList
 
-    banListFile = os.path.join(os.path.dirname(__file__), "banList.txt")
-
     try:
-        with open(banListFile, mode="r", encoding="utf-8") as f:
-            banList = [line.strip() for line in f if line.strip()]
+        with open(banPath, mode="r", encoding="utf-8") as f:
+            banList = [line.strip() for line in f]
     except FileNotFoundError:
         print("Warning: ban_list.txt not found")
 
 
 def isLineSkippable(line):
-    if line.strip().isdigit():
+    s = line.strip()
+    if s.isdigit():
         return True
-
     for item in banList:
-        if item in line:
+        if item in s:
             return True
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
 
 
 def deleteLine(inputFile):
     loadBanList()
-    
-    weirdString = makeWeirdString(6)
-    
+
     weirdList = []
 
     with open(inputFile, mode="r", encoding="utf-8") as f:
         allLines = f.readlines()
         content = allLines
 
-        # Skip empty files
-        if not content:
-            return
-
-        maxLineLength = len(max(content, key=len))
-
-    # Then write the processed content
     with open(inputFile, mode="w", encoding="utf-8") as f:
         for line in content:
             if isLineSkippable(line):
+                weirdList.append(line)
                 continue
 
-            try:
-                isLineShort = len(line.strip()) < maxLineLength / 3
-                isLineEnglish = detect(line.strip()) == "en"
-
-                if isLineShort or isLineEnglish:
-                    f.write(line)
-                    continue
-                else:
-                    weirdList.append(line)
-                    f.write(weirdString + line)
-            except Exception:
-                weirdList.append(line)
-                f.write(weirdString + line)
+            f.write(line)
 
     with open(weirdPath, mode="a+", encoding="utf-8") as f:
         for item in weirdList:
