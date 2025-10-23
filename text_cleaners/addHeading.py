@@ -10,12 +10,7 @@ def addHeading(inputFile):
         content = f.readlines()
 
     with open(inputFile, mode="w", encoding="utf-8") as f:
-        for line in content[:10]:
-            f.write("# " + line)
-            if line.isupper():
-                break
-
-        for line in content[10:]:
+        for line in content:
             if "WORDS" in line:
                 f.write("# Words\n")
                 continue

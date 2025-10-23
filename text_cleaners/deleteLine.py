@@ -50,7 +50,17 @@ def deleteLine(inputFile):
         content = allLines
 
     with open(inputFile, mode="w", encoding="utf-8") as f:
+        hasTheChapterAppeared = False
+
         for line in content:
+            isLineTheChapter = re.match(theChapterPattern, line)
+
+            if isLineTheChapter:
+                if not hasTheChapterAppeared:
+                    hasTheChapterAppeared = True
+                else:
+                    continue
+
             if isLineSkippable(line):
                 weirdList.append(line)
                 continue
