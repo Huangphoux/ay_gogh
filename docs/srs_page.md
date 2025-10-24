@@ -1,2 +1,4 @@
 - A good card should have: the word, the sentence contains that word.
-- Use Piper to generate beforehand the words 
+- Use Piper to generate audio
+- FSRS
+- 

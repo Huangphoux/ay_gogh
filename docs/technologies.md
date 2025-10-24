@@ -3,9 +3,6 @@ Lightweight, fast on mobile and 3G (most important!!!)
 recordTrimEdit
 No comments
 PWABuilder
-FSRS
 
 Assumptions:
-- Children (9-13 yo)
-- Android phone
-- 3G
+

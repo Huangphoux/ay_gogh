@@ -1,0 +1,9 @@
+# Read page
+
+- Press/Double-click a word
+- Use Piper to generate beforehand audio readings of the texts.
+- Let the user download the models, so that they can adjust the speed.
+- Host the models ourselves?
+- Small window consists of every images and marginal notes in that chapter, so that users can switch easily
+  - On mobile, the window would reside at the bottom
+  - Scroll to the marginal note or image that are shown, but not scroll to the ones that has been shown
