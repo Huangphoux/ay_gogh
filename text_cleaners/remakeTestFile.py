@@ -3,6 +3,8 @@ from addCodeBlock import addCodeBlock
 from addHeading import addHeading
 from deleteLine import deleteLine
 from deleteCodeBlock import deleteCodeBlock
+from addReadTime import addReadTime
+from addCEFR import addCEFR
 
 import os
 from tqdm import tqdm
@@ -17,7 +19,7 @@ fullPath = os.path.join(rootProjectPath, "full.txt")
 def remakeTestFile():
     deleteTestFiles(savePath)
     print("Deleted test files.")
-    
+
     if os.path.exists(weirdPath):
         os.remove(weirdPath)
 
@@ -29,11 +31,17 @@ def remakeTestFile():
         for filename in tqdm(files):
             filePath = os.path.join(root, filename)
             try:
-                deleteLine(filePath)
+                steps = [
+                    deleteLine,
+                    addHeading,
+                    addCodeBlock,
+                    deleteCodeBlock,
+                    addReadTime,
+                    addCEFR,
+                ]
 
-                addHeading(filePath)
-                addCodeBlock(filePath)
-                deleteCodeBlock(filePath)
+                for step in steps:
+                    step(filePath)
 
             except Exception as e:
                 print(f"Error!! {filename}: {str(e)}")

@@ -7,6 +7,8 @@
 - Small window consists of every images and marginal notes in that chapter, so that users can switch easily
   - On mobile, the window would reside at the bottom
   - Scroll to the marginal note or image that are shown, but not scroll to the ones that has been shown
+- Reading ease, reading time, CEFR levels, word count for chapters beforehand.
+- 
 
 # Questions
 - Questions add the end of each chapter

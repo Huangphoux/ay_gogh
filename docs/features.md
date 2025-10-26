@@ -2,7 +2,6 @@
 # Features
 
 - Write the texts in Markdown, so that those can be downloaded as EPUB
-- Reading ease, reading time and CEFR levels for chapters beforehand.
 - Determine words that are not in the NGSL beforehand.
 - Determine CEFR level of a word beforehand.
 - PWA, can handle being offline
