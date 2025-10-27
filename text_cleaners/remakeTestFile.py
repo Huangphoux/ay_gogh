@@ -5,6 +5,7 @@ from deleteLine import deleteLine
 from deleteCodeBlock import deleteCodeBlock
 from addReadTime import addReadTime
 from addCEFR import addCEFR
+from addTitle import addTitle
 
 import os
 from tqdm import tqdm
@@ -34,6 +35,7 @@ def remakeTestFile():
                 steps = [
                     deleteLine,
                     addHeading,
+                    addTitle,
                     addCodeBlock,
                     deleteCodeBlock,
                     addReadTime,

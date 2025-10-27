@@ -8,7 +8,10 @@
   - On mobile, the window would reside at the bottom
   - Scroll to the marginal note or image that are shown, but not scroll to the ones that has been shown
 - Reading ease, reading time, CEFR levels, word count for chapters beforehand.
-- 
+- spaCy, NLTK
+  - Get POS of a word, POS level of a word
+  - Getting Average Level of a Word
+  - 
 
 # Questions
 - Questions add the end of each chapter
