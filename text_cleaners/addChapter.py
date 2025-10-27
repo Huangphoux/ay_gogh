@@ -1,22 +1,19 @@
 import os
-import string
 import frontmatter
 
 
 savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
+chapterPattern = r"Chapter.+\((\d+)\)"
 
 
-def addTitle(inputFile):
+def addReadability(inputFile):
     with open(inputFile, mode="r", encoding="utf-8") as f:
         content = f.read()
         post = frontmatter.loads(content)
-        allLines = content.splitlines(keepends=True)
+        
+        
 
-        for line in allLines:
-            if line.isupper():
-                post["title"] = string.capwords(line).strip()
-                allLines.remove(line)
-                break
+        post[item.__name__] = number
 
     with open(inputFile, mode="wb") as f:
         f.write(frontmatter.dumps(post).encode("utf-8"))

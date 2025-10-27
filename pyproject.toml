@@ -7,11 +7,13 @@ requires-python = ">=3.12"
 dependencies = [
     "cefrpy>=1.0.1",
     "monsterui>=1.0.30",
+    "pip>=25.3",
     "python-fasthtml>=0.12.30",
     "python-frontmatter>=1.1.0",
     "readtime>=3.0.0",
     "setuptools>=80.9.0",
     "spacy>=3.8.7",
+    "textstat>=0.7.10",
     "tqdm>=4.67.1",
     "wheel>=0.45.1",
 ]

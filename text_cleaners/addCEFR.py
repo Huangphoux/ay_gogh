@@ -13,6 +13,7 @@ ABBREVIATION_MAPPING = {
     "'ll": "will",
 }
 
+# uv run spacy download en_core_web_sm
 nlp = spacy.load("en_core_web_sm")
 
 savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")

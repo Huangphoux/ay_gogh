@@ -6,6 +6,7 @@ from deleteCodeBlock import deleteCodeBlock
 from addReadTime import addReadTime
 from addCEFR import addCEFR
 from addTitle import addTitle
+from addReadability import addReadability
 
 import os
 from tqdm import tqdm
@@ -34,19 +35,20 @@ def remakeTestFile():
             try:
                 steps = [
                     deleteLine,
+                    addReadability,
                     addHeading,
-                    addTitle,
-                    addCodeBlock,
-                    deleteCodeBlock,
-                    addReadTime,
-                    addCEFR,
+                    # addTitle,
+                    # addCodeBlock,
+                    # deleteCodeBlock,
+                    # addReadTime,
+                    # addCEFR,
                 ]
 
                 for step in steps:
                     step(filePath)
 
             except Exception as e:
-                print(f"Error!! {filename}: {str(e)}")
+                print(f"{e.__class__.__name__}: {filename}: {str(e)}")
 
 
 if __name__ == "__main__":
