@@ -44,7 +44,3 @@ def splitChapter(inputFile, testNumber=None):
         with open(outputFile, "a", encoding="utf-8") as out:
             out.writelines(line)
 
-
-if __name__ == "__main__":
-    deleteTestFiles(savePath)
-    splitChapter("full.txt")

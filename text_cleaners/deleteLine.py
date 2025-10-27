@@ -1,6 +1,5 @@
 import os
 import re
-from tqdm import tqdm
 
 rootProjectPath = os.path.dirname(os.path.dirname(__file__))
 
@@ -80,17 +79,3 @@ def makeWeirdString(tabNum):
     for _ in range(tabNum):
         weirdString += "\t"
     return weirdString
-
-
-if __name__ == "__main__":
-    # Load the non-English characters
-    loadBanList()
-    print(banList)
-
-    for root, _, files in os.walk(savePath):
-        for filename in tqdm(files):
-            file_path = os.path.join(root, filename)
-            try:
-                deleteLine(file_path)
-            except Exception as e:
-                print(f"Error processing {filename}: {str(e)}")

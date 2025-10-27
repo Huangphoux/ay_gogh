@@ -23,7 +23,7 @@ def remakeTestFile():
     if os.path.exists(weirdPath):
         os.remove(weirdPath)
 
-    splitChapter(fullPath)
+    splitChapter(fullPath, 20)
 
     for root, _, files in os.walk(savePath):
         print("Processing on each file:")
