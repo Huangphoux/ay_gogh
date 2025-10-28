@@ -4,8 +4,10 @@ import frontmatter
 
 
 savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
-chapterPattern = r"Chapter.+\((\d+)\)"
-theChapterPattern = r"The.+\(\d+.+\).+Chapter"
+chapterPattern = r"Chapter (.+) \((\d+)\)"
+theChapterPattern = r"The (.+) \((\d+.+)\).+Chapter"
+
+# extract the number word, cardinal number, cardinal number word
 
 
 def addChapter(inputFile):
@@ -20,11 +22,21 @@ def addChapter(inputFile):
             isLineUppercaseTitle = re.match(r"^[A-Z\s]+$", line.strip())
 
             if isLineChapter:
-                bracketNumber = int(isLineChapter.group(1))
-                post["chapter"] = bracketNumber
+                number_word = isLineChapter.group(1)
+                number = int(isLineChapter.group(2))
+
+                post["number_word"] = number_word
+                post["number"] = number
+
                 allLines.remove(line)
 
             if isLineTheChapter:
+                cardinal_word = isLineTheChapter.group(1)
+                cardinal_number = isLineTheChapter.group(2)
+
+                post["cardinal_word"] = cardinal_word
+                post["cardinal_number"] = cardinal_number
+
                 allLines.remove(line)
 
             if isLineUppercaseTitle and line.strip():

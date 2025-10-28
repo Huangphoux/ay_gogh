@@ -30,6 +30,8 @@ addCEFR = profile_step(addCEFR)
 addCodeBlock = profile_step(addCodeBlock)
 deleteCodeBlock = profile_step(deleteCodeBlock)
 
+testNumber = 40
+
 
 @profile_remake
 def remakeTestFile():
@@ -39,7 +41,7 @@ def remakeTestFile():
     if os.path.exists(weirdPath):
         os.remove(weirdPath)
 
-    splitChapter(fullPath, 20)
+    splitChapter(fullPath, testNumber)
 
     for root, _, files in os.walk(savePath):
         print("Processing on each file:")
@@ -64,6 +66,11 @@ def remakeTestFile():
 
             except Exception as e:
                 print(f"{e.__class__.__name__}: {filename}: {str(e)}")
+
+        # Remove preface
+        os.remove(os.path.join(savePath, "0.md"))
+        # Remove useless n+1 file
+        os.remove(os.path.join(savePath, f"{testNumber+1}.md"))
 
 
 if __name__ == "__main__":
