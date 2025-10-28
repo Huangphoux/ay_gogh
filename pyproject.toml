@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "cefrpy>=1.0.1",
+    "fh-posts>=0.0.3",
     "monsterui>=1.0.30",
     "pip>=25.3",
     "python-fasthtml>=0.12.30",
