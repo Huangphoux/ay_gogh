@@ -70,10 +70,10 @@ def chapter_card(chapter):
 
 @rt
 def page(idx: int = 0):
-    return generate_part(idx)
+    return load_chapter(idx)
 
 
-def generate_part(part_num: int = 1, size: int = 10):
+def load_chapter(part_num: int = 1, size: int = 10):
     chapters = sorted(load_posts("test"), key=lambda chapter: chapter.number)
 
     # Calculate the start and end indices for this page
@@ -103,7 +103,7 @@ def index():
         Main(
             (navbar, DividerSplit()),
             DivVStacked(
-                *generate_part(1),
+                *load_chapter(1),
                 cls="space-y-4 p-5 items-stretch",
             ),
             cls="max-w-xl mx-auto px-4 py-8",
@@ -118,7 +118,12 @@ def get(slug: str):
 
     chapter = next((ch for ch in chapters if ch.slug == slug), None)
     if not chapter:
-        return Titled("404, we're so sorry !")
+        return Titled(
+            "404, we're so sorry !",
+            P(
+                "It's a shame that we can't find the chapter that you requested anywhere"
+            ),
+        )
 
     content = chapter.render()
 
@@ -130,19 +135,31 @@ def get(slug: str):
         Container(
             DivVStacked(
                 A("← Back to Home", href="/", cls="mb-10"),
-                H2(chapter_str, cls="text-3xl"),
-                H2(the_chapter_str, cls="text-3xl"),
-                H1(chapter.title, cls="text-7xl"),
+                H2(chapter_str, cls="text-3xl text-center"),
+                H2(the_chapter_str, cls="text-3xl text-center"),
+                H1(chapter.title, cls="text-7xl text-center"),
                 P(chapter.reading_time, cls=TextPresets.muted_sm),
                 cls="space-y-4",  # Ensure inner content respects container width
             ),
             Divider(cls="my-10"),
-            Button(
-                "↑ Scroll to Top",
-                _="on click go to top of the body smoothly",
-                cls=f"fixed bottom-10 right-10 px-4 py-2 z-50 {ButtonT.primary}",
+            DivVStacked(
+                Button(
+                    "↑",
+                    _="on click go to top of the body smoothly",
+                    cls=("text-2xl p-5", ButtonT.secondary),
+                ),
+                Button(
+                    "↓",
+                    _="on click go to bottom of the body smoothly",
+                    cls=("text-2xl p-5", ButtonT.secondary),
+                ),
+                cls="space-y-4 fixed bottom-10 right-10",
             ),
             Article(content),
+            DivFullySpaced(
+                A("← Previous Chapter", href=f"/chapter/{int(slug) - 1}", cls="mt-10"),
+                A("Next Chapter →", href=f"/chapter/{int(slug) + 1}", cls="mt-10"),
+            ),
             cls="max-w-xl px-4 py-8",  # Added w-full
         ),
     )
