@@ -1,6 +1,42 @@
+import html
 from fasthtml.common import *
 from monsterui.all import *
 from fh_posts.all import *
+
+from mistletoe import markdown
+from mistletoe.html_renderer import HtmlRenderer
+
+
+class AsideCodeRenderer(HtmlRenderer):
+    def render_block_code(self, token):
+        template = "<aside{attr}><pre>{inner}</pre></aside>"
+        base_class = "lg:inline lg:float-right lg:relative lg:w-[20vw] lg:mr-[-20vw] ld:text-base md:block md:float-none md:m-[5%_10%]"
+        if token.language:
+            lang_class = "language-{}".format(html.escape(token.language))
+            attr = ' class="{} {}"'.format(base_class, lang_class)
+        else:
+            attr = ' class="{}"'.format(base_class)
+        inner = self.escape_html_text(token.content)
+        return template.format(attr=attr, inner=inner)
+
+
+def render_md_aside(post):
+    """Render a Markdown post using AsideCodeRenderer."""
+
+    with open(post.path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Remove frontmatter if present
+    if content.startswith("---"):
+        parts = content.split("---", 2)
+        if len(parts) >= 3:
+            content = parts[2]
+
+    # Convert entire markdown to HTML using AsideCodeRenderer
+    html_content = str(markdown(content, AsideCodeRenderer))
+
+    return NotStr(html_content)
+
 
 hdrs = (
     Theme.violet.headers(),
@@ -125,7 +161,7 @@ def get(slug: str):
             ),
         )
 
-    content = chapter.render()
+    content = render_md_aside(chapter)
 
     chapter_str = f"Chapter {chapter.number_word} ({chapter.number})"
     the_chapter_str = f"The {chapter.cardinal_word} ({chapter.cardinal_number}) Chapter"
@@ -160,7 +196,7 @@ def get(slug: str):
                 A("← Previous Chapter", href=f"/chapter/{int(slug) - 1}", cls="mt-10"),
                 A("Next Chapter →", href=f"/chapter/{int(slug) + 1}", cls="mt-10"),
             ),
-            cls="max-w-xl px-4 py-8",  # Added w-full
+            cls="max-w-xl mx-auto px-4 py-8",  # Added w-full
         ),
     )
 
