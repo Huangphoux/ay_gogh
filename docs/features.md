@@ -18,3 +18,8 @@
 - Can't use Rust cuz complexity
 - htmgo or FastHTML: built-in HTMX support
 - Refrence for features: [Astro Docs](https://docs.astro.build/en/getting-started/)
+- BentoPDF
+- 
+- Extract SVGs from illustrations: https://www.pdf2svgsnipper.com/
+- Extract pages with illustrations: iLovePDF, BentoPDF
+- NGSL: https://www.newgeneralservicelist.com/tools

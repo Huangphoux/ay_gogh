@@ -10,7 +10,7 @@ from mistletoe.html_renderer import HtmlRenderer
 class AsideCodeRenderer(HtmlRenderer):
     def render_block_code(self, token):
         template = "<aside{attr}><pre>{inner}</pre></aside>"
-        base_class = "lg:inline lg:float-right lg:relative lg:w-[20vw] lg:mr-[-20vw] ld:text-base md:block md:float-none md:m-[5%_10%]"
+        base_class = "block float-none m-10 lg:inline lg:float-right lg:relative lg:-mr-30"
         if token.language:
             lang_class = "language-{}".format(html.escape(token.language))
             attr = ' class="{} {}"'.format(base_class, lang_class)
@@ -39,7 +39,11 @@ def render_md_aside(post):
 
 
 hdrs = (
-    Theme.violet.headers(),
+    Theme.violet.headers(
+        radii=ThemeRadii.lg,
+        shadows=ThemeShadows.md,
+        font=ThemeFont.default,
+    ),
     Link(rel="icon", href="https://fav.farm/🔥"),
     Script(src="https://unpkg.com/hyperscript.org@0.9.14", defer=""),
 )
@@ -189,7 +193,7 @@ def get(slug: str):
                     _="on click go to bottom of the body smoothly",
                     cls=("text-2xl p-5", ButtonT.secondary),
                 ),
-                cls="space-y-4 fixed bottom-10 right-10",
+                cls="space-y-4 fixed bottom-10 right-10 z-50",
             ),
             Article(content),
             DivFullySpaced(
