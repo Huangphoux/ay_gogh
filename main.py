@@ -11,7 +11,9 @@ class AsideCodeRenderer(HtmlRenderer):
     def render_block_code(self, token):
         template = "<aside{attr}><pre>{inner}</pre></aside>"
         base_class = (
-            "block float-none m-10 lg:inline lg:float-right lg:relative lg:-mr-30"
+            "block float-none m-10 "  # mobile-first
+            "lg:relative lg:inline lg:float-right lg:-mr-[20vw] "
+            "[&:nth-of-type(odd)]:lg:float-left [&:nth-of-type(odd)]:lg:-ml-[20vw]"
         )
         if token.language:
             lang_class = "language-{}".format(html.escape(token.language))
@@ -140,7 +142,7 @@ theme_toggle = Button(
     UkIcon("sun", height=24, width=24, cls="sun-icon"),
     UkIcon("moon", height=24, width=24, cls="moon-icon"),
     _="on click toggle .dark on <html/>",
-    cls="fixed bottom-10 left-10 z-50 p-4",
+    cls=("fixed bottom-10 left-10 z-50 p-4", ButtonT.secondary),
 )
 
 
@@ -162,6 +164,23 @@ def index():
         ),
         Footer(),
     )
+
+
+scroll_top_bottom_btn = (
+    DivVStacked(
+        Button(
+            "↑",
+            _="on click go to top of the body smoothly",
+            cls=("text-2xl p-5", ButtonT.secondary),
+        ),
+        Button(
+            "↓",
+            _="on click go to bottom of the body smoothly",
+            cls=("text-2xl p-5", ButtonT.secondary),
+        ),
+        cls="space-y-4 fixed bottom-10 right-10 z-50",
+    ),
+)
 
 
 @rt("/chapter/{slug}")
@@ -197,25 +216,13 @@ def get(slug: str):
                 Divider(cls="my-10"),
                 theme_toggle,
             ),
-            DivVStacked(
-                Button(
-                    "↑",
-                    _="on click go to top of the body smoothly",
-                    cls=("text-2xl p-5", ButtonT.secondary),
-                ),
-                Button(
-                    "↓",
-                    _="on click go to bottom of the body smoothly",
-                    cls=("text-2xl p-5", ButtonT.secondary),
-                ),
-                cls="space-y-4 fixed bottom-10 right-10 z-50",
-            ),
-            Article(content),
+            scroll_top_bottom_btn,
+            Article(content, cls="text-justify "),
             DivFullySpaced(
                 A("← Previous Chapter", href=f"/chapter/{int(slug) - 1}", cls="mt-10"),
                 A("Next Chapter →", href=f"/chapter/{int(slug) + 1}", cls="mt-10"),
             ),
-            cls="max-w-xl mx-auto px-4 py-8",  # Added w-full
+            cls="md:max-w-xl mx-auto px-4 py-8",  # Added w-full
         ),
     )
 
