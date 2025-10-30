@@ -95,19 +95,12 @@ navbar = NavBar(
 def chapter_card(chapter):
     """Creates a card for a chapter preview"""
 
-    chapter_str = f"Chapter {chapter.number_word} ({chapter.number})"
-    the_chapter_str = f"The {chapter.cardinal_word} ({chapter.cardinal_number}) Chapter"
-
     return A(
         Card(
-            DivVStacked(
-                H2(
-                    f"{chapter_str} — {the_chapter_str}",
-                    cls=TextPresets.muted_sm,
-                ),
-                H1(chapter.title, cls=("text-3xl")),
-                P(chapter.reading_time, cls=TextPresets.muted_sm),
-                cls="space-y-2 h-full",
+            DivFullySpaced(
+                H2(f"# {chapter.number}", cls="text-2xl"),
+                H1(chapter.title, cls=("text-3xl text-right")),
+                cls="space-x-4 h-full w-full",
             ),
             cls=("h-full", CardT.hover),
         ),
@@ -135,7 +128,7 @@ def load_chapter(part_num: int = 1, size: int = 10):
         paginated[-1].attrs.update(
             {
                 "hx-get": f"page?idx={part_num + 1}",
-                "hx-trigger": "revealed",
+                "hx-trigger": "load",
                 "hx-swap": "afterend",
             }
         )
@@ -165,7 +158,7 @@ def index():
                 *load_chapter(1),
                 cls="space-y-4 p-5 items-stretch",
             ),
-            cls="max-w-xl mx-auto px-4 py-8",
+            cls="md:max-w-xl mx-auto px-4 py-8",
         ),
         Footer(),
     )
