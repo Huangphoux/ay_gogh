@@ -59,36 +59,28 @@ hdrs = (
 )
 
 
-app, rt = fast_app(
-    hdrs=hdrs,
-    static_path="static",
-)
+app, rt = fast_app(hdrs=hdrs)
 
-navbar_icon_size = 15
+navbar_icon_size = 30
 
+top_icons = [
+    ("book-open", "Read !"),
+    ("layers", "Review !"),
+    ("bot-message-square", "Ask !"),
+]
 navbar = NavBar(
-    UkIconLink(
-        "book-open",
-        height=20,
-        width=20,
-    ),
-    UkIconLink(
-        "layers",
-        height=20,
-        width=20,
-    ),
-    UkIconLink(
-        "bot-message-square",
-        height=20,
-        width=20,
-    ),
-    DiceBearAvatar("Alyssa", h=10, w=10),
+    *[
+        UkIcon(
+            icon[0],
+            uk_tooltip=icon[1],
+            height=navbar_icon_size,
+            width=navbar_icon_size,
+        )
+        for icon in top_icons
+    ],
+    DiceBearAvatar("Easton", h=10, w=10),
     brand=DivLAligned(
-        UkIconLink(
-            "book-check",
-            height=20,
-            width=20,
-        ),
+        UkIconLink("book-check", height=20, width=20),
         H3("Ay Gogh !"),
     ),
 )
