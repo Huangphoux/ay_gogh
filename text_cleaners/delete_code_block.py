@@ -1,17 +1,17 @@
 import os
 
 
-savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
+save_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
 
 
-def deleteCodeBlock(inputFile):
-    with open(inputFile, mode="r", encoding="utf-8") as f:
+def delete_code_block(fname):
+    with open(fname, mode="r", encoding="utf-8") as f:
         lines = f.readlines()
         if not lines:
             return
 
     # Process and write back
-    with open(inputFile, mode="w", encoding="utf-8") as f:
+    with open(fname, mode="w", encoding="utf-8") as f:
         i = 0
         while i < len(lines):
             if "```" in lines[i]:
@@ -38,4 +38,3 @@ def deleteCodeBlock(inputFile):
             else:
                 f.write(lines[i])
                 i += 1
-

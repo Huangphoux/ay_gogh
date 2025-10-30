@@ -3,7 +3,7 @@ import frontmatter
 from textstat.textstat import textstat
 
 
-savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
+save_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
 
 textstat_funcs = (
     # textstat.flesch_reading_ease,
@@ -24,13 +24,13 @@ textstat_funcs = (
 )
 
 
-def addReadability(inputFile):
-    with open(inputFile, mode="r", encoding="utf-8") as f:
+def add_readability(fname):
+    with open(fname, mode="r", encoding="utf-8") as f:
         content = f.read()
         post = frontmatter.loads(content)
 
         for item in textstat_funcs:
-            number = item(content.replace("\t", ""))
+            number = item(content)
 
             try:
                 number = round(float(number), 2)
@@ -39,5 +39,5 @@ def addReadability(inputFile):
 
             post[item.__name__] = number
 
-    with open(inputFile, mode="wb") as f:
+    with open(fname, mode="wb") as f:
         f.write(frontmatter.dumps(post).encode("utf-8"))

@@ -16,7 +16,7 @@ ABBREVIATION_MAPPING = {
 # uv run spacy download en_core_web_sm
 nlp = spacy.load("en_core_web_sm")
 
-savePath = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
+save_pawth = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
 
 
 def get_word_level_count_statistic_unique(
@@ -52,6 +52,7 @@ def get_not_found_words(
 
     return not_found_words
 
+
 def filter_for_desired_level(
     level_tokens: list[tuple[str, str, bool, float, int, int]],
     min_level: float | int = 1.0,
@@ -67,7 +68,7 @@ def filter_for_desired_level(
     return filtered_tokens
 
 
-def addCEFR(inputFile):
+def add_cefr(inputFile):
     with open(inputFile, mode="r", encoding="utf-8") as f:
         content = f.read()
         post = frontmatter.loads(content)
@@ -80,12 +81,12 @@ def addCEFR(inputFile):
 
         for i in range(1, 7):
             post[f"{CEFRLevel(i)}"] = difficulty_levels_count_unique[i - 1]
-            
+
         not_found_words_set = get_not_found_words(tokens)
         not_found_words_list = list(not_found_words_set)
         not_found_words_list.sort()
-        
+
         post["IDK"] = ", ".join(not_found_words_list)
-        
+
     with open(inputFile, mode="wb") as f:
         f.write(frontmatter.dumps(post).encode("utf-8"))

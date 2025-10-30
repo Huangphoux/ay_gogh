@@ -39,7 +39,7 @@ def isLineSkippable(line):
         return False
 
 
-def deleteLine(inputFile):
+def delete_line(inputFile):
     loadBanList()
 
     weirdList = []
