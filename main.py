@@ -10,7 +10,9 @@ from mistletoe.html_renderer import HtmlRenderer
 class AsideCodeRenderer(HtmlRenderer):
     def render_block_code(self, token):
         template = "<aside{attr}><pre>{inner}</pre></aside>"
-        base_class = "block float-none m-10 lg:inline lg:float-right lg:relative lg:-mr-30"
+        base_class = (
+            "block float-none m-10 lg:inline lg:float-right lg:relative lg:-mr-30"
+        )
         if token.language:
             lang_class = "language-{}".format(html.escape(token.language))
             attr = ' class="{} {}"'.format(base_class, lang_class)
@@ -46,13 +48,18 @@ hdrs = (
     ),
     Link(rel="icon", href="https://fav.farm/🔥"),
     Script(src="https://unpkg.com/hyperscript.org@0.9.14", defer=""),
+    Style("""
+        .dark .sun-icon { display: inline; }
+        .dark .moon-icon { display: none; }
+        html:not(.dark) .sun-icon { display: none; }
+        html:not(.dark) .moon-icon { display: inline; }
+    """),
 )
 
 
 app, rt = fast_app(
     hdrs=hdrs,
     static_path="static",
-    mode="light",
 )
 
 navbar_icon_size = 15
@@ -136,12 +143,24 @@ def load_chapter(part_num: int = 1, size: int = 10):
     return paginated
 
 
+theme_toggle = Button(
+    UkIcon("sun", height=24, width=24, cls="sun-icon"),
+    UkIcon("moon", height=24, width=24, cls="moon-icon"),
+    _="on click toggle .dark on <html/>",
+    cls="fixed bottom-10 left-10 z-50 p-4",
+)
+
+
 @rt
 def index():
     return (
         Title("Ay Gogh !"),
         Main(
-            (navbar, DividerSplit()),
+            Header(
+                navbar,
+                DividerSplit(),
+                theme_toggle,
+            ),
             DivVStacked(
                 *load_chapter(1),
                 cls="space-y-4 p-5 items-stretch",
@@ -172,16 +191,19 @@ def get(slug: str):
 
     return (
         Title(f"{chapter.title} - Ay Gogh !"),
-        Container(
-            DivVStacked(
-                A("← Back to Home", href="/", cls="mb-10"),
-                H2(chapter_str, cls="text-3xl text-center"),
-                H2(the_chapter_str, cls="text-3xl text-center"),
-                H1(chapter.title, cls="text-7xl text-center"),
-                P(chapter.reading_time, cls=TextPresets.muted_sm),
-                cls="space-y-4",  # Ensure inner content respects container width
+        Main(cls="uk-container mt-5")(
+            Header(
+                DivVStacked(
+                    A("← Back to Home", href="/", cls="mb-10"),
+                    H2(chapter_str, cls="text-3xl text-center"),
+                    H2(the_chapter_str, cls="text-3xl text-center"),
+                    H1(chapter.title, cls="text-7xl text-center"),
+                    P(chapter.reading_time, cls=TextPresets.muted_sm),
+                    cls="space-y-4",  # Ensure inner content respects container width
+                ),
+                Divider(cls="my-10"),
+                theme_toggle,
             ),
-            Divider(cls="my-10"),
             DivVStacked(
                 Button(
                     "↑",
