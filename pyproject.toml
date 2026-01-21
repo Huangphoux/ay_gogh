@@ -3,11 +3,10 @@ name = "ay-gogh"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "cefrpy>=1.0.1",
     "fh-posts>=0.0.3",
-    "monsterui>=1.0.30",
     "pip>=25.3",
     "python-fasthtml>=0.12.30",
     "python-frontmatter>=1.1.0",
@@ -18,3 +17,6 @@ dependencies = [
     "tqdm>=4.67.1",
     "wheel>=0.45.1",
 ]
+
+[tool.ruff.lint]
+ignore = ["F403", "F405"]

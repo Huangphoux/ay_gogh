@@ -1,5 +1,4 @@
 *.pyc
-test
 __pycache__
 *.onnx
 *.onnx.json

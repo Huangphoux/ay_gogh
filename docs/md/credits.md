@@ -1,0 +1,5 @@
+-   Extract SVGs from illustrations: https://www.pdf2svgsnipper.com/
+-   Extract pages with illustrations: iLovePDF, BentoPDF
+-   NGSL: https://www.newgeneralservicelist.com/
+-   Simple.css: https://simplecss.org/
+-   FSRS: https://github.com/open-spaced-repetition/py-fsrs
