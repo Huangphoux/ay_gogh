@@ -6,10 +6,8 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "cefrpy>=1.0.1",
-    "fh-posts>=0.0.3",
     "pip>=25.3",
     "python-fasthtml>=0.12.30",
-    "python-frontmatter>=1.1.0",
     "readtime>=3.0.0",
     "setuptools>=80.9.0",
     "spacy>=3.8.7",
