@@ -6,8 +6,7 @@
 
 # Test
 
-- [ ] Trích mỗi tệp thành file txt, nên làm tay cho lẹ
-- [ ] Trình bày thành CSV: lemma, câu hỏi, A, B, C, D, đáp án, cấp độ
+- Trình bày thành CSV: lemma, câu hỏi, A, B, C, D, đáp án, cấp độ
 
 # Read
 
