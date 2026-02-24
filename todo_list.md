@@ -6,11 +6,9 @@
 
 # Test
 
-- Trình bày thành CSV: lemma, câu hỏi, A, B, C, D, đáp án, cấp độ
-
 # Read
 
 - CSV mỗi từ trong nguyên cả cuốn sách
-- Dùng NGSLT và SRS để phân tích độ phù hợp: số lượng từ người học biết
+- Dùng NGSLT và SRS để phân tích độ phù hợp: số lượng từ người học biết.
 
 # SRS
