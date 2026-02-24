@@ -60,10 +60,10 @@ with open("./test/ngslt.csv", mode="w", newline="") as csvfile:
                     )
 
                 number = int(is_item.group(1))
-                level = get_level(is_item.group(1))
-                lemma = is_item.group(2)
-                question = is_item.group(3)
-                choices = {}
+                level: int = get_level(is_item.group(1))
+                lemma: str = is_item.group(2)
+                question: str = is_item.group(3)
+                choices: dict[str, str] = {}
 
             if is_choice:  # a. place to study
                 choices[is_choice.group(1)] = is_choice.group(2)
@@ -86,6 +86,8 @@ with open("./test/ngslt.csv", mode="w", newline="") as csvfile:
 
         # write rows, attaching the answer from the answer key
         for row_number, row in enumerate(rows, start=1):
-            answer_letter = answers.get(row_number, "")
-            answer_text = row["abcd".index(answer_letter) + 3] if answer_letter else ""
+            answer_letter: str = answers.get(row_number, "")
+            answer_text: str = (
+                row["abcd".index(answer_letter) + 3] if answer_letter else ""
+            )
             csvwriter.writerow(row + [answer_text])
