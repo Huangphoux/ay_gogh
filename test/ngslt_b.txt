@@ -1,601 +1,600 @@
-single: The single flower is pretty.
+0. single: The single flower is pretty.
 a. very small
 b. red
 c. one
 d. real
-
 1. toward: The dog walked toward me.
 a. to
 b. away from
 c. with
 d. behind
-
 2. pass: We passed the house.
 a. moved by
 b. made
 c. opened
 d. stayed at
-
 3. almost: I almost did it.
 a. sometimes
 b. finally
 c. easily
 d. very nearly
-
 4. account: I will put it in our account.
 a. place for money
 b. place for growing food
 c. agreement
 d. plan to do something
-
 5. way: This is a good way.
 a. method
 b. hope for the future
 c. question
 d. piece of information
-
 6. problem: This is a problem.
 a. plan for the future
 b. group of things working together
 c. service
 d. difficult situation
-
 7. also: Also, she likes music.
 a. and
 b. but
 c. or
 d. so
-
 8. try: I am trying.
 a. giving something to someone
 b. going to another place
 c. making an effort
 d. doing something fun
-
 9. show: Did you show her?
 a. let her see
 b. ask her
 c. say something to her
 d. follow her
-
 10. hope: I hope to do it.
 a. don't like
 b. need
 c. want
 d. agree
-
 11. test: This is a test.
 a. good chance
 b. way to check how good something is
 c. time when two people think the same thing
 d. part of a book
-
 12. position: This is a good position.
 a. place
 b. time
 c. price
 d. city
-
 13. age: I know his age.
 a. the people he lives with
 b. how many years he has lived
 c. what kind of person he is
 d. something he wants to do
-
 14. low: They are low.
 a. large
 b. not close
 c. dark
 d. not high
-
 15. report: This is the report.
 a. written record
 b. market
 c. amount of time
 d. rule
-
 16. area: This is the area.
 a. number
 b. time
 c. way
 d. place
-
 17. move: Could you move this?
 a. take this to a different place
 b. think about this
 c. keep this in your hand
 d. remember this
-
 18. face: Look at her face.
 a. her family
 b. the front of her head
 c. her written work
 d. her work place
-
 19. true: That is true.
 a. correct
 b. different
 c. interesting
 d. natural
-
 20. pause: We paused.
 a. prepared for travel
 b. stopped for a short time
 c. were not the same
 d. moved quickly
-
 21. president: This is the new president.
 a. date
 b. plan
 c. leader
 d. place
-
 22. regular: The meetings were regular.
 a. useful
 b. happening at fixed times
 c. important
 d. with many activities
-
 23. function: This function is good.
 a. use
 b. machine
 c. hotel
 d. choice
-
 24. primary: This is her primary work.
 a. very difficult
 b. future
 c. daily
 d. most important
-
 25. strategy: This is our strategy.
 a. plan
 b. message
 c. need
 d. effect
-
 26. specific: This needs to be more specific.
 a. important
 b. right for the situation
 c. simple
 d. clear and detailed
-
 27. previous: That was my previous job.
 a. earlier
 b. special
 c. normal
 d. favorite
-
 28. handle: I can handle it.
 a. look at it
 b. make it faster
 c. do it okay
 d. break it
-
 29. theory: It was a new theory.
 a. detail
 b. idea to explain something
 c. amount
 d. talk with different opinions
-
 30. operation: This is a large operation.
 a. part of a book
 b. thing to show the way
 c. planned activity
 d. piece of land
-
 31. protect: They protect it.
 a. try to do it
 b. look at it
 c. think about it
 d. keep it safe
-
 32. behavior: We liked her behavior.
 a. actions
 b. place to live
 c. voice
 d. school work
-
 33. catch: They caught him near his house.
 a. paid
 b. got
 c. helped
 d. met
-
 34. pull: He pulled it.
 a. put it on his body
 b. moved it closer
 c. gave it to someone
 d. went into it
-
 35. discover: We discovered something.
 a. did not see
 b. said
 c. finished
 d. found
-
 36. average: It was average.
 a. high
 b. normal
 c. different
 d. first
-
 37. link: We have a link with them.
 a. travel plan
 b. thing we must do
 c. serious fight
 d. relation
-
 38. heavy: It was heavy.
 a. simple
 b. liked by many people
 c. the first one
 d. difficult to pick up
-
 39. copy: I will make a copy.
 a. thing that is the same
 b. thing that is better
 c. plan to use money
 d. group of related things
-
 40. sector: That sector has become better.
 a. idea for change
 b. part
 c. organization
 d. plan of action
-
 41. capture: Will they capture it?
 a. save
 b. change
 c. eat
 d. catch
-
 42. nevertheless: Nevertheless, I went home.
 a. however
 b. also
 c. at last
 d. often
-
 43. blow: It blew around the park.
 a. jumped
 b. moved with the air
 c. climbed
 d. moved like a ball
-
 44. load: It is a big load.
 a. place for boats
 b. group of workers
 c. wood box
 d. thing that is carried
-
 45. brief: It was brief.
 a. short
 b. serious
 c. important
 d. fun
-
 46. commercial: This area is commercial.
 a. very important
 b. used for selling things
 c. using old styles
 d. liked by many people
-
 47. decade: In the last decade, I learned a lot.
 a. ten years
 b. school subject
 c. job
 d. difficult situation
-
 48. complain: She complained about it.
 a. explained it
 b. felt thanks for it
 c. tried to understand it
 d. said it was bad
-
 49. principal: That was my principal reason.
 a. main
 b. last
 c. real
 d. simple
-
 50. export: These are the exports.
 a. large companies
 b. things we must do
 c. things sold to other countries
 d. people who make things
-
 51. sight: His sight is not good.
 a. his answer
 b. part of his body
 c. his ability to see
 d. his work place
-
 52. category: This is our category.
 a. answer
 b. problem
 c. idea
 d. group
-
 53. loan: The loan is from my father.
 a. small plant
 b. money
 c. place to put things
 d. present
-
 54. defense: We need better defense.
 a. ways of thinking
 b. ways of acting
 c. things to protect us
 d. machines to help us
-
 55. tool: Here are the tools.
 a. places to buy things
 b. animals you keep in the house
 c. very old and large buildings
 d. things you use to do a job
-
 56. glad: I was glad.
 a. surprised
 b. sorry
 c. happy
 d. interested
-
 57. island: It is on the island.
 a. land with water around it
 b. top of something
 c. place for books
 d. part of a tree
-
 58. opposition: There is some opposition.
 a. feeling of surprise
 b. damage
 c. difference in opinion
 d. help
-
 59. theater: We saw the theater.
 a. kind of animal
 b. place to see acting
 c. thing to aim at
 d. style of clothes
-
 60. prior: My prior experiences helped me.
 a. different
 b. very good
 c. many
 d. earlier
-
 61. pose: It could pose a problem.
 a. fix a problem
 b. make a problem bigger
 c. present a problem
 d. make a problem continue
-
 62. outline: He outlined it.
 a. continued doing it
 b. gave it for a short time
 c. asked for it
 d. explained its main ideas
-
 63. strip: We made some strips.
 a. rules
 b. round pieces
 c. copies
 d. long pieces
-
 64. reputation: The reputation of this place is good.
 a. growing of food and animals
 b. main purpose
 c. opinion people have
 d. leader
-
 65. contemporary: I like contemporary music.
 a. music that is different
 b. music of today
 c. fast music
 d. music with feeling
-
 66. crucial: This is crucial.
 a. very important
 b. strange
 c. not strong
 d. small
-
 67. innovation: This innovation is interesting.
 a. new idea
 b. story of a book or movie
 c. page of information
 d. place where two things meet
-
 68. evil: He was evil.
 a. not interesting
 b. rich
 c. fully grown
 d. very bad
-
 69. fault: This is my fault.
 a. basic idea
 b. thing I won
 c. bad action
 d. question
-
 70. neighborhood: I like this neighborhood.
 a. church leader
 b. place to live
 c. part of a house
 d. way of dressing
-
 71. soul: She did it with soul.
 a. friends
 b. power
 c. money
 d. feeling
-
 72. abroad: I want to go abroad.
 a. to another country
 b. to buy things
 c. to the place where I live
 d. by myself
-
 73. metal: Do you see the black metal?
 a. place with water
 b. top part
 c. hard thing
 d. animal
-
 74. album: This is our album.
 a. plan to use time
 b. thing to give to someone
 c. collection of songs
 d. way to do something
-
 75. chip: I got some chips.
 a. presents
 b. clothes
 c. food
 d. keys
-
 76. household: It is a household.
 a. machine to do a job
 b. large amount of money
 c. group of people living together
 d. thing to keep private
-
 77. phrase: That's a nice phrase.
 a. general agreement
 b. group of words
 c. thing to hold food
 d. place to sit
-
 78. supporter: They are the supporters.
 a. people who lead a company
 b. people who like or agree with something
 c. people who study something
 d. people who are paid to do a job
-
 79. tone: I like that tone.
 a. ending
 b. class
 c. idea
 d. sound
-
 80. bunch: This is a good bunch.
 a. group of things
 b. thing to make a place look nice
 c. place to keep things
 d. thing to help us remember something
-
 81. fool: I was a fool.
 a. person who is popular
 b. person who acts without thinking
 c. person who makes things
 d. person who protects others
-
 82. grammar: We like grammar.
 a. keeping records of money
 b. working together
 c. making things new again
 d. language rules
-
 83. illustration: This is my illustration.
 a. picture
 b. idea
 c. feeling
 d. promise
-
 84. pale: She is pale.
 a. not happy
 b. light
 c. not friendly
 d. old
-
 85. swear: You have to swear not to do it.
 a. remember
 b. try
 c. promise
 d. think
-
 86. carbon: It is made of carbon.
 a. a small plant
 b. a natural element
 c. a sweet food
 d. a hard body part
-
 87. craft: They enjoy their craft.
 a. special fun event
 b. traditional skills
 c. place to be safe
 d. competition
-
 88. dialogue: We have a dialogue.
 a. simple plan
 b. place to make things
 c. useful thing
 d. kind of communication
-
 89. exhaust: She was exhausted.
 a. very tired
 b. feeling happy
 c. better
 d. not involved
-
 90. mayor: She is our mayor.
 a. family member
 b. supporter
 c. city leader
 d. worker
-
 91. privilege: It is a privilege.
 a. place for a king
 b. group of words with a special meaning
 c. good thing for only some people
 d. weak point
-
 92. snap: It has snapped.
 a. landed
 b. closed
 c. broken
 d. continued
-
 93. stair: Where are the stairs?
 a. steps to go up and down
 b. tickets
 c. things to make music
 d. glasses
-
 94. counsel: They are our counsel.
 a. people with lots of experience
 b. people who give advice
 c. people who fight for a country
 d. people who see something
-
 95. violent: They were very violent.
 a. serious
 b. able to think of new ideas
 c. exciting
 d. likely to hurt someone
-
 96. championship: They met at the championship.
 a. event to find the best team
 b. new part of a building
 c. event for people with the same interests
 d. place to show art
-
 97. membership: She enjoys her membership.
 a. kind of work
 b. having time by herself
 c. belonging to a group
 d. usual things to do
-
 98. pride: We had a lot of pride.
 a. things to use for an activity
 b. places to keep things
 c. very bad events
 d. good feelings about ourselves
-
 99. promotion: Did you hear about her promotion?
 a. first time to do something
 b. move to a more important job
 c. new way to do something
 d. result from the court
-
-100.
+1 c
+2 a
+3 a
+4 d
+5 a
+6 a
+7 d
+8 a
+9 c
+10 a
+11 c
+12 b
+13 a
+14 b
+15 d
+16 a
+17 d
+18 a
+19 b
+20 a
+21 b
+22 c
+23 b
+24 a
+25 d
+26 a
+27 d
+28 a
+29 c
+30 b
+31 c
+32 d
+33 a
+34 b
+35 b
+36 d
+37 b
+38 d
+39 d
+40 a
+41 b
+42 d
+43 a
+44 b
+45 d
+46 a
+47 b
+48 a
+49 d
+50 a
+51 c
+52 c
+53 d
+54 b
+55 c
+56 d
+57 c
+58 a
+59 c
+60 b
+61 d
+62 c
+63 d
+64 d
+65 c
+66 b
+67 a
+68 a
+69 d
+70 c
+71 b
+72 d
+73 a
+74 c
+75 c
+76 c
+77 c
+78 b
+79 b
+80 d
+81 a
+82 b
+83 d
+84 a
+85 b
+86 c
+87 b
+88 b
+89 d
+90 a
+91 c
+92 c
+93 c
+94 a
+95 b
+96 d
+97 a
+98 c
+99 d
+100 b

@@ -1,601 +1,600 @@
-offer: She will not offer a lot.
+0. offer: She will not offer a lot.
 a. make
 b. talk
 c. change
 d. try to give
-
 1. present: They are present.
 a. strong
 b. not right
 c. here
 d. new
-
 2. event: These are big events.
 a. parts of a company
 b. people with power
 c. places where people study
 d. planned activities
-
 3. issue: Let's talk about this issue.
 a. way of doing something
 b. important problem
 c. decision
 d. idea
-
 4. class: This is my class.
 a. group of people learning together
 b. person with health problems
 c. power to decide something
 d. important thing to say
-
 5. couple: I saw the couple.
 a. center part
 b. two people
 c. small town
 d. shopping area
-
 6. write: I wrote on it.
 a. put words
 b. used money
 c. sat down
 d. made food
-
 7. education: The education was good.
 a. living together
 b. learning
 c. effect
 d. way something happened
-
 8. raise: They raised it.
 a. started to do it
 b. used it
 c. broke it
 d. put it higher
-
 9. during: It happened during the meeting.
 a. in the middle of
 b. earlier than
 c. outside
 d. very close to
-
 10. film: Did you like the film?
 a. way to go
 b. place to live
 c. young person
 d. thing to watch
-
 11. language: What language is that?
 a. way to learn
 b. way of speaking
 c. thing to choose
 d. thing to look at
-
 12. security: Think about security.
 a. the people around you
 b. getting help from others
 c. making your risks smaller
 d. the rules in a place
-
 13. wear: I wear them.
 a. have them on my body
 b. let them stay with me
 c. make them
 d. look for them
-
 14. white: It is white.
 a. not large
 b. a light color
 c. not the same
 d. near here
-
 15. there: Please put it there.
 a. in that place
 b. with another thing
 c. outside
 d. above
-
 16. become: He will become a teacher.
 a. let a teacher see
 b. help a teacher
 c. start to be a teacher
 d. ask a teacher
-
 17. focus: Let's focus on this.
 a. decide this
 b. think about this
 c. share this
 d. take this out
-
 18. year: I stayed for a year.
 a. thing to eat
 b. rest
 c. job
 d. period of time
-
 19. kind: Do you like this kind?
 a. type of thing
 b. place to work
 c. information
 d. story
-
 20. scene: She told me about the scene.
 a. talk with other people
 b. problem
 c. plan
 d. place where something happened
-
 21. collection: She has a collection.
 a. special kind of business
 b. plan
 c. group of things of the same type
 d. note for another person
-
 22. prepare: They prepared it.
 a. made it higher
 b. changed it
 c. moved it
 d. made it ready
-
 23. various: We have various things.
 a. different
 b. important
 c. free
 d. new
-
 24. apply: These apply here.
 a. become bigger
 b. are important
 c. move by
 d. go back to
-
 25. chair: Look at the chair.
 a. group of things
 b. place to stay
 c. person in a game
 d. thing to sit on
-
 26. dog: It is a dog.
 a. small shop
 b. living thing
 c. bad action
 d. new idea
-
 27. doubt: I doubt it.
 a. don't believe it
 b. say it again
 c. make it stronger
 d. understand it
-
 28. exactly: I did it exactly.
 a. very often
 b. not long ago
 c. in a fast way
 d. in the right way
-
 29. fit: Does it fit?
 a. change
 b. happen
 c. match
 d. grow
-
 30. male: It is male.
 a. liked a lot
 b. good for learning
 c. like a boy
 d. the most important
-
 31. official: They are officials.
 a. people with power
 b. important papers
 c. places to work
 d. good results
-
 32. profit: Did you make a profit?
 a. a part of something
 b. a group of words
 c. a usual way to do something
 d. more money
-
 33. ready: Are you ready?
 a. about to act
 b. different from others
 c. liked by people
 d. older than others
-
 34. seek: They continue to seek new things.
 a. make
 b. look for
 c. get
 d. think about
-
 35. throughout: It happened throughout the city.
 a. close to
 b. in the direction of
 c. in every part of
 d. higher than
-
 36. thus: Thus it was a good idea.
 a. but
 b. and
 c. so
 d. if
-
 37. transfer: The transfer was easy.
 a. move
 b. job
 c. sign
 d. choice
-
 38. wall: This is the wall.
 a. thing to drink from
 b. side of a room
 c. place to drive
 d. cost of something
-
 39. separate: They are separate.
 a. not together
 b. very important
 c. easy to understand
 d. in good condition
-
 40. device: He has a new device.
 a. idea
 b. wish
 c. standard
 d. machine
-
 41. escape: He tried to escape.
 a. become free
 b. make something new
 c. find the answer
 d. do it well
-
 42. crowd: We were in a large crowd.
 a. group of people
 b. place with water
 c. group of houses
 d. place to look at art
-
 43. equal: These are equal.
 a. cheap
 b. new
 c. the same
 d. very good
-
 44. native: They are the native people.
 a. old people
 b. people from that place
 c. people with no homes
 d. people with little money
-
 45. slowly: They worked slowly.
 a. with no problem
 b. not fast
 c. with no other people
 d. every day
-
 46. cry: He began to cry.
 a. change
 b. move his head up and down
 c. think something bad would happen
 d. show unhappy feelings
-
 47. battle: We saw the battle.
 a. fight
 b. group of trees
 c. place to live
 d. sign
-
 48. desire: This is his desire.
 a. way to do something
 b. opinion
 c. idea about something
 d. wish
-
 49. driver: He is the driver.
 a. person we work with
 b. person using a car
 c. person that writes
 d. young person
-
 50. eventually: Eventually, we finished.
 a. after a long time
 b. very soon after
 c. very quickly
 d. quite often
-
 51. flower: She has the flower.
 a. thing to make a sound
 b. beautiful plant
 c. way to make food
 d. small house
-
 52. gas: It was a gas.
 a. small machine
 b. large part of something
 c. material like air
 d. part of a house
-
 53. mainly: It was mainly dry.
 a. in most parts
 b. very quickly
 c. not often
 d. only a little
-
 54. map: Look at the map.
 a. place next to the sea
 b. top part of something
 c. message on a computer
 d. picture of an area
-
 55. reality: This is reality.
 a. a true situation
 b. a kind of problem
 c. a good chance
 d. a kind of power
-
 56. south: This is south.
 a. a direction
 b. a big city
 c. a season
 d. a country
-
 57. council: This is our council.
 a. group to make decisions
 b. feeling something is true
 c. message to explain something
 d. planned order of events
-
 58. destroy: They destroyed it.
 a. made it better
 b. completely broke it
 c. ran after it
 d. decided how good it was
-
 59. refuse: He refused to try.
 a. said it was necessary
 b. said it was a good idea
 c. said he had done it
 d. said he would not do it
-
 60. virtually: Virtually everyone came.
 a. almost
 b. little by little
 c. It seems
 d. sometimes
-
 61. frequently: I frequently have problems.
 a. recently
 b. never
 c. always
 d. often
-
 62. core: This is the core.
 a. problem
 b. center
 c. guess
 d. top point
-
 63. meter: This is a meter.
 a. long book
 b. kind of money
 c. heavy thing
 d. distance
-
 64. plate: I like this plate.
 a. thing for eating
 b. choice
 c. idea for the future
 d. time of the year
-
 65. climate: We like the climate in this place.
 a. help
 b. style of clothes
 c. laws
 d. usual weather
-
 66. dish: You can use this dish.
 a. thing for holding food
 b. place to stand
 c. bag to carry things
 d. place to sit
-
 67. draft: Could you please look at this draft?
 a. version of something
 b. part of something
 c. way of understanding something
 d. better way to do something
-
 68. gate: We need a new gate.
 a. book for photos
 b. way to do something
 c. daily plan
 d. door in a wall
-
 69. gentleman: Did you see the gentlemen over there?
 a. young people
 b. writers
 c. men with good manners
 d. people on a train or bus
-
 70. habit: I don't like his habits.
 a. acting
 b. plans for the future
 c. things he often does
 d. ideas
-
 71. merely: They merely sat there.
 a. often
 b. only
 c. almost never
 d. clearly
-
 72. perception: That is an interesting perception.
 a. talk
 b. problem with no answer
 c. view
 d. area to study
-
 73. plot: I don't like the plot very much.
 a. way of living
 b. animals in a place
 c. cost of something
 d. story of a book or movie
-
 74. restriction: There are many restrictions here.
 a. rules to limit something
 b. goals
 c. fights between groups
 d. areas
-
 75. retain: We did not retain very many.
 a. change
 b. keep
 c. see
 d. throw away
-
 76. string: They will use the string.
 a. thing for tying
 b. place to stay
 c. long piece of wood
 d. thing for cutting
-
 77. accompany: She accompanied me.
 a. went together with me
 b. chose me for a job
 c. left me alone
 d. was against me
-
 78. complicate: It was complicated.
 a. very large or great
 b. hard to understand
 c. including all of the parts
 d. having no mistakes
-
 79. milk: Do you like the milk?
 a. the most popular clothes
 b. catching fish
 c. moving your body to music
 d. a kind of drink
-
 80. advocate: Those are his advocates.
 a. parts for a computer
 b. feelings
 c. supporters
 d. things of value
-
 81. angle: Let's try this angle.
 a. direction to see from
 b. official plan
 c. part of something
 d. order of things
-
 82. custom: That is a very old custom.
 a. piece of art
 b. usual way to do something
 c. building for animals
 d. secret plan to do something
-
 83. density: Was there a change in density?
 a. how things are done
 b. the number of people or things in a place
 c. the shape of the land
 d. how something goes around another thing
-
 84. disagree: They usually disagree.
 a. change to fit the situation
 b. follow the rules
 c. say bad things about something
 d. have different ideas about things
-
 85. experimental: His work was experimental.
 a. done to see how well something works
 b. high quality
 c. done without stopping
 d. only for a short time
-
 86. fancy: This place is fancy.
 a. making money
 b. becoming old
 c. not simple
 d. not exciting
-
 87. happiness: Happiness is important.
 a. a kind of good feeling
 b. knowing a lot about something
 c. a kind of story about the world
 d. making no mistakes
-
 88. iron: There was a lot of iron.
 a. a kind of metal
 b. money from business
 c. very small rocks
 d. black gas from fire
-
 89. orange: It is orange.
 a. something that helps
 b. enough
 c. the color of the sun
 d. staying the same
-
 90. poetry: Do you like this poetry?
 a. general plan
 b. place to relax
 c. outside part of a house
 d. special kind of writing
-
 91. pot: There is a small pot.
 a. object for holding food
 b. group of things
 c. tool for doing a job
 d. space between two things
-
 92. remote: This place is very remote.
 a. developed
 b. far from other people
 c. special
 d. different from other places
-
 93. rescue: Did you hear about the rescue?
 a. choosing someone for an important job
 b. saving someone from danger
 c. small change
 d. information on TV or radio
-
 94. universal: We want it to be universal.
 a. for everyone
 b. usual
 c. easy to see
 d. large
-
 95. flexible: This is not very flexible.
 a. easy to reach
 b. easy to trust
 c. easy to understand
 d. easy to change
-
 96. clothing: I do not have other clothing.
 a. things to use
 b. parts for something
 c. things to wear
 d. things for a house
-
 97. blind: My dog is blind.
 a. free to run
 b. not able to see
 c. going to have babies
 d. easy to become angry
-
 98. bowl: That is a very nice bowl.
 a. kind of animal
 b. place for swimming
 c. thing to put on top
 d. thing to hold food
-
 99. gender: Please write your gender.
 a. if you are a boy or girl
 b. your way to do something
 c. your ideas for helping
 d. if you like it or not
-
-100.
+1 d
+2 c
+3 d
+4 b
+5 a
+6 b
+7 a
+8 b
+9 d
+10 a
+11 d
+12 b
+13 c
+14 a
+15 b
+16 a
+17 c
+18 b
+19 d
+20 a
+21 d
+22 c
+23 d
+24 a
+25 b
+26 d
+27 b
+28 a
+29 d
+30 c
+31 c
+32 a
+33 d
+34 a
+35 b
+36 c
+37 c
+38 a
+39 b
+40 a
+41 d
+42 a
+43 a
+44 c
+45 b
+46 b
+47 d
+48 a
+49 d
+50 b
+51 a
+52 b
+53 c
+54 a
+55 d
+56 a
+57 a
+58 a
+59 b
+60 d
+61 a
+62 d
+63 b
+64 d
+65 a
+66 d
+67 a
+68 a
+69 d
+70 c
+71 c
+72 b
+73 c
+74 d
+75 a
+76 b
+77 a
+78 a
+79 b
+80 d
+81 c
+82 a
+83 b
+84 b
+85 d
+86 a
+87 c
+88 a
+89 a
+90 c
+91 d
+92 a
+93 b
+94 b
+95 a
+96 d
+97 c
+98 b
+99 d
+100 a

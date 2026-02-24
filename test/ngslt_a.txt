@@ -1,602 +1,601 @@
-charge: They are the charges.
+0. charge: They are the charges.
 a. important things to think about
 b. prices for a service
 c. good things
 d. reasons
-
 1. case: This is a good case.
 a. place to study
 b. way something works
 c. example of something
 d. plan for the future
-
 2. different: They are different.
 a. easy to see
 b. large
 c. not easy
 d. not the same
-
 3. room: Where is the room?
 a. thing we read
 b. thing to drive
 c. place to buy things
 d. space in a building
-
 4. lead: I will lead you.
 a. take you to a place
 b. meet you
 c. let you
 d. give something to you
-
 5. policy: That is a good policy.
 a. kind of school
 b. story
 c. place to visit
 d. way to act
-
 6. rise: They will rise next week.
 a. become higher
 b. change
 c. become better
 d. finish
-
 7. sure: I am sure.
 a. young
 b. early
 c. certain
 d. new
-
 8. health: Health is important.
 a. learning in a school or college
 b. having no problems with your body
 c. learning by doing something a lot
 d. having help from other people
-
 9. expect: I expected this.
 a. thought this would happen
 b. said this idea
 c. put this into something
 d. took this to a place
-
 10. include: We are including it.
 a. paying
 b. changing
 c. adding
 d. reading
-
 11. building: Where is the building?
 a. group of people working together
 b. road
 c. middle part
 d. place to live or work
-
 12. benefit: These are the benefits.
 a. costs
 b. problems
 c. examples
 d. good results
-
 13. teacher: They are teachers.
 a. people with children
 b. workers in schools
 c. leaders in a company
 d. young people
-
 14. well: You did that well.
 a. fast
 b. in a good way
 c. by yourself
 d. often
-
 15. return: Please return it.
 a. talk about it
 b. sell it
 c. show it
 d. take it back
-
 16. result: We had the same results.
 a. questions
 b. thoughts
 c. rules for doing something
 d. things that happened at the end
-
 17. among: He was among them.
 a. after
 b. behind
 c. together with
 d. not far from
-
 18. consider: She considered it.
 a. could not find
 b. needed
 c. thought about
 d. said
-
 19. approach: We like your approach.
 a. way of doing something
 b. part of a book
 c. house and land
 d. facts and information
-
 20. observe: We observed the people.
 a. visited
 b. talked with
 c. painted
 d. watched
-
 21. variety: I like the variety here.
 a. good points
 b. things which people buy and sell
 c. different types of things
 d. ways people think
-
 22. fly: We will fly there.
 a. go for a short time
 b. take a test
 c. find something
 d. travel in the air
-
 23. significant: This is significant.
 a. important
 b. basic
 c. not common
 d. natural
-
 24. extra: These are extra.
 a. used in a hospital
 b. more than enough
 c. needed
 d. easy to see
-
 25. instance: This, for instance, was a good idea.
 a. working together
 b. a short time
 c. health
 d. example
-
 26. solution: This is one solution.
 a. answer to a problem
 b. idea to think about
 c. plan for spending money
 d. part of a bigger thing
-
 27. clean: It was clean.
 a. not safe
 b. not dirty
 c. very good
 d. very small
-
 28. pressure: Put pressure on this.
 a. water
 b. force
 c. a cold thing
 d. a cover
-
 29. cross: Please make a cross.
 a. shape like an X
 b. kind of food
 c. rule
 d. group of words
-
 30. progress: Their progress was good.
 a. way of thinking about something
 b. start
 c. movement toward a better position
 d. result
-
 31. straight: I went straight home.
 a. beyond the
 b. directly
 c. around the
 d. easily
-
 32. despite: Despite the beginning, the speech was
 good.
 a. in addition to
 b. because of
 c. according to
 d. even with
-
 33. bank: I like this bank.
 a. time in history
 b. group of workers in a place
 c. place to keep money
 d. part of something
-
 34. examine: She wants to examine this.
 a. finish this
 b. explain the meaning of this
 c. look at this with care
 d. go to this
-
 35. mix: We mixed them.
 a. showed
 b. found their answer
 c. put them all together
 d. caused trouble for them
-
 36. double: It will become double.
 a. two times as much
 b. very small
 c. worse
 d. something which happens every day
-
 37. debate: We had a debate.
 a. test
 b. person who we wanted to be the leader
 c. bad result
 d. serious talk with different opinions
-
 38. deep: It is deep.
 a. very simple
 b. hard to carry
 c. liked by many people
 d. a long way from top to bottom
-
 39. financial: The problem was financial.
 a. related to money
 b. related to school
 c. different for each person
 d. happening now
-
 40. ice: Look at the ice.
 a. small house
 b. very cold thing
 c. part of a car
 d. plant
-
 41. hall: This is an interesting hall.
 a. answer
 b. kind of animal
 c. sound
 d. large building
-
 42. revenue: We need more revenue.
 a. members
 b. trust
 c. money
 d. good ideas
-
 43. desk: Where is the desk?
 a. box to put things in
 b. table to work at
 c. small piece of something
 d. place to grow things
-
 44. mail: Do we have any mail?
 a. place to live
 b. money
 c. letters from people
 d. clothes for cold weather
-
 45. decrease: Next year, it will decrease.
 a. come together
 b. become smaller
 c. move very fast
 d. move to many different places
-
 46. extent: She did not know the extent of it.
 a. time
 b. color
 c. amount
 d. cause
-
 47. safety: Safety is important.
 a. planning something
 b. having a high level
 c. studying in detail
 d. not being in danger
-
 48. guarantee: I guarantee this.
 a. promise
 b. guess
 c. need
 d. have
-
 49. ordinary: He is ordinary.
 a. strong
 b. short
 c. not friendly
 d. not special
-
 50. factory: This is a new factory.
 a. place where things are made
 b. kind of product
 c. group of things
 d. rule
-
 51. label: Please look at the label.
 a. paper with information
 b. large book
 c. change to the rules
 d. picture of a person
-
 52. breath: My breath was fast.
 a. air going into the body
 b. body movement
 c. timing
 d. understanding
-
 53. disappear: She has disappeared.
 a. finished her work
 b. changed her job
 c. done something very well
 d. become impossible to see
-
 54. global: This is a global problem.
 a. small
 b. serious
 c. world
 d. local
-
 55. hide: It was hidden.
 a. in good condition
 b. difficult to find
 c. changing
 d. very detailed
-
 56. comfortable: Are you comfortable?
 a. feeling good
 b. wanting to try
 c. able to do something well
 d. surprised
-
 57. quote: Can I quote you?
 a. repeat words from
 b. say a bad thing about
 c. go together with
 d. give advice to
-
 58. sheet: I need a new sheet.
 a. thing to read
 b. place to live
 c. piece of paper
 d. drink
-
 59. confirm: They confirmed it.
 a. questioned it
 b. said that it was true
 c. asked for it
 d. tried it
-
 60. thick: It is very thick.
 a. dry
 b. important
 c. beautiful
 d. wide
-
 61. mechanism: This mechanism works well.
 a. group of people
 b. part of a door
 c. planned way of doing something
 d. person who helps the leader
-
 62. steal: It has been stolen.
 a. put together
 b. taken
 c. followed
 d. changed to something different
-
 63. uniform: He has his uniform.
 a. clothes for everyone in a company to wear
 b. suggestion for a business plan
 c. thing that makes you less successful
 d. reason to do something
-
 64. bone: It is a bone.
 a. kind of sound
 b. small machine
 c. hard part of the body
 d. large and beautiful house
-
 65. occupy: This place is occupied.
 a. left empty
 b. not liked
 c. on a list
 d. used by someone
-
 66. impose: They imposed their ideas.
 a. kept
 b. wrote
 c. spoke about
 d. forced
-
 67. variable: Those are two variables.
 a. things that can change
 b. purposes
 c. things that a person owns
 d. ways of doing something
-
 68. curve: This is a curve.
 a. higher place
 b. place for animals
 c. rounded line
 d. small river
-
 69. owe: I owe a lot.
 a. have
 b. save
 c. need to pay
 d. work
-
 70. justify: We cannot justify this.
 a. hit this hard
 b. follow this
 c. exchange this for something else
 d. show that this is right
-
 71. smooth: It was smooth.
 a. far away
 b. very bad
 c. most powerful
 d. flat and even
-
 72. freeze: It was frozen.
 a. full of colors
 b. very cold
 c. secret
 d. strange
-
 73. currency: What is the currency there?
 a. time
 b. situation
 c. money
 d. problem
-
 74. sad: That is sad.
 a. strong
 b. not warm
 c. quiet
 d. not happy
-
 75. formula: This is a formula.
 a. place to wait for a train
 b. place to make things
 c. part of a country
 d. rule or way to do something
-
 76. slide: It started to slide.
 a. break
 b. move
 c. make power
 d. become bigger
-
 77. tension: I don’t like the tension here.
 a. difficult relationships
 b. quality of the air, land, and water
 c. information about things for sale
 d. cost of things
-
 78. shadow: I can see the shadow.
 a. dark shape
 b. difference
 c. space
 d. starting place
-
 79. gradually: I did it gradually.
 a. at the end
 b. with no difficulty
 c. in small steps
 d. many times
-
 80. cooperation: Cooperation is a good thing.
 a. working together
 b. help for poor people
 c. talking with people
 d. thinking about people
-
 81. joy: I had a lot of joy.
 a. happy feelings
 b. feelings of not knowing something
 c. information about something
 d. changes
-
 82. motivation: Motivation is important.
 a. wanting to do something
 b. freedom to decide
 c. ability to work well
 d. health
-
 83. journal: It is a journal.
 a. drink for sick people
 b. decision
 c. small book on a particular subject
 d. new thing that someone found
-
 84. confusion: We had some confusion.
 a. poor understanding
 b. heavy things to carry
 c. things we wanted
 d. conversation
-
 85. coin: That is my coin.
 a. thing to cook food in
 b. money
 c. tool for cutting
 d. thing to sit on
-
 86. twist: Who twisted this?
 a. turned this
 b. cut this
 c. took this out
 d. did not accept this
-
 87. castle: It is a castle.
 a. thing to shoot
 b. place to see art
 c. large strong building
 d. big group of people
-
 88. bias: This is biased.
 a. changing
 b. not powerful
 c. honest
 d. not fair
-
 89. summary: This is a good summary.
 a. start to something new
 b. reason for not doing something
 c. amount of time between two things
 d. short statement of the main ideas
-
 90. diversity: We like the diversity there.
 a. holidays
 b. mix of different things
 c. connection between things
 d. way of life
-
 91. edit: It wasn't edited very well.
 a. corrected
 b. discussed
 c. planned
 d. understood
-
 92. comprehensive: It was very comprehensive.
 a. complete
 b. surprising
 c. much liked
 d. short in time
-
 93. excess: There was excess food.
 a. well liked
 b. unusual
 c. healthy
 d. more than enough
-
 94. throat: Is your throat okay?
 a. thing to sit on
 b. thing to wear
 c. part of the body
 d. kind of food
-
 95. profession: This is my profession.
 a. type of writing
 b. thing to wear
 c. type of work
 d. decision
-
 96. moderate: The size is moderate.
 a. not big or small
 b. very big
 c. very small
 d. not okay
-
 97. format: This is the format.
 a. group of people working together
 b. thing to study
 c. problem or argument
 d. plan or arrangement
-
 98. accurate: Is this accurate?
 a. working exactly
 b. expensive
 c. difficult to use
 d. easy to see
-
 99. compound: They are compounds.
 a. spirits with no bodies
 b. ideas to help answer a question
 c. sets of beliefs
 d. things with two or more parts
-
-100.
+1 b
+2 c
+3 d
+4 d
+5 a
+6 d
+7 a
+8 c
+9 b
+10 a
+11 c
+12 d
+13 d
+14 b
+15 b
+16 d
+17 d
+18 c
+19 c
+20 a
+21 d
+22 c
+23 d
+24 a
+25 b
+26 d
+27 a
+28 b
+29 b
+30 a
+31 c
+32 b
+33 d
+34 c
+35 c
+36 c
+37 a
+38 d
+39 d
+40 a
+41 b
+42 d
+43 c
+44 b
+45 c
+46 b
+47 c
+48 d
+49 a
+50 d
+51 a
+52 a
+53 a
+54 d
+55 c
+56 b
+57 a
+58 a
+59 c
+60 b
+61 d
+62 c
+63 b
+64 a
+65 c
+66 d
+67 d
+68 a
+69 c
+70 c
+71 d
+72 d
+73 b
+74 c
+75 d
+76 d
+77 b
+78 a
+79 a
+80 c
+81 a
+82 a
+83 a
+84 c
+85 a
+86 b
+87 a
+88 c
+89 d
+90 d
+91 b
+92 a
+93 a
+94 d
+95 c
+96 c
+97 a
+98 d
+99 a
+100 d
