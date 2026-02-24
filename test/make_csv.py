@@ -89,5 +89,5 @@ with open("./test/ngslt.csv", mode="w", newline="") as csvfile:
             answer_letter: str = answers.get(row_number, "")
             answer_text: str = (
                 row["abcd".index(answer_letter) + 3] if answer_letter else ""
-            )
+            )  # index of "a" + 3
             csvwriter.writerow(row + [answer_text])

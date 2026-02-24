@@ -9,7 +9,7 @@ chapter_regex = r"Chapter.+\((\d+)\)"
 
 root_path = os.path.dirname(os.path.dirname(__file__))
 
-save_path = os.path.join(root_path, "test")
+save_path = os.path.join(root_path, "chapter")
 
 
 def remove_test(path):

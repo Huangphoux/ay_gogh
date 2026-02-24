@@ -1,6 +1,6 @@
 import os
 
-save_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "test")
+save_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "chapter")
 
 
 def add_code_block(fname):
