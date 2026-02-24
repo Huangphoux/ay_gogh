@@ -1,7 +1,6 @@
 import re
 import os
 import shutil
-from tqdm import tqdm
 
 # Dòng đó có nguyên cụm "Chapter"
 # sau đó là các kí tự gì ko quan tâm
@@ -24,12 +23,12 @@ def split_chapter(inputFile, test_num=None):
     with open(inputFile, mode="r", encoding="utf-8") as f:
         content = f.readlines()
 
-    for line in tqdm(content):
+    for line in content:
         # Stop at chapter (testNumber)+1
         if test_num is not None and curr_chap == test_num + 1:
             break
 
-        # check if the line is "Chapter" and (n)
+        # is line "Chapter" and (n) ?
         is_chapter = re.match(chapter_regex, line)
 
         if is_chapter:
@@ -37,7 +36,7 @@ def split_chapter(inputFile, test_num=None):
 
             if num_bracket != curr_chap:
                 curr_chap = num_bracket
-            else:  # The same "Chapter (n)"" line occurs again !
+            else:  # "Chapter (n)"" appears again !
                 continue
 
         output = os.path.join(save_path, f"{curr_chap}.md")

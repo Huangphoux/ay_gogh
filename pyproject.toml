@@ -5,16 +5,14 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "cefrpy>=1.0.1",
-    "pip>=25.3",
-    "python-fasthtml>=0.12.30",
-    "readtime>=3.0.0",
-    "setuptools>=80.9.0",
-    "spacy>=3.8.7",
-    "textstat>=0.7.10",
-    "tqdm>=4.67.1",
-    "wheel>=0.45.1",
+    "starhtml>=0.5.9",
 ]
 
 [tool.ruff.lint]
 ignore = ["F403", "F405"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.2",
+    "ty>=0.0.18",
+]
