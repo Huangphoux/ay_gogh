@@ -10,3 +10,4 @@
 - HATEOAS
 - SSE
 - Brotli
+- Single-Tenant Databases
