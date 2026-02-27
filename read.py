@@ -1,6 +1,6 @@
 import html
 
-from fasthtml.common import *
+from starhtml import *
 from fh_posts.all import *
 
 from shared import theme_toggle, scroll_btn

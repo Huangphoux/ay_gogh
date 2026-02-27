@@ -6,6 +6,13 @@
 
 # Test
 
+- Chia từng Form thành file riêng, không gộp thành 1 file
+- CQRS, Fat Morph, View=F(State), Auto-Sync
+  - Bấm Bắt đầu
+  - Bảng Test, cột: ngày, progress=0, lv1, lv2, lv3, lv4, lv5
+  - Load câu hỏi và câu trả lời
+  - Nhận từ client, sửa DB, check DB, gửi tới client
+
 # Read
 
 - CSV mỗi từ trong nguyên cả cuốn sách
@@ -13,6 +20,7 @@
 - Cá nhân hoá lộ trình học: sử dụng NGSLT và SRS để xác định độ khó của bài đọc.
     - Một trang riêng, giống Anki hiện các deck, bấm vô mới hiện chi tiết trước khi bắt đầu
 - Đọc thể loại nhiều: tuyển chọn và giới thiệu cho người đọc các tác phẩm văn học đình đám được viết bằng tiếng Anh. Người đọc có thể chủ động tìm đọc ở ngoài hệ thống để không cần phải phụ thuộc vào kết nối mạng, hoặc có thể đọc và thu thập từ vựng ngay thẳng trong hệ thống. Standard Ebooks.
+- Load từng câu vào bộ nhớ. Khi người dùng bấm tiếp theo thì pop ở đầu mảng. Hàng đợi.
 
 # Mining
 

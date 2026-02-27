@@ -1,13 +1,11 @@
 # What I Learned
 
-- Text Processing
-- Natural Language Processing
-- CQRS
-- RegEx
+- Data Processing with RegEx
+- Natural Language Processing with spaCy
+- CQRS with SSE and Brotli
+- HATEOAS with DataStar
+- Single-Tenant Databases with SQLite
+- Accessibility
 - Data-Oriented Programming
-- SQLite
-- DataStar
-- HATEOAS
-- SSE
-- Brotli
-- Single-Tenant Databases
+- Data Structure: Queues
+- Singleton: Database
