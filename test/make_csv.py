@@ -1,32 +1,21 @@
 import csv
 import re
+from difflib import SequenceMatcher
+
 
 item_pattern: str = r"(\d+)\. (\w+): (.+)"
 choice_pattern: str = r"([abcd])\. (.+)"
 answer_pattern: str = r"(\d+) ([abcd])"
 
+for form in "abc":
+    with open(f"./test/ngslt_{form}.csv", mode="w", newline="") as csvfile:
+        csvwriter = csv.writer(csvfile, delimiter="\t")
 
-def get_level(num: str) -> int:
-    if int(num) in range(1, 21):  # range(i, j): [i, j)
-        return 1
-    if int(num) in range(21, 41):
-        return 2
-    if int(num) in range(41, 61):
-        return 3
-    if int(num) in range(61, 81):
-        return 4
-    if int(num) in range(81, 102):
-        return 5
-    return 0
+        # write header
+        csvwriter.writerow(
+            ["number", "lemma", "question", "a", "b", "c", "d", "answer"]
+        )
 
-
-with open("./test/ngslt.csv", mode="w", newline="") as csvfile:
-    csvwriter = csv.writer(csvfile, delimiter="\t")
-
-    # write header
-    csvwriter.writerow(["Lemma", "Level", "Question", "A", "B", "C", "D", "Answer"])
-
-    for form in ("a", "b", "c"):
         with open(f"./test/ngslt_{form}.txt", mode="r") as f:
             lines: list[str] = f.read().splitlines()  # split into lines, not chars
 
@@ -34,8 +23,7 @@ with open("./test/ngslt.csv", mode="w", newline="") as csvfile:
         answers: dict[int, str] = {}
 
         # current item state, carried across iterations
-        number: int = 0
-        level: int = 0
+        number: int = -1
         lemma: str = ""
         question: str = ""
         choices: dict[str, str] = {}  # {"a": "...", "b": "...", ...}
@@ -46,11 +34,11 @@ with open("./test/ngslt.csv", mode="w", newline="") as csvfile:
             is_answer = re.match(answer_pattern, line)
 
             if is_item:  # 1. case: This is a good case.
-                if number > 0:  # save previous item before starting a new one
+                if number > -1:  # save previous item before starting a new one
                     rows.append(
                         [
+                            str(number),
                             lemma,
-                            str(level),
                             question,
                             choices.get("a", ""),
                             choices.get("b", ""),
@@ -59,11 +47,20 @@ with open("./test/ngslt.csv", mode="w", newline="") as csvfile:
                         ]
                     )
 
-                number = int(is_item.group(1))
-                level: int = get_level(is_item.group(1))
+                number = int(is_item.group(1)) + 1
                 lemma: str = is_item.group(2)
                 question: str = is_item.group(3)
                 choices: dict[str, str] = {}
+
+                # bold the target word
+                for i, word in enumerate(question_splited := question.split()):
+                    if SequenceMatcher(a=lemma, b=word).ratio() > 0.7:
+                        question_splited[i] = f"*{word}*"
+                        question_splited[i] = re.sub(
+                            r"([?.!,])\*", r"*\1", question_splited[i]
+                        )
+
+                question = " ".join(question_splited)
 
             if is_choice:  # a. place to study
                 choices[is_choice.group(1)] = is_choice.group(2)
@@ -71,11 +68,11 @@ with open("./test/ngslt.csv", mode="w", newline="") as csvfile:
             if is_answer:  # 65 c
                 answers[int(is_answer.group(1)) - 1] = is_answer.group(2)
 
-        if number > 0:  # save the last item
+        if number > -1:  # save the last item
             rows.append(
                 [
+                    str(number),
                     lemma,
-                    str(level),
                     question,
                     choices.get("a", ""),
                     choices.get("b", ""),
