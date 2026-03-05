@@ -1,17 +1,13 @@
 # Auth
 
-- [How to Build a Simple Login System in FastHTML](https://blog.mariusvach.com/posts/login-fasthtml)
-- [StarHTML](https://starhtml.com/demos/)
-- FastHTML has auth examples.
-
 # Test
 
-- Chia từng Form thành file riêng, không gộp thành 1 file
 - CQRS, Fat Morph, View=F(State), Auto-Sync
-  - Bấm Bắt đầu
-  - Bảng Test, cột: ngày, progress=0, lv1, lv2, lv3, lv4, lv5
-  - Load câu hỏi và câu trả lời
-  - Nhận từ client, sửa DB, check DB, gửi tới client
+    - Bảng Test, cột: ngày, form, number=0, lv1, lv2, lv3, lv4, lv5
+    - Query từ DB. Check number > 100. Subscribe.
+        - Có: sang URL kết quả, Hiện các lv.
+        - Không: load lemma, câu hỏi, câu trả lời vào HTML. Patch HTML.
+    - Bấm Next: Nhận kết quả. Tính điểm. Sửa DB các cột lv. cột number++. Publish.
 
 # Read
 

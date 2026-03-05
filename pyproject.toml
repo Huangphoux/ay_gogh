@@ -6,13 +6,15 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "python-frontmatter>=1.1.0",
-    "starhtml>=0.5.9",
+    "starhtml>=0.5.14",
 ]
 
 [tool.ruff.lint]
+select = ["F401"]
 ignore = ["F403", "F405"]
 
-[tool.uv.sources]
+[tool.ty.rules]
+unresolved-reference = "ignore"
 
 [dependency-groups]
 dev = [
