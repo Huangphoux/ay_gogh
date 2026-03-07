@@ -1,7 +1,12 @@
 from starhtml import *
+from db import DatabaseDict
+from relay import Relay
+
+db = DatabaseDict()
+relay: Relay[str] = Relay()
 
 
-def html_header():
+def html_header(sess=None):
     return Header(
         Nav(
             A("Home", href="/"),

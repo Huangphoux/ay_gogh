@@ -15,3 +15,6 @@ wheels/
 .venv
 
 weird_line.txt
+
+.sesskey
+*.db
