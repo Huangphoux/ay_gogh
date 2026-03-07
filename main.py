@@ -1,5 +1,11 @@
 from shared import html_header, html_footer
 from starhtml import *
+from db import DatabaseDict
+from relay import Relay
+from hmac import compare_digest
+
+db = DatabaseDict()
+relay: Relay[str] = Relay()
 
 
 def not_found(req, exc):
@@ -7,7 +13,7 @@ def not_found(req, exc):
 
 
 def set_auth(req, sess):
-    auth = req.scope["auth"] = sess.get("auth", None)
+    auth = req.scope["name"] = sess.get("name", None)
     if not auth:
         return Redirect(login)
 
@@ -18,7 +24,6 @@ auth_bware = Beforeware(
 )
 
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
-    debug=True,
     title="Ay Gogh!",
     htmlkw={"lang": "en"},
     before=(auth_bware,),
@@ -39,8 +44,6 @@ def index():
     return (
         html_header(),
         Main(
-            (timestamp := Signal("timestamp", js("Date.now()"))),
-            Pre(data_json_signals=True),
             P("This page is in construction.", _class="notice"),
             A("Get started", href=login, _class="button"),
         ),
@@ -81,22 +84,32 @@ def login():
 
 @rt
 def login_process(name: str, pwd: str, sess):
-    return Redirect(index)
+    global db
+    db_app = db.get()
 
     if not name or not pwd:
-        return login_redir
-    try:
-        u = users[name]
-    except NotFoundError:
-        u = users.insert(name=name, pwd=pwd)
-    if not compare_digest(u.pwd.encode("utf-8"), pwd.encode("utf-8")):
-        return login_redir
-    sess["auth"] = u.name
+        return Redirect(login)
+
+    # query() returns generator
+    rows = list(db_app.query("SELECT name, pwd FROM users WHERE name=?", (name,)))
+    if not rows:
+        db_app.execute(
+            "INSERT OR REPLACE INTO users (name, pwd) VALUES (?, ?)", (name, pwd)
+        )
+        sess["name"] = name
+        return Redirect(index)
+
+    u = rows[0]
+    if not compare_digest(u["pwd"].encode("utf-8"), pwd.encode("utf-8")):
+        return Redirect(login)
+
+    sess["name"] = u["name"]
+    return Redirect(index)
 
 
 @rt
 def logout(sess):
-    del sess["auth"]
+    del sess["name"]
     return RedirectResponse(index, status_code=303)
 
 
