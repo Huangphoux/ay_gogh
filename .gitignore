@@ -18,3 +18,5 @@ weird_line.txt
 
 .sesskey
 *.db
+*.db-shm
+*.db-wal

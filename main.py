@@ -1,4 +1,4 @@
-from shared import html_header, html_footer
+from shared import html_header, html_footer, db
 from starhtml import *
 
 
@@ -45,7 +45,6 @@ auth_rt.to_app(app)
 
 @rt
 def index():
-
     return (
         html_header(),
         Main(
@@ -58,13 +57,16 @@ def index():
 
 @rt
 def profile(sess):
+
+    tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
+
     return Body(
-        html_header,
+        html_header(sess),
         Main(
             H1(f"Hello, {sess['name']}"),
-            A("Log Out", href="/auth/logout"),
+            Pre(str(tests)),
         ),
-        html_footer,
+        html_footer(),
     )
 
 

@@ -12,6 +12,8 @@ def html_header(sess=None):
             A("Home", href="/"),
         ),
         H1("Ay Gogh!"),
+        sess and P(f"Hello {sess['name']}!"),
+        sess and A("Log Out", href="/auth/logout"),
     )
 
 

@@ -15,31 +15,33 @@ class DatabaseDict:
             )
         }
 
-        self._dbs["app"].execute("""
-                CREATE TABLE IF NOT EXISTS user (
-                    id INTEGER PRIMARY KEY,
-                    name TEXT NOT NULL,
-                    pwd TEXT NOT NULL
-                )
-            """)
+        if not self._dbs["app"].table_names():
+            self._dbs["app"].execute("""
+                    CREATE TABLE IF NOT EXISTS user (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        pwd TEXT NOT NULL
+                    )
+                """)
 
         # https://sqlite.org/autoinc.html
 
     def get(self, name: str = "app") -> Database:
-        if name not in self._dbs:
+        self._dbs[name] = Database(
+            os.path.join(self._db_dir, f"{name}.db"),
+            strict=True,
+        )
+
+        if not self._dbs[name].table_names():
             self.init_user_db(name)
 
         return self._dbs[name]
 
     def close(self, name: str = "app") -> None:
         self._dbs[name].close()
+        del self._dbs[name]
 
     def init_user_db(self, name: str = "app"):
-        self._dbs[name] = Database(
-            os.path.join(self._db_dir, f"{name}.db"),
-            strict=True,
-        )
-
         self._dbs[name].execute("""
                 CREATE TABLE IF NOT EXISTS test (
                     day DATE PRIMARY KEY,
@@ -52,6 +54,7 @@ class DatabaseDict:
                     lv5 INTEGER NOT NULL
                 )
             """)
+
         import random
 
         self._dbs[name].execute(
