@@ -7,6 +7,7 @@
 - Single-Tenant Databases: SQLite
     - Must use raw SQL queries, can't use ORMs, because objects would be tied into only one database connection.
     - How would you define object models for users' databases?
+    - No need to manually close connections due to Python's garbage collection: https://rogerbinns.github.io/apsw/example.html#cleanup
 - Accessibility: Semantic HTML
 - Data-Oriented Programming
 - Data Structure: Queues
