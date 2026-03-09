@@ -8,7 +8,7 @@ dependencies = [
     "argon2-cffi>=25.1.0",
     "passlib>=1.7.4",
     "python-frontmatter>=1.1.0",
-    "starhtml>=0.5.14",
+    "starhtml[debug]>=0.5.19",
 ]
 
 [tool.ruff.lint]

@@ -1,3 +1,4 @@
+from doctest import debug
 from shared import html_header, html_footer, db
 from starhtml import *
 
@@ -35,8 +36,9 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
         Link(rel="stylesheet", href="/simple.min.css"),
         Link(rel="stylesheet", href="/custom.css"),
     ),
-    sess_https_only=False,  # secure
+    sess_https_only=False,  # set secure on cookies
     same_site="strict",
+    debug=True,
 )
 from auth import auth_rt
 
