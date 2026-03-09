@@ -29,7 +29,11 @@ def login_view():
                         required=True,
                         data_attr_type="$is_show ? 'text' : 'password'",
                     ),
-                    Input("Show Password", type="checkbox", data_bind="is_show"),
+                    Input(
+                        "Show Password",
+                        type="checkbox",
+                        data_bind="is_show",
+                    ),
                 ),
                 Button("Login"),
                 Span(f" or "),

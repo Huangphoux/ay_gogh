@@ -1,4 +1,3 @@
-from doctest import debug
 from shared import html_header, html_footer, db
 from starhtml import *
 
@@ -26,6 +25,9 @@ auth_bware = Beforeware(
 )
 
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
+    devtools=True,
+    # devtools.py, devtools_css = (_DEVTOOLS_DIR / "devtools.css").read_text(encoding="utf-8")
+    # mainly my fault for setting the locale to Japanese, setting the encoding to cp932
     title="Ay Gogh!",
     htmlkw={"lang": "en"},
     before=(auth_bware,),
