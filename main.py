@@ -6,14 +6,14 @@ def not_found(req, exc):
     return H1("There's no such page like that!")
 
 
-def set_auth(req, sess):
-    auth = req.scope["name"] = sess.get("name", None)
-    if not auth:
+def set_name(req, sess):
+    name = req.scope["name"] = sess.get("name", None)
+    if not name:
         return Redirect("/auth/login")
 
 
 auth_bware = Beforeware(
-    set_auth,
+    set_name,
     skip=[
         r"/favicon\.ico",
         r"/static/.*",
@@ -21,9 +21,10 @@ auth_bware = Beforeware(
         "/",
         "/auth/login",
         "/auth/login_process",
+        "/auth/signup",
+        "/auth/signup_process",
     ],
 )
-
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     devtools=True,
     # devtools.py, devtools_css = (_DEVTOOLS_DIR / "devtools.css").read_text(encoding="utf-8")
@@ -34,10 +35,10 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     exception_handlers={404: not_found},
     middleware=(compression(),),
     static_path="static",
-    hdrs=(  # / in href ARE VERY IMPORTANT, DO NOT DELETE THEM
+    hdrs=(
         Link(rel="stylesheet", href="/simple.min.css"),
         Link(rel="stylesheet", href="/custom.css"),
-    ),
+    ),  # keep / in href, if not, /auth/custom.css
     sess_https_only=False,  # set secure on cookies
     same_site="strict",
     debug=True,
@@ -61,14 +62,14 @@ def index():
 
 @rt
 def profile(sess):
-
     tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
-
     return Body(
         html_header(sess),
         Main(
-            H1(f"Hello, {sess['name']}"),
+            H1("Tests"),
             Pre(str(tests)),
+            Hr(),
+            H1("Read"),
         ),
         html_footer(),
     )

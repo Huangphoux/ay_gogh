@@ -7,70 +7,67 @@ auth_rt: APIRouter = APIRouter("/auth")
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
-def login_view():
+@auth_rt.get("/login")
+def login():
     return Body(
         html_header(),
         Main(
-            H1("Login"),
+            H1("Log In"),
+            P(f"You are about to ", Mark("log in"), "."),
             Form(action=login_process, method="post")(
                 Fieldset(
-                    Label("Username", _for="name"),
+                    Label(B("Username"), _for="name"),
                     Input(
                         id="name",
                         name="name",
                         placeholder="Enter Username",
                         required=True,
+                        maxlength="100",
+                        autofocus=True,
+                        onfocus="let temp=this.value; this.value=''; this.value=temp",
                     ),
-                    Label("Password", _for="name"),
+                    Label(B("Password"), _for="name"),
                     Input(
+                        data_attr_type="$is_show ? 'text' : 'password'",
                         id="pwd",
                         name="pwd",
                         placeholder="Enter Password",
                         required=True,
-                        data_attr_type="$is_show ? 'text' : 'password'",
+                        minlength="8",
+                        maxlength="100",
                     ),
+                    Br(),
                     Input(
-                        "Show Password",
+                        id="show_pwd",
+                        name="show_pwd",
                         type="checkbox",
                         data_bind="is_show",
                     ),
+                    Label("Show Password", _for="show_pwd"),
                 ),
-                Button("Login"),
+                Button("Log In"),
                 Span(f" or "),
-                A("Sign Up", href=login),
+                A("Sign Up", href=signup),
             ),
         ),
         html_footer(),
     )
 
 
-@auth_rt.get("/login")
-def login():
-    return login_view()
-
-
 @auth_rt.post("/login_process")
 def login_process(name: str, pwd: str, sess):
-    global db
-    db_app = db.get()
-
     if not name or not pwd:
-        return Redirect("/auth/login")
+        return Redirect(login)
 
-    rows = list(db_app.query("SELECT name, pwd FROM user WHERE name=?", (name,)))
+    global db
+    rows = list(db.app.query("SELECT name, pwd FROM user WHERE name=?", (name,)))
 
     if not rows:
-        db_app.execute(
-            "INSERT OR REPLACE INTO user (name, pwd) VALUES (?, ?)",
-            (name, pwd_context.hash(pwd)),
-        )
-        sess["name"] = name
-        db.get(name)
-        return Redirect("/profile")
+        return Redirect(login)
 
     u = rows[0]
     if not pwd_context.verify(pwd, u["pwd"]):
-        return Redirect("/auth/login")
+        return Redirect(login)
 
     sess["name"] = u["name"]
     return Redirect("/profile")
@@ -80,3 +77,68 @@ def login_process(name: str, pwd: str, sess):
 def logout(sess):
     del sess["name"]
     return Redirect("/")
+
+
+@auth_rt.get("/signup")
+def signup():
+    return Body(
+        html_header(),
+        Main(
+            H1("Sign Up"),
+            P(f"You are about to ", Mark("sign up"), "."),
+            Form(action=signup_process, method="post")(
+                Fieldset(
+                    Label(B("Username"), _for="name"),
+                    Input(
+                        id="name",
+                        name="name",
+                        placeholder="Enter Username",
+                        required=True,
+                        maxlength="100",
+                        autofocus=True,
+                        onfocus="let temp=this.value; this.value=''; this.value=temp",
+                    ),
+                    Label(B("Password"), _for="name"),
+                    Input(
+                        data_attr_type="$is_show ? 'text' : 'password'",
+                        id="pwd",
+                        name="pwd",
+                        placeholder="Enter Password",
+                        required=True,
+                        minlength="8",
+                        maxlength="100",
+                    ),
+                    Br(),
+                    Input(
+                        id="show_pwd",
+                        name="show_pwd",
+                        type="checkbox",
+                        data_bind="is_show",
+                    ),
+                    Label("Show Password", _for="show_pwd"),
+                ),
+                Button("Sign Up"),
+            ),
+        ),
+        html_footer(),
+    )
+
+
+@auth_rt.post("/signup_process")
+def signup_process(name: str, pwd: str, sess):
+    if not name or not pwd:
+        return Redirect(login)
+
+    global db
+    rows = list(db.app.query("SELECT 1 FROM user WHERE name=?", (name,)))
+
+    if rows:
+        return Redirect(signup)
+
+    db.app.execute(
+        "INSERT OR REPLACE INTO user (name, pwd) VALUES (?, ?)",
+        (name, pwd_context.hash(pwd)),
+    )
+
+    sess["name"] = name
+    return Redirect("/profile")

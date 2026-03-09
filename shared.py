@@ -9,18 +9,30 @@ relay: Relay[str] = Relay()
 def html_header(sess=None):
     return Header(
         Nav(
+            sess and A("Profile", href="/profile"),  # if … then …
+            sess
+            and A(
+                "Log Out",
+                data_on_click=js("confirm('Are you sure?')").if_(
+                    get("/auth/logout"), ""
+                ),
+            ),
+        )
+        if sess
+        else Nav(
             A("Home", href="/"),
+            A("Log In", href="/auth/login"),
         ),
         H1("Ay Gogh!"),
         sess and P(f"Hello {sess['name']}!"),
-        sess and A("Log Out", href="/auth/logout"),
     )
 
 
 def html_footer():
     return Footer(
         P(
-            "Ay Gogh! was created with ❤️ by  ",
+            A("Ay Gogh!", href="/"),
+            " was created with ❤️ by  ",
             A("huangphoux", href="https://github.com/Huangphoux/"),
             ".",
         )
