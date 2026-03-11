@@ -83,7 +83,7 @@ for form in "abc":
 
         # write rows, attaching the answer from the answer key
         for row_number, row in enumerate(rows, start=1):
-            answer_letter: str = answers.get(row_number, "")
+            answer_letter: str = answers.get(row_number-1, "")
             answer_text: str = (
                 row["abcd".index(answer_letter) + 3] if answer_letter else ""
             )  # index of "a" + 3
