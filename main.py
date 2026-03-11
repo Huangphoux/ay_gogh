@@ -1,6 +1,7 @@
 from shared import html_header, html_footer
 from starhtml import *
 from auth import auth_rt
+from test import test_rt
 
 
 def not_found(req, exc):
@@ -72,17 +73,22 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
 )
 
 auth_rt.to_app(app)
+test_rt.to_app(app)
 
 
 @rt
 def index():
     return (
-        html_header(),
-        Main(
-            P("This page is in construction.", _class="notice"),
-            A("Get started", href="/auth/login", _class="button"),
+        Title(f"Home: Ay Gogh"),
+        Body(
+            A(Strong("Jump to content"), href="#main-content", cls="skip-link"),
+            html_header(),
+            Main(id="main-content")(
+                P("This page is in construction.", _class="notice"),
+                A("Get started", href="/auth/login", _class="button"),
+            ),
+            html_footer(),
         ),
-        html_footer(),
     )
 
 

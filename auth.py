@@ -9,50 +9,54 @@ auth_rt: APIRouter = APIRouter("/auth")
 
 @auth_rt.get("/login")
 def login():
-    return Body(
-        html_header(),
-        Main(
-            H1("Log In"),
-            P(f"You are about to ", Mark("log in"), "."),
-            Form(action=login_process, method="post")(
-                Fieldset(
-                    Label(B("Username"), _for="name"),
-                    Input(
-                        id="name",
-                        name="name",
-                        placeholder="Enter Username",
-                        required=True,
-                        maxlength="100",
-                        autofocus=True,
-                        onfocus="let temp=this.value; this.value=''; this.value=temp",
-                        value="asd",  ### DEBUG
+    return (
+        Title(f"Login: Ay Gogh"),
+        Body(
+            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
+            html_header(),
+            Main(
+                H1("Log In", id="main-heading"),
+                P(f"You are about to ", Mark("log in"), "."),
+                Form(action=login_process, method="post")(
+                    Fieldset(
+                        Label(B("Username"), _for="name"),
+                        Input(
+                            id="name",
+                            name="name",
+                            placeholder="Enter Username",
+                            required=True,
+                            maxlength="100",
+                            autofocus=True,
+                            onfocus="let temp=this.value; this.value=''; this.value=temp",
+                            value="asd",  ### DEBUG
+                        ),
+                        Label(B("Password"), _for="name"),
+                        Input(
+                            data_attr_type="$is_show ? 'text' : 'password'",
+                            id="pwd",
+                            name="pwd",
+                            placeholder="Enter Password",
+                            required=True,
+                            minlength="8",
+                            maxlength="100",
+                            value="asd",  ### DEBUG
+                        ),
+                        Br(),
+                        Input(
+                            id="show_pwd",
+                            name="show_pwd",
+                            type="checkbox",
+                            data_bind="is_show",
+                        ),
+                        Label("Show Password", _for="show_pwd"),
                     ),
-                    Label(B("Password"), _for="name"),
-                    Input(
-                        data_attr_type="$is_show ? 'text' : 'password'",
-                        id="pwd",
-                        name="pwd",
-                        placeholder="Enter Password",
-                        required=True,
-                        minlength="8",
-                        maxlength="100",
-                        value="asd",  ### DEBUG
-                    ),
-                    Br(),
-                    Input(
-                        id="show_pwd",
-                        name="show_pwd",
-                        type="checkbox",
-                        data_bind="is_show",
-                    ),
-                    Label("Show Password", _for="show_pwd"),
+                    Button("Log In"),
+                    Span(f" or "),
+                    A("Sign Up", href=signup),
                 ),
-                Button("Log In"),
-                Span(f" or "),
-                A("Sign Up", href=signup),
             ),
+            html_footer(),
         ),
-        html_footer(),
     )
 
 
@@ -83,46 +87,50 @@ def logout(sess):
 
 @auth_rt.get("/signup")
 def signup():
-    return Body(
-        html_header(),
-        Main(
-            H1("Sign Up"),
-            P(f"You are about to ", Mark("sign up"), "."),
-            Form(action=signup_process, method="post")(
-                Fieldset(
-                    Label(B("Username"), _for="name"),
-                    Input(
-                        id="name",
-                        name="name",
-                        placeholder="Enter Username",
-                        required=True,
-                        maxlength="100",
-                        autofocus=True,
-                        onfocus="let temp=this.value; this.value=''; this.value=temp",
+    return (
+        Title(f"Signup: Ay Gogh"),
+        Body(
+            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
+            html_header(),
+            Main(
+                H1("Sign Up", id="main-heading"),
+                P(f"You are about to ", Mark("sign up"), "."),
+                Form(action=signup_process, method="post")(
+                    Fieldset(
+                        Label(B("Username"), _for="name"),
+                        Input(
+                            id="name",
+                            name="name",
+                            placeholder="Enter Username",
+                            required=True,
+                            maxlength="100",
+                            autofocus=True,
+                            onfocus="let temp=this.value; this.value=''; this.value=temp",
+                        ),
+                        Label(B("Password"), _for="name"),
+                        Input(
+                            data_attr_type="$is_show ? 'text' : 'password'",
+                            id="pwd",
+                            name="pwd",
+                            placeholder="Enter Password",
+                            required=True,
+                            minlength="8",
+                            maxlength="100",
+                        ),
+                        Br(),
+                        Input(
+                            id="show_pwd",
+                            name="show_pwd",
+                            type="checkbox",
+                            data_bind="is_show",
+                        ),
+                        Label("Show Password", _for="show_pwd"),
                     ),
-                    Label(B("Password"), _for="name"),
-                    Input(
-                        data_attr_type="$is_show ? 'text' : 'password'",
-                        id="pwd",
-                        name="pwd",
-                        placeholder="Enter Password",
-                        required=True,
-                        minlength="8",
-                        maxlength="100",
-                    ),
-                    Br(),
-                    Input(
-                        id="show_pwd",
-                        name="show_pwd",
-                        type="checkbox",
-                        data_bind="is_show",
-                    ),
-                    Label("Show Password", _for="show_pwd"),
+                    Button("Sign Up"),
                 ),
-                Button("Sign Up"),
             ),
+            html_footer(),
         ),
-        html_footer(),
     )
 
 
@@ -154,23 +162,30 @@ def profile(sess):
     return (
         Title(f"Profile: Ay Gogh"),
         Body(
+            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
             html_header(sess),
             Main(
-                H1("Profile"),
+                H1("Profile", id="main-heading"),
                 P(_class="notice")(
                     f"Hello ",
                     Mark(sess["name"]),
                     "! Here's where you can access the system's features.",
                 ),
-                H2("Tests"),
-                Figure(
-                    Table(
-                        Thead(Tr(Th(h.title()) for h in header)),
-                        Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),
+                Section(
+                    H2("Tests"),
+                    Figure(
+                        Table(
+                            Thead(Tr(Th(h.title()) for h in header)),
+                            Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),
+                        ),
+                    ),
+                    A(
+                        "Take a Test!",
+                        href="/test",
+                        _class="button",
+                        style="margin-top:2rem",
                     ),
                 ),
-                A(_class="button")("Take a Test!", href="/test"),
-                Hr(),
                 H2("Read"),
             ),
             html_footer(sess),
