@@ -2,9 +2,9 @@ from starhtml import *
 from shared import db, html_header, html_footer
 from passlib.context import CryptContext
 
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 auth_rt: APIRouter = APIRouter("/auth")
-pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 @auth_rt.get("/login")
@@ -25,6 +25,7 @@ def login():
                         maxlength="100",
                         autofocus=True,
                         onfocus="let temp=this.value; this.value=''; this.value=temp",
+                        value="asd",  ### DEBUG
                     ),
                     Label(B("Password"), _for="name"),
                     Input(
@@ -35,6 +36,7 @@ def login():
                         required=True,
                         minlength="8",
                         maxlength="100",
+                        value="asd",  ### DEBUG
                     ),
                     Br(),
                     Input(
@@ -70,7 +72,7 @@ def login_process(name: str, pwd: str, sess):
         return Redirect(login)
 
     sess["name"] = u["name"]
-    return Redirect("/profile")
+    return Redirect(profile)
 
 
 @auth_rt.get("/logout")
@@ -141,4 +143,36 @@ def signup_process(name: str, pwd: str, sess):
     )
 
     sess["name"] = name
-    return Redirect("/profile")
+    return Redirect(profile)
+
+
+@auth_rt.get("/profile")
+def profile(sess):
+    tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
+    header = ["day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
+
+    return (
+        Title(f"Profile: Ay Gogh"),
+        Body(
+            html_header(sess),
+            Main(
+                H1("Profile"),
+                P(_class="notice")(
+                    f"Hello ",
+                    Mark(sess["name"]),
+                    "! Here's where you can access the system's features.",
+                ),
+                H2("Tests"),
+                Figure(
+                    Table(
+                        Thead(Tr(Th(h.title()) for h in header)),
+                        Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),
+                    ),
+                ),
+                A(_class="button")("Take a Test!", href="/test"),
+                Hr(),
+                H2("Read"),
+            ),
+            html_footer(sess),
+        ),
+    )

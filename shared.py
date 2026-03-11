@@ -7,8 +7,15 @@ relay: Relay[str] = Relay()
 
 
 def html_header(sess=None):
-    return Header(
-        Nav(
+    nav: starhtml.tags.FT
+
+    if not sess:
+        nav = Nav(
+            A("Home", href="/"),
+            A("Log In", href="/auth/login"),
+        )
+    else:
+        nav = Nav(
             sess and A("Profile", href="/profile"),  # if … then …
             sess
             and A(
@@ -18,22 +25,34 @@ def html_header(sess=None):
                 ),
             ),
         )
-        if sess
-        else Nav(
-            A("Home", href="/"),
-            A("Log In", href="/auth/login"),
-        ),
+
+    return Header(
+        # nav,
         H1("Ay Gogh!"),
-        sess and P(f"Hello {sess['name']}!"),
     )
 
 
-def html_footer():
+def html_footer(sess=None):
     return Footer(
+        sess
+        and (
+            A(
+                "Log Out",
+                data_on_click=js("confirm('Are you sure?')").if_(
+                    get("/auth/logout"), ""
+                ),
+            ),
+            Br(),
+        ),
         P(
-            A("Ay Gogh!", href="/"),
-            " was created with ❤️ by  ",
+            A(
+                "Ay Gogh!",
+                href="https://github.com/Huangphoux/ay_gogh",
+                target="_blank",
+                rel="noreferrer",
+            ),
+            " was created by the ❤️ of  ",
             A("huangphoux", href="https://github.com/Huangphoux/"),
             ".",
-        )
+        ),
     )

@@ -1,4 +1,7 @@
 from apswutils import Database
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 class DatabaseDict:
@@ -16,6 +19,13 @@ class DatabaseDict:
                     pwd TEXT NOT NULL
                 )
         """)
+
+        ### DEBUG
+        self.app.execute(
+            "INSERT OR REPLACE INTO user (name, pwd) VALUES (?, ?)",
+            ("asd", pwd_context.hash("asd")),
+        )
+        ### DEBUG
 
     def get(self, name: str = "app") -> Database:  # db.app, db.name
         if name not in self._user:
@@ -35,6 +45,7 @@ class DatabaseDict:
                         )
                 """)
 
+                ### DEBUG
                 import random
 
                 self._user[name].execute(
@@ -52,6 +63,7 @@ class DatabaseDict:
                         random.randint(0, 20),  # lv5
                     ),
                 )
+                ### DEBUG
 
         return self._user[name]
 

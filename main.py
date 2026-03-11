@@ -1,4 +1,4 @@
-from shared import html_header, html_footer, db
+from shared import html_header, html_footer
 from starhtml import *
 from auth import auth_rt
 
@@ -52,7 +52,7 @@ auth_bware = Beforeware(
     ],
 )
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
-    devtools=True,
+    devtools=False,
     # devtools.py, devtools_css = (_DEVTOOLS_DIR / "devtools.css").read_text(encoding="utf-8")
     # mainly my fault for setting the locale to Japanese, setting the encoding to cp932
     title="Ay Gogh!",
@@ -62,11 +62,13 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     middleware=(compression(),),
     static_path="static",
     hdrs=(
+        Link(rel="icon", href="https://fav.farm/🔥"),  # favicon
         Link(rel="stylesheet", href="/simple.min.css"),
         Link(rel="stylesheet", href="/custom.css"),
     ),  # keep / in href, if not, /auth/custom.css
     sess_https_only=False,  # set secure on cookies
     same_site="strict",
+    debug=False,
 )
 
 auth_rt.to_app(app)
@@ -79,21 +81,6 @@ def index():
         Main(
             P("This page is in construction.", _class="notice"),
             A("Get started", href="/auth/login", _class="button"),
-        ),
-        html_footer(),
-    )
-
-
-@rt
-def profile(sess):
-    tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
-    return Body(
-        html_header(sess),
-        Main(
-            H1("Tests"),
-            Pre(str(tests)),
-            Hr(),
-            H1("Read"),
         ),
         html_footer(),
     )
