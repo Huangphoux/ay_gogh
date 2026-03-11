@@ -1,9 +1,35 @@
 from shared import html_header, html_footer, db
 from starhtml import *
+from auth import auth_rt
 
 
 def not_found(req, exc):
-    return H1("There's no such page like that!")
+    import random
+
+    return Body(
+        html_header(),
+        Main(
+            H1(
+                random.choice(
+                    (
+                        "Hmm… I don't think I have that page!",
+                        "I'm pretty sure I don't have that page!",
+                        f"I don't think I have that in my system.",
+                    )
+                )
+            ),
+            Img(
+                title="An image of a cat provided by CATAAS, Cat-as-a-Service.",
+                style="display:grid;place-self:center",
+                alt="An image of a cat provided by CATAAS, Cat-as-a-Service.",
+                src="https://cataas.com/cat?type=square",
+            ),
+            Figcaption(
+                "In the meantime, here's a random image of a cat provided by CATAAS, Cat-as-a-Service."
+            ),
+        ),
+        html_footer(),
+    )
 
 
 def set_name(req, sess):
@@ -41,9 +67,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     ),  # keep / in href, if not, /auth/custom.css
     sess_https_only=False,  # set secure on cookies
     same_site="strict",
-    debug=True,
 )
-from auth import auth_rt
 
 auth_rt.to_app(app)
 
