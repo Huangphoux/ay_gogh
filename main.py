@@ -1,3 +1,4 @@
+from fastcore.all import timed_cache
 from shared import html_header, html_footer
 from starhtml import *
 from auth import auth_rt
@@ -60,14 +61,14 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     htmlkw={"lang": "en"},
     before=(auth_bware,),
     exception_handlers={404: not_found},
-    middleware=(compression(),),
+    middleware=(compression(gzip=False, zstd=False, brotli_quality=11),),
     static_path="static",
-    hdrs=(
+    hdrs=(  # keep / in href, if not, /auth/custom.css
         Link(rel="icon", href="https://fav.farm/🔥"),  # favicon
         Link(rel="stylesheet", href="/simple.min.css"),
         Link(rel="stylesheet", href="/custom.css"),
-    ),  # keep / in href, if not, /auth/custom.css
-    sess_https_only=False,  # set secure on cookies
+    ),
+    sess_https_only=False,  # set Secure flag on cookies
     same_site="strict",
     debug=False,
 )

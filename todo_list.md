@@ -1,4 +1,11 @@
-# Auth
+# DB
+- Migration
+    - https://rogerbinns.github.io/apsw/tips.html#managing-and-updating-your-schema
+    - https://stackoverflow.com/questions/989558/best-practices-for-in-app-database-migration-for-sqlite
+    - fastmigrate
+    - apswutils
+- Encryption: at rest
+- Litestream
 
 # Test
 

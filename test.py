@@ -1,5 +1,6 @@
 from starhtml import *
 from shared import db, html_header, html_footer
+from starhtml.plugins import markdown
 
 test_rt: APIRouter = APIRouter("/test")
 
