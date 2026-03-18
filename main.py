@@ -1,8 +1,8 @@
-from fastcore.all import timed_cache
 from shared import html_header, html_footer
 from starhtml import *
 from auth import auth_rt
 from test import test_rt
+from starhtml.plugins import markdown
 
 
 def not_found(req, exc):
@@ -27,7 +27,14 @@ def not_found(req, exc):
                 src="https://cataas.com/cat?type=square",
             ),
             Figcaption(
-                "In the meantime, here's a random image of a cat provided by CATAAS, Cat-as-a-Service."
+                "In the meantime, here's a random image of a cat provided by ",
+                A(
+                    "CATAAS",
+                    href="https://cataas.com/",
+                    target="_blank",
+                    rel="noreferrer",
+                ),
+                ", Cat-as-a-Service.",
             ),
         ),
         html_footer(),
@@ -73,10 +80,15 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     debug=False,
 )
 
+# Add routes to app
 auth_rt.to_app(app)
 test_rt.to_app(app)
 
+# Register
+app.register(markdown)
 
+
+# Page for guests
 @rt
 def index():
     return (

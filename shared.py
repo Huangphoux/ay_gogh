@@ -16,7 +16,7 @@ def html_header(sess=None):
         )
     else:
         nav = Nav(
-            sess and A("Profile", href="/profile"),  # if … then …
+            sess and A("Profile", href="/auth/profile"),  # if … then …
             sess
             and A(
                 "Log Out",
@@ -27,7 +27,7 @@ def html_header(sess=None):
         )
 
     return Header(
-        # nav,
+        nav,
         H1("Ay Gogh!"),
     )
 

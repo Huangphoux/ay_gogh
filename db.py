@@ -1,5 +1,6 @@
 from apswutils import Database
 from passlib.context import CryptContext
+import csv
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -27,45 +28,67 @@ class DatabaseDict:
         )
         ### DEBUG
 
+        for form in "abc":
+            self.app.execute(f"""
+                    CREATE TABLE IF NOT EXISTS form_{form} (
+                        number INT NOT NULL PRIMARY KEY,
+                        lemma TEXT NOT NULL,
+                        question TEXT NOT NULL,
+                        a TEXT NOT NULL,
+                        b TEXT NOT NULL,
+                        c TEXT NOT NULL,
+                        d TEXT NOT NULL,
+                        answer TEXT NOT NULL
+                    )
+            """)
+
+            with open(f"test/ngslt_{form}.csv", "r") as f:
+                dr = csv.DictReader(f, delimiter="\t")
+                to_db = [
+                    (
+                        int(i["number"]),
+                        i["lemma"],
+                        i["question"],
+                        i["a"],
+                        i["b"],
+                        i["c"],
+                        i["d"],
+                        i["answer"],
+                    )
+                    for i in dr
+                ]
+
+            for row in to_db:
+                self.app.execute(
+                    f"""
+                        INSERT OR REPLACE INTO form_{form} (number, lemma, question, a, b, c, d, answer)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    row,
+                )
+
     def get(self, name: str = "app") -> Database:  # db.app, db.name
         if name not in self._user:
             self._user[name] = Database(f"db/{name}.db", strict=True)
 
-            if not self._user[name].table_names():
-                self._user[name].execute("""
-                        CREATE TABLE IF NOT EXISTS test (
-                            day DATE PRIMARY KEY,
-                            form TEXT NOT NULL,
-                            progress INTEGER NOT NULL,
-                            lv1 INTEGER NOT NULL,
-                            lv2 INTEGER NOT NULL,
-                            lv3 INTEGER NOT NULL,
-                            lv4 INTEGER NOT NULL,
-                            lv5 INTEGER NOT NULL
-                        )
-                """)
-
-                ### DEBUG
-                import random
-
-                self._user[name].execute(
-                    """
-                        INSERT OR REPLACE INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
-                        VALUES (CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)
-                        """,
-                    (
-                        random.choice(("abc")),  # form
-                        random.randint(0, 100),  # progress
-                        random.randint(0, 20),  # lv1
-                        random.randint(0, 20),  # lv2
-                        random.randint(0, 20),  # lv3
-                        random.randint(0, 20),  # lv4
-                        random.randint(0, 20),  # lv5
-                    ),
-                )
-                ### DEBUG
+            self._user[name].execute("""
+                    CREATE TABLE IF NOT EXISTS test (
+                        day DATE PRIMARY KEY,
+                        form TEXT NOT NULL,
+                        progress INTEGER NOT NULL,
+                        lv1 INTEGER NOT NULL,
+                        lv2 INTEGER NOT NULL,
+                        lv3 INTEGER NOT NULL,
+                        lv4 INTEGER NOT NULL,
+                        lv5 INTEGER NOT NULL
+                    )
+            """)
 
         return self._user[name]
+
+    def close(self, name: str = "app"):
+        self._user[name].close()
+        self._user.pop(name)
 
 
 # no need to manually close connections

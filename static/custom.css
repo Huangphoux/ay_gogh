@@ -9,9 +9,15 @@
 .skip-link:focus-visible {
     /* on keyboard focus */
     top: 0; /* bring into view */
-    border: white 0.25rem solid;
+    border: var(--accent) 0.25rem solid;
 }
 
 @view-transition {
     navigation: auto;
+}
+
+legend {
+    background-color: var(--text);
+    color: var(--bg);
+    padding: 3px 6px;
 }

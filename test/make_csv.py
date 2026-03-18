@@ -55,9 +55,9 @@ for form in "abc":
                 # bold the target word
                 for i, word in enumerate(question_splited := question.split()):
                     if SequenceMatcher(a=lemma, b=word).ratio() > 0.7:
-                        question_splited[i] = f"*{word}*"
+                        question_splited[i] = f"**{word}**"
                         question_splited[i] = re.sub(
-                            r"([?.!,])\*", r"*\1", question_splited[i]
+                            r"([?.!,])\*\*", r"**\1", question_splited[i]
                         )
 
                 question = " ".join(question_splited)
@@ -83,7 +83,7 @@ for form in "abc":
 
         # write rows, attaching the answer from the answer key
         for row_number, row in enumerate(rows, start=1):
-            answer_letter: str = answers.get(row_number-1, "")
+            answer_letter: str = answers.get(row_number - 1, "")
             answer_text: str = (
                 row["abcd".index(answer_letter) + 3] if answer_letter else ""
             )  # index of "a" + 3

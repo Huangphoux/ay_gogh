@@ -81,6 +81,9 @@ def login_process(name: str, pwd: str, sess):
 
 @auth_rt.get("/logout")
 def logout(sess):
+    global db
+    db.close(sess["name"])
+
     del sess["name"]
     return Redirect("/")
 
@@ -156,9 +159,6 @@ def signup_process(name: str, pwd: str, sess):
 
 @auth_rt.get("/profile")
 def profile(sess):
-    tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
-    header = ["day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
-
     return (
         Title(f"Profile: Ay Gogh"),
         Body(
@@ -172,19 +172,7 @@ def profile(sess):
                     "! Here's where you can access the system's features.",
                 ),
                 Section(
-                    H2("Tests"),
-                    Figure(
-                        Table(
-                            Thead(Tr(Th(h.title()) for h in header)),
-                            Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),
-                        ),
-                    ),
-                    A(
-                        "Take a Test!",
-                        href="/test",
-                        _class="button",
-                        style="margin-top:2rem",
-                    ),
+                    H2(A("Test", href="/test")),
                 ),
                 H2("Read"),
             ),
