@@ -1,6 +1,7 @@
 from starhtml import *
 from shared import db, html_header, html_footer
 from math import ceil
+from random import choice
 
 test_rt: APIRouter = APIRouter("/test")
 header = ["day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
@@ -9,6 +10,16 @@ header = ["day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
 @test_rt.get("/")
 def test(sess):
     tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
+
+    try:
+        last_test = list(
+            db.get(sess["name"]).query(
+                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
+            )
+        )[0]
+    except IndexError:
+        return Redirect("/auth/profile")
+
     return (
         Title(f"Test: Ay Gogh"),
         Body(
@@ -23,7 +34,7 @@ def test(sess):
                     ),
                 )
                 if tests
-                else P("You haven't taken any tests yet!"),
+                else None,
                 A("Take a Test", _class="button", href=intro),
             ),
             html_footer(sess),
@@ -33,17 +44,13 @@ def test(sess):
 
 @test_rt.get("/intro")
 def intro(sess):
-    # last_form = (
-    #     db.get(sess["name"])
-    #     .execute("SELECT form FROM test WHERE day = (SELECT MAX(day) FROM test)")
-    #     .get
-    # )
     db.get(sess["name"]).execute(
         """
             INSERT OR REPLACE INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
             VALUES (CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)
         """,
-        ("a", 0, 0, 0, 0, 0, 0),
+        # ("a", 0, 0, 0, 0, 0, 0),
+        (choice("abc"), 97, 0, 20, 0, 0, 0),  ### DEBUG
     )
     return (
         Title(f"Test, Intro: Ay Gogh"),
@@ -54,7 +61,7 @@ def intro(sess):
                 H1("Intro", id="main-heading"),
                 P("This is a test of basic vocabulary knowledge."),
                 P(
-                    "Each test item has a target word in **bold** font followed by an example sentence which uses this target word. Below the example sentence are four answer choices. ",
+                    "Each test item has a target word in **bold** font followed by an example sentence which uses this target word. Below the example sentence are four answer choices.",
                     data_markdown=True,
                 ),
                 Ul(
@@ -77,16 +84,25 @@ def intro(sess):
 
 @test_rt.get("/progress")
 def progress(sess):
-    last_test = list(
-        db.get(sess["name"]).query(
-            "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
-        )
-    )[0]
+    try:
+        last_test = list(
+            db.get(sess["name"]).query(
+                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
+            )
+        )[0]
+    except IndexError:
+        return Redirect("/auth/profile")
 
     last_num = last_test["progress"]
-    next_q = list(db.app.query(f"SELECT * FROM form_a WHERE number = {last_num + 1}"))[
-        0
-    ]
+
+    if last_num == 100:
+        return Redirect(result)
+
+    next_q = list(
+        db.app.query(
+            f"SELECT * FROM form_{last_test['form']} WHERE number = {last_num + 1}"
+        )
+    )[0]
 
     return (
         Title(f"Test, Progress {last_num + 1}/100: Ay Gogh"),
@@ -136,19 +152,74 @@ def progress_process(choice: str, sess):
     )[0]
 
     last_num = last_test["progress"]
-    
+
     next_q = list(
-        db.app.query(f"SELECT answer FROM form_a WHERE number = {last_num + 1}")
+        db.app.query(
+            f"SELECT answer FROM form_{last_test['form']} WHERE number = {last_num + 1}"
+        )
     )[0]
 
     lv_num = ceil((last_num + 1) / 20)
-    
-    result = 1 if choice == next_q["answer"] else 0
+
+    lvs = {"lv" + lv: last_test["lv" + lv] for lv in "12345"}
+
+    lvs[f"lv{lv_num}"] += 1 if choice == next_q["answer"] else 0
 
     db.get(sess["name"]).execute(
-        f"""
-            INSERT OR REPLACE INTO test (day, progress, lv{lv_num})
-            VALUES (CURRENT_DATE, ?, ?)
+        """
+            INSERT OR REPLACE INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """,
-        (last_num + 1, last_test[f"lv{lv_num}"] + result),
+        (
+            last_test["day"],
+            last_test["form"],
+            last_num + 1,
+            lvs["lv1"],
+            lvs["lv2"],
+            lvs["lv3"],
+            lvs["lv4"],
+            lvs["lv5"],
+        ),
+    )
+
+    return Redirect(progress)
+
+
+@test_rt.get("/result")
+def result(sess):
+    try:
+        last_test = list(
+            db.get(sess["name"]).query(
+                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
+            )
+        )[0]
+    except IndexError:
+        return Redirect("/auth/profile")
+
+    return (
+        Title(f"Test, Result: Ay Gogh"),
+        Body(
+            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
+            html_header(sess),
+            Main(
+                H1("Result", id="main-heading"),
+                Ul(
+                    *(
+                        Li(
+                            f"Level {num}: {last_test[f'lv{num}'] / 20:.0%}",
+                            style="color:red; font-weight: bold; font-size: 2rem"
+                            if last_test[f"lv{num}"] / 20 < 0.8
+                            else None,
+                        )
+                        for num in "12345"
+                    ),
+                ),
+                P(
+                    Span(style="color:red; font-weight: bold")("Red-highlighted"),
+                    ": score is below 80%. Target your study around these.",
+                ),
+                A("Return", href="/auth/profile", _class="button"),
+            ),
+            html_footer(sess),
+        ),
     )

@@ -159,6 +159,15 @@ def signup_process(name: str, pwd: str, sess):
 
 @auth_rt.get("/profile")
 def profile(sess):
+    try:
+        last_test = list(
+            db.get(sess["name"]).query(
+                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
+            )
+        )[0]
+    except IndexError:
+        last_test = None
+
     return (
         Title(f"Profile: Ay Gogh"),
         Body(
@@ -172,7 +181,24 @@ def profile(sess):
                     "! Here's where you can access the system's features.",
                 ),
                 Section(
-                    H2(A("Test", href="/test")),
+                    H2("Test"),
+                    Details(
+                        Summary("Your latest test"),
+                        Ul(
+                            *(
+                                Li(
+                                    f"Level {num}: {last_test[f'lv{num}'] / 20:.0%}",
+                                    style="color:red; font-weight: bold; font-size: 2rem"
+                                    if last_test[f"lv{num}"] / 20 < 0.8
+                                    else None,
+                                )
+                                for num in "12345"
+                            ),
+                        ),
+                    )
+                    if last_test
+                    else None,
+                    A("Browse", href="/test", _class="button"),
                 ),
                 H2("Read"),
             ),
