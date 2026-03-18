@@ -11,21 +11,13 @@ header = ["day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
 def test(sess):
     tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
 
-    try:
-        last_test = list(
-            db.get(sess["name"]).query(
-                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
-            )
-        )[0]
-    except IndexError:
-        return Redirect("/auth/profile")
-
     return (
         Title(f"Test: Ay Gogh"),
         Body(
             A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
             html_header(sess),
             Main(
+                A("< Profile", href="/auth/profile"),
                 H1("Test", id="main-heading"),
                 Figure(
                     Table(
@@ -35,7 +27,10 @@ def test(sess):
                 )
                 if tests
                 else None,
-                A("Take a Test", _class="button", href=intro),
+                P(A("Take a test", _class="button", href=intro)),
+                P(
+                    "※ You may not take a new test if it hasn't been 2 months since your last test."
+                ),
             ),
             html_footer(sess),
         ),
@@ -44,13 +39,26 @@ def test(sess):
 
 @test_rt.get("/intro")
 def intro(sess):
+    last_date = list(
+        db.get(sess["name"]).query("""
+            SELECT progress, julianday('now') - julianday(day) AS diff
+            FROM test WHERE day = (SELECT MAX(day) FROM test)
+        """)
+    )
+
+    if last_date:
+        if last_date[0]["progress"] < 100:  # last test is not finished
+            return Redirect(progress)
+        if last_date[0]["diff"] < 60:  # two months hasn't passed
+            return Redirect(test)
+
     db.get(sess["name"]).execute(
         """
             INSERT OR REPLACE INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
             VALUES (CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)
         """,
         # ("a", 0, 0, 0, 0, 0, 0),
-        (choice("abc"), 97, 0, 20, 0, 0, 0),  ### DEBUG
+        (choice("abc"), 91, 0, 10, 20, 0, 0),  ### DEBUG
     )
     return (
         Title(f"Test, Intro: Ay Gogh"),
@@ -84,6 +92,19 @@ def intro(sess):
 
 @test_rt.get("/progress")
 def progress(sess):
+    last_date = list(
+        db.get(sess["name"]).query("""
+            SELECT progress, julianday('now') - julianday(day) AS diff
+            FROM test WHERE day = (SELECT MAX(day) FROM test)
+        """)
+    )
+
+    if last_date and last_date[0]["progress"] == 100:
+        if last_date[0]["diff"] < 60:
+            return Redirect(result)
+        else:
+            return Redirect(intro)
+        
     try:
         last_test = list(
             db.get(sess["name"]).query(
@@ -94,9 +115,6 @@ def progress(sess):
         return Redirect("/auth/profile")
 
     last_num = last_test["progress"]
-
-    if last_num == 100:
-        return Redirect(result)
 
     next_q = list(
         db.app.query(
@@ -114,8 +132,9 @@ def progress(sess):
                 Form(action=progress_process, method="post")(
                     Fieldset(
                         Legend("Select the meaning of the bolded words"),
-                        P(data_markdown=True)(
-                            f"**{next_q['lemma']}**: {next_q['question']}",
+                        P(
+                            Strong(style="font-size:3rem")(next_q["lemma"]),
+                            Div(data_markdown=True)(next_q["question"]),
                         ),
                         *[
                             (

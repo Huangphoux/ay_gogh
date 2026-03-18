@@ -27,7 +27,7 @@ def html_header(sess=None):
         )
 
     return Header(
-        nav,
+        # nav,
         H1("Ay Gogh!"),
     )
 
@@ -51,7 +51,7 @@ def html_footer(sess=None):
                 target="_blank",
                 rel="noreferrer",
             ),
-            " was created by the ❤️ of  ",
+            " is created by the ❤️ of  ",
             A("huangphoux", href="https://github.com/Huangphoux/"),
             ".",
         ),

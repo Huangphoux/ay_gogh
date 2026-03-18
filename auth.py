@@ -176,14 +176,14 @@ def profile(sess):
             Main(
                 H1("Profile", id="main-heading"),
                 P(_class="notice")(
-                    f"Hello ",
+                    f"Hi ",
                     Mark(sess["name"]),
                     "! Here's where you can access the system's features.",
                 ),
                 Section(
                     H2("Test"),
                     Details(
-                        Summary("Your latest test"),
+                        Summary("Your last test"),
                         Ul(
                             *(
                                 Li(
@@ -195,9 +195,9 @@ def profile(sess):
                                 for num in "12345"
                             ),
                         ),
-                    )
-                    if last_test
-                    else None,
+                    )  # only show if last test is finished
+                    if last_test and last_test["progress"] == 100
+                    else P("Your last finished test's result will be shown here."),
                     A("Browse", href="/test", _class="button"),
                 ),
                 H2("Read"),
