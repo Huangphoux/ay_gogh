@@ -100,7 +100,7 @@ def signup():
                 P(f"You are about to ", Mark("sign up"), "."),
                 Form(action=signup_process, method="post")(
                     Fieldset(
-                        Label(B("Username"), _for="name"),
+                        Label(B("Username *"), _for="name"),
                         Input(
                             id="name",
                             name="name",
@@ -110,7 +110,7 @@ def signup():
                             autofocus=True,
                             onfocus="let temp=this.value; this.value=''; this.value=temp",
                         ),
-                        Label(B("Password"), _for="name"),
+                        Label(B("Password *"), _for="name"),
                         Input(
                             data_attr_type="$is_show ? 'text' : 'password'",
                             id="pwd",
@@ -145,7 +145,7 @@ def signup_process(name: str, pwd: str, sess):
     global db
     rows = list(db.app.query("SELECT 1 FROM user WHERE name=?", (name,)))
 
-    if rows:
+    if rows: # there's already someone with that name
         return Redirect(signup)
 
     db.app.execute(
@@ -183,7 +183,7 @@ def profile(sess):
                 Section(
                     H2("Test"),
                     Details(
-                        Summary("Your last test"),
+                        Summary("Your latest test"),
                         Ul(
                             *(
                                 Li(
@@ -197,7 +197,7 @@ def profile(sess):
                         ),
                     )  # only show if last test is finished
                     if last_test and last_test["progress"] == 100
-                    else P("Your last finished test's result will be shown here."),
+                    else P("Your latest finished test's result will be shown here."),
                     A("Browse", href="/test", _class="button"),
                 ),
                 H2("Read"),

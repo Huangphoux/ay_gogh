@@ -4,6 +4,8 @@ from math import ceil
 from random import choice
 
 test_rt: APIRouter = APIRouter("/test")
+
+
 header = ["day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
 
 
@@ -28,8 +30,11 @@ def test(sess):
                 if tests
                 else None,
                 P(A("Take a test", _class="button", href=intro)),
-                P(
-                    "※ You may not take a new test if it hasn't been 2 months since your last test."
+                Ul(
+                    Li("You may continue your latest test if hasn't finished yet."),
+                    Li(
+                        "You may not take a new test if it hasn't been 2 months since your latest test."
+                    ),
                 ),
             ),
             html_footer(sess),
@@ -104,7 +109,7 @@ def progress(sess):
             return Redirect(result)
         else:
             return Redirect(intro)
-        
+
     try:
         last_test = list(
             db.get(sess["name"]).query(
@@ -128,12 +133,12 @@ def progress(sess):
             A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
             html_header(sess),
             Main(
-                H1(f"Question {last_num + 1} / 100", id="main-heading"),
+                H1(f"Question {last_num + 1}", id="main-heading"),
                 Form(action=progress_process, method="post")(
                     Fieldset(
                         Legend("Select the meaning of the bolded words"),
                         P(
-                            Strong(style="font-size:3rem")(next_q["lemma"]),
+                            Strong(style="font-size:2rem")(next_q["lemma"]),
                             Div(data_markdown=True)(next_q["question"]),
                         ),
                         *[

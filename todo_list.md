@@ -1,4 +1,5 @@
 # DB
+
 - Migration
     - https://rogerbinns.github.io/apsw/tips.html#managing-and-updating-your-schema
     - https://stackoverflow.com/questions/989558/best-practices-for-in-app-database-migration-for-sqlite
@@ -7,14 +8,23 @@
 - Encryption: at rest
 - Litestream
 
+# Auth
+
+- Đặt điều kiện Validation
+- Validation trên Client
+- Validation trên Server
+- Username → Email
+- Gửi email xác nhận
+- Lấy cái khác làm khoá chính
+- Đổi mật khẩu
+- Đổi email
+
 # Test
 
-- CQRS, Fat Morph, View=F(State), Auto-Sync
-    - Bảng Test, cột: ngày, form, number=0, lv1, lv2, lv3, lv4, lv5
-    - Query từ DB. Check number > 100. Subscribe.
-        - Có: sang URL kết quả, Hiện các lv.
-        - Không: load lemma, câu hỏi, câu trả lời vào HTML. Patch HTML.
-    - Bấm Next: Nhận kết quả. Tính điểm. Sửa DB các cột lv. cột number++. Publish.
+- CQRS: nhánh khác
+- Người dùng mới: Redirect(intro)
+- Bỏ trang Intro, Result
+- Kiểm tra lại luồng
 
 # Read
 

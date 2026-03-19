@@ -21,3 +21,8 @@ legend {
     color: var(--bg);
     padding: 3px 6px;
 }
+
+* {
+    /* Preventing layout shift from scrollbar appearance */
+    scrollbar-gutter: stable;
+}
