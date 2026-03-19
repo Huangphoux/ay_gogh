@@ -16,7 +16,6 @@ def login():
             html_header(),
             Main(
                 H1("Log In", id="main-heading"),
-                P(f"You are about to ", Mark("log in"), "."),
                 Form(action=login_process, method="post")(
                     Fieldset(
                         Label(B("Username"), _for="name"),
@@ -97,7 +96,6 @@ def signup():
             html_header(),
             Main(
                 H1("Sign Up", id="main-heading"),
-                P(f"You are about to ", Mark("sign up"), "."),
                 Form(action=signup_process, method="post")(
                     Fieldset(
                         Label(B("Username *"), _for="name"),

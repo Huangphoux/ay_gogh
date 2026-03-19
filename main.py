@@ -61,6 +61,7 @@ auth_bware = Beforeware(
     ],
 )
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
+    debug=False,
     devtools=False,
     # devtools.py, devtools_css = (_DEVTOOLS_DIR / "devtools.css").read_text(encoding="utf-8")
     # mainly my fault for setting the locale to Japanese, setting the encoding to cp932
@@ -68,7 +69,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     htmlkw={"lang": "en"},
     before=(auth_bware,),
     exception_handlers={404: not_found},
-    middleware=(compression(gzip=False, zstd=False, brotli_quality=11),),
+    middleware=(compression(),),
     static_path="static",
     hdrs=(  # keep / in href, if not, /auth/custom.css
         Link(rel="icon", href="https://fav.farm/🔥"),  # favicon
@@ -77,7 +78,6 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     ),
     sess_https_only=False,  # set Secure flag on cookies
     same_site="strict",
-    debug=False,
 )
 
 # Add routes to app

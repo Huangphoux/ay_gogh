@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, html_header, html_footer
+from shared import db, html_header, html_footer, relay
 from math import ceil
 from random import choice
 
@@ -63,7 +63,7 @@ def intro(sess):
             VALUES (CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)
         """,
         # ("a", 0, 0, 0, 0, 0, 0),
-        (choice("abc"), 91, 0, 10, 20, 0, 0),  ### DEBUG
+        (choice("abc"), 0, 0, 0, 0, 0, 0),  ### DEBUG
     )
     return (
         Title(f"Test, Intro: Ay Gogh"),
@@ -95,8 +95,7 @@ def intro(sess):
     )
 
 
-@test_rt.get("/progress")
-def progress(sess):
+def progress_view(sess):
     last_date = list(
         db.get(sess["name"]).query("""
             SELECT progress, julianday('now') - julianday(day) AS diff
@@ -132,29 +131,43 @@ def progress(sess):
         Body(
             A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
             html_header(sess),
-            Main(
+            Main(data_init=get(cqrs))(
                 H1(f"Question {last_num + 1}", id="main-heading"),
-                Form(action=progress_process, method="post")(
+                Form(
+                    data_on_submit=(
+                        post(progress_process, {"contentType": "form"}),
+                        # ; is for seperation
+                        js("; document.querySelector('form').reset()"),
+                    )
+                )(
                     Fieldset(
-                        Legend("Select the meaning of the bolded words"),
-                        P(
-                            Strong(style="font-size:2rem")(next_q["lemma"]),
-                            Div(data_markdown=True)(next_q["question"]),
+                        Legend("Choose your answer"),
+                        P(style="margin: 0%")(
+                            Strong(next_q["lemma"]),
+                            ": ",
+                            Span(data_markdown=True, style="display: inline-block")(
+                                next_q["question"]
+                            ),
                         ),
-                        *[
-                            (
-                                Input(
-                                    type="radio",
-                                    name="choice",
-                                    value=next_q[answer],
-                                    id=answer,
-                                    required=True,
-                                ),
-                                Label(next_q[answer], _for=answer),
-                                Br(),
-                            )
-                            for answer in "abcd"
-                        ],
+                        Ul(style="list-style-type: none; margin: 0%; padding: 0%")(
+                            *[
+                                Li(
+                                    Input(
+                                        type="radio",
+                                        name="choice",
+                                        value=next_q[answer],
+                                        id=answer,
+                                        required=True,
+                                        autofocus=True,
+                                    ),
+                                    Label(
+                                        next_q[answer],
+                                        _for=answer,
+                                    ),
+                                )
+                                for answer in "abcd"
+                            ],
+                        ),
                     ),
                     Button("Advance"),
                 ),
@@ -164,8 +177,34 @@ def progress(sess):
     )
 
 
+@test_rt.get("/progress")
+def progress(sess):
+    return progress_view(sess)
+
+
+@test_rt.get("/cqrs")
+@sse
+async def cqrs(req, sess):
+    last_date = list(
+        db.get(sess["name"]).query("""
+            SELECT progress, julianday('now') - julianday(day) AS diff
+            FROM test WHERE day = (SELECT MAX(day) FROM test)
+        """)
+    )
+
+    if last_date and last_date[0]["progress"] == 100:
+        if last_date[0]["diff"] < 60:
+            yield Redirect(result)
+        else:
+            yield Redirect(intro)
+
+    async for _ in relay.subscribe(f"test.{sess['name']}.progress"):
+        # replace to reset the form
+        yield elements(progress_view(sess), use_view_transition=True)
+
+
 @test_rt.post("/progress_process")
-def progress_process(choice: str, sess):
+async def progress_process(sess):
     if not choice:
         Redirect(progress)
 
@@ -206,7 +245,7 @@ def progress_process(choice: str, sess):
         ),
     )
 
-    return Redirect(progress)
+    relay.publish(f"test.{sess['name']}.progress", "")
 
 
 @test_rt.get("/result")
