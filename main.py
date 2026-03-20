@@ -1,11 +1,5 @@
 from shared import html_header, html_footer
 from starhtml import *
-from auth import auth_rt
-from test import test_rt
-from starhtml.plugins import markdown
-from brotli_asgi import BrotliMiddleware
-from starlette_cramjam.compression import Compression
-from starlette_cramjam.middleware import CompressionMiddleware
 
 
 def not_found(req, exc):
@@ -64,6 +58,11 @@ auth_bware = Beforeware(
     ],
 )
 
+
+from brotli_asgi import BrotliMiddleware
+from starlette_cramjam.compression import Compression
+from starlette_cramjam.middleware import CompressionMiddleware
+
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     debug=False,
     devtools=False,
@@ -77,7 +76,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
         # compression(brotli_quality=8, zstd_level=8, gzip_level=8),
         Middleware(
             BrotliMiddleware,  # ty:ignore[invalid-argument-type]
-            quality=8
+            quality=8,
         ),
         # Middleware(
         #     CompressionMiddleware,  # ty:ignore[invalid-argument-type]
@@ -100,10 +99,15 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
 )
 
 # Add routes to app
+from auth import auth_rt
+from test import test_rt
+
 auth_rt.to_app(app)
 test_rt.to_app(app)
 
 # Register
+from starhtml.plugins import markdown
+
 app.register(markdown)
 
 
@@ -126,3 +130,9 @@ def index():
 
 if __name__ == "__main__":
     serve(port=1984)
+    
+    # Clean-up after exiting
+    import os, shutil
+
+    os.remove("./.sesskey")
+    shutil.rmtree("__pycache__")
