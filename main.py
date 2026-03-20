@@ -59,7 +59,6 @@ auth_bware = Beforeware(
 )
 
 
-from brotli_asgi import BrotliMiddleware
 from starlette_cramjam.compression import Compression
 from starlette_cramjam.middleware import CompressionMiddleware
 
@@ -73,20 +72,12 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     before=(auth_bware,),
     exception_handlers={404: not_found},
     middleware=(
-        # compression(brotli_quality=8, zstd_level=8, gzip_level=8),
+        # compression(brotli_quality=8, zstd_level=8, gzip_level=8), # doesn't compress stream
         Middleware(
-            BrotliMiddleware,  # ty:ignore[invalid-argument-type]
-            quality=8,
+            CompressionMiddleware,  # ty:ignore[invalid-argument-type]
+            compression=[Compression.br, Compression.zstd, Compression.gzip],
+            compression_level=10,
         ),
-        # Middleware(
-        #     CompressionMiddleware,  # ty:ignore[invalid-argument-type]
-        #     compression=[
-        #         Compression.br,
-        #         Compression.zstd,
-        #         Compression.gzip,
-        #     ],
-        #     compression_level=10,
-        # ),
     ),
     static_path="static",
     hdrs=(  # keep / in href, if not, /auth/custom.css
@@ -130,7 +121,7 @@ def index():
 
 if __name__ == "__main__":
     serve(port=1984)
-    
+
     # Clean-up after exiting
     import os, shutil
 

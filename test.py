@@ -95,7 +95,8 @@ def intro(sess):
     )
 
 
-def progress_view(sess):
+@test_rt.get("/progress")
+def progress(sess):
     last_date = list(
         db.get(sess["name"]).query("""
             SELECT progress, julianday('now') - julianday(day) AS diff
@@ -109,6 +110,10 @@ def progress_view(sess):
         else:
             return Redirect(intro)
 
+    return progress_view(sess)
+
+
+def progress_view(sess):
     try:
         last_test = list(
             db.get(sess["name"]).query(
@@ -175,11 +180,6 @@ def progress_view(sess):
             html_footer(sess),
         ),
     )
-
-
-@test_rt.get("/progress")
-def progress(sess):
-    return progress_view(sess)
 
 
 @test_rt.get("/cqrs")
