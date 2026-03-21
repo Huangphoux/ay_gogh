@@ -17,13 +17,11 @@ def html_header(sess=None):
     else:
         nav = Nav(
             sess and A("Profile", href="/"),  # if … then …
-            
         )
 
     return Header(
         nav,
         H1("Ay Gogh!"),
-        Small("Just read. It's that easy.")
     )
 
 
@@ -42,9 +40,15 @@ def html_footer(sess=None):
                 rel="noreferrer",
             ),
             " is created by the ❤️ of  ",
-            A("huangphoux", href="https://github.com/Huangphoux/"),
+            A(
+                "huangphoux",
+                href="https://github.com/Huangphoux/",
+                target="_blank",
+                rel="noreferrer",
+            ),
             ".",
         ),
+        P("Copyright © Ay Gogh! 2026"),
     )
 
 

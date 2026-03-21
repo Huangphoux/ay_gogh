@@ -34,7 +34,10 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     title="Ay Gogh!",
     htmlkw={"lang": "en"},
     before=(auth_bware,),
-    exception_handlers={404: lambda req, exc: Redirect("/")},
+    exception_handlers={
+        404: lambda req, exc: Redirect("/"),
+        500: lambda req, exc: Redirect("/"),
+    },
     middleware=(
         # compression(brotli_quality=8, zstd_level=8, gzip_level=8), # doesn't compress stream
         Middleware(
@@ -77,9 +80,85 @@ def index(req, sess):
             Body(
                 A(Strong("Jump to content"), href="#main-content", cls="skip-link"),
                 html_header(),
-                Main(id="main-content", _class="gradient-background")(
-                    P("This page is in construction.", _class="notice"),
-                    A("Get started", href="/auth/login", _class="button"),
+                Main(id="main-content")(
+                    Section(
+                        style="display: grid; place-items: center; text-align: center; margin-top: 0"
+                    )(
+                        H1(
+                            "Just Read.",
+                        ),
+                        Small("It's that simple."),
+                        P("Read. Collect. Review. Rinse and repeat."),
+                        A(href="/auth/signup", _class="button")("Sign up"),
+                        Video(style="padding-top: 1rem")(
+                            width="1280", height="720", playsinline=True, controls=True
+                        )(),
+                    ),
+                    Section(
+                        P(style="text-align: center")(
+                            B("Ay Gogh!"),
+                            " is a English learning platform, created to promote the input-driven immersion-based language learning method.",
+                        ),
+                        Section(
+                            Aside(_class="notice")(
+                                "Bite-sized reading materials with the ",
+                                A(
+                                    href="https://archive.org/details/english-by-the-nature-method/",
+                                    target="_blank",
+                                    rel="noreferrer",
+                                )("English by the Nature Method"),
+                            ),
+                            Img(width="400", height="200")(),
+                        ),
+                        Section(
+                            Aside(_class="notice")(
+                                "Supercharge your vocabulary acquisition with the ",
+                                A(
+                                    href="https://www.newgeneralservicelist.com/new-general-service-list",
+                                    target="_blank",
+                                    rel="noreferrer",
+                                )("NGSL Word List"),
+                            ),
+                            Img(width="400", height="200")(),
+                        ),
+                        Section(
+                            Aside(_class="notice")(
+                                "Remember your words forever with the ",
+                                A(
+                                    href="https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler",
+                                    target="_blank",
+                                    rel="noreferrer",
+                                )("FSRS Algorithm"),
+                            ),
+                            Img(width="400", height="200")(),
+                        ),
+                        Section(
+                            Aside(_class="notice")(
+                                "Explore English literature with the ",
+                                A(
+                                    href="https://standardebooks.org/",
+                                    target="_blank",
+                                    rel="noreferrer",
+                                )("Standard Ebooks"),
+                            ),
+                            Img(width="400", height="200")(),
+                        ),
+                        Section(
+                            Blockquote(
+                                P(
+                                    "Oh yeah, Ay Gogh is great. What else can I not say about it?"
+                                ),
+                                P(Cite("– Random guy of the street")),
+                            ),
+                        ),
+                        Section(style="display: grid; place-items: center")(
+                            P(_class="notice")(
+                                "It's time for you to actually sign up now."
+                            ),
+                            P("It's free. Did you know that?"),
+                            A(href="/auth/signup", _class="button")("Sign up"),
+                        ),
+                    ),
                 ),
                 html_footer(),
             ),

@@ -135,6 +135,11 @@ def signup(req, sess):
                         Label("Show Password", _for="show_pwd"),
                     ),
                     Button("Sign Up"),
+                    P(
+                        "Maybe you actually want to ",
+                        A("Log In", href=login),
+                        " instead?",
+                    ),
                 ),
             ),
             html_footer(),
