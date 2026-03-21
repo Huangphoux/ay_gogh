@@ -6,12 +6,10 @@ from random import choice
 test_rt: APIRouter = APIRouter("/test")
 
 
-header = ["day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
-
-
 @test_rt.get("/")
 def test(sess):
     tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
+    header = ["day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
 
     try:
         last_test = list(
@@ -103,7 +101,7 @@ def intro(sess):
             INSERT OR REPLACE INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
             VALUES (CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)
         """,
-        (choice("abc"), 97, 0, 0, 0, 0, 0),
+        (choice("abc"), 97, 0, 0, 0, 0, 0),  # DEBUG
     )
 
     return (
@@ -158,7 +156,7 @@ def progress_view(sess):
             )
         )[0]
     except IndexError:
-        return Redirect("/")
+        return Redirect(test)
 
     last_num = last_test["progress"]
 

@@ -36,6 +36,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     before=(auth_bware,),
     exception_handlers={
         404: lambda req, exc: Redirect("/"),
+        405: lambda req, exc: Redirect("/"),
         500: lambda req, exc: Redirect("/"),
     },
     middleware=(
@@ -80,13 +81,11 @@ def index(req, sess):
             Body(
                 A(Strong("Jump to content"), href="#main-content", cls="skip-link"),
                 html_header(),
-                Main(id="main-content")(
+                Main(
                     Section(
                         style="display: grid; place-items: center; text-align: center; margin-top: 0"
                     )(
-                        H1(
-                            "Just Read.",
-                        ),
+                        H1(id="main-content")("Just Read."),
                         Small("It's that simple."),
                         P("Read. Collect. Review. Rinse and repeat."),
                         A(href="/auth/signup", _class="button")("Sign up"),
