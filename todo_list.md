@@ -10,21 +10,16 @@
 
 # Auth
 
+- Username → Email
+    - Lấy email làm khoá chính
 - Đặt điều kiện Validation
 - Validation trên Client
 - Validation trên Server
-- Username → Email
 - Gửi email xác nhận
-- Lấy cái khác làm khoá chính
 - Đổi mật khẩu
 - Đổi email
 
 # Test
-
-- CQRS: nhánh khác
-- Người dùng mới: Redirect(intro)
-- Bỏ trang Intro, Result
-- Kiểm tra lại luồng
 
 # Read
 

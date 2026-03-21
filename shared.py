@@ -17,13 +17,7 @@ def html_header(sess=None):
     else:
         nav = Nav(
             sess and A("Profile", href="/"),  # if … then …
-            sess
-            and A(
-                "Log Out",
-                data_on_click=js("confirm('Are you sure?')").if_(
-                    get("/auth/logout"), ""
-                ),
-            ),
+            
         )
 
     return Header(
@@ -35,6 +29,11 @@ def html_header(sess=None):
 
 def html_footer(sess=None):
     return Footer(
+        sess
+        and A(
+            "Log Out",
+            data_on_click=js("confirm('Are you sure?')").if_(get("/auth/logout"), ""),
+        ),
         P(
             A(
                 "Ay Gogh!",

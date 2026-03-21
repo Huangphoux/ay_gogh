@@ -65,6 +65,8 @@ from starhtml.plugins import markdown
 
 app.register(markdown)
 
+from test import is_last_finished
+
 
 # Page for guests
 @rt
@@ -75,7 +77,7 @@ def index(req, sess):
             Body(
                 A(Strong("Jump to content"), href="#main-content", cls="skip-link"),
                 html_header(),
-                Main(id="main-content")(
+                Main(id="main-content", _class="gradient-background")(
                     P("This page is in construction.", _class="notice"),
                     A("Get started", href="/auth/login", _class="button"),
                 ),
@@ -92,6 +94,11 @@ def index(req, sess):
                     H1(id="main-heading")(f"{sess['name']}'s profile"),
                     Section(
                         H2(A(href="/test")("Test")),
+                        P(_class="notice")(
+                            "As a new user, you should take a test to measure your core vocabulary knowledge."
+                        )
+                        if is_last_finished(sess) is None
+                        else None,
                     ),
                     Section(
                         H2("Read"),
