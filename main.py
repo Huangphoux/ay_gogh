@@ -3,38 +3,39 @@ from starhtml import *
 
 
 def not_found(req, exc):
-    import random
-
-    return Body(
-        html_header(),
-        Main(
-            H1(
-                random.choice(
-                    (
-                        "Hmm… I don't think I have that page!",
-                        "I'm pretty sure I don't have that page!",
-                        f"I don't think I have that in my system.",
-                    )
-                )
-            ),
-            Img(
-                title="An image of a cat provided by CATAAS, Cat-as-a-Service.",
-                style="display:grid;place-self:center",
-                alt="An image of a cat provided by CATAAS, Cat-as-a-Service.",
-                src="https://cataas.com/cat?type=square",
-            ),
-            Figcaption(
-                "In the meantime, here's a random image of a cat provided by ",
-                A(
-                    "CATAAS",
-                    href="https://cataas.com/",
-                    target="_blank",
-                    rel="noreferrer",
+    return Redirect("/auth/profile")
+    
+    return (
+        Title(f"Not Found: Ay Gogh"),
+        Body(
+            A(Strong("Jump to content"), href="#main-content", cls="skip-link"),
+            html_header(),
+            Main(id="main-content")(
+                H1(
+                    "We cannot find that page.",
                 ),
-                ", Cat-as-a-Service.",
+                P("Alas, we do not have that page in our system."),
+                Img(
+                    title="An image of cats provided by CATAAS, Cat-as-a-Service.",
+                    style="display:grid; place-self:center",
+                    alt="An image of a cat provided by CATAAS, Cat-as-a-Service.",
+                    src="https://cataas.com/cat/says/sowwy?&type=square",
+                    width="200",
+                    height="200",
+                ),
+                Figcaption(
+                    "In the meantime, here's a random image of cats provided by ",
+                    A(
+                        "CATAAS",
+                        href="https://cataas.com/",
+                        target="_blank",
+                        rel="noreferrer",
+                    ),
+                    ", Cat-as-a-Service.",
+                ),
             ),
+            html_footer(),
         ),
-        html_footer(),
     )
 
 

@@ -80,8 +80,9 @@ def login_process(name: str, pwd: str, sess):
 
 @auth_rt.get("/logout")
 def logout(sess):
-    global db
-    db.close(sess["name"])
+    # DEBUG
+    # global db
+    # db.close(sess["name"])
 
     del sess["name"]
     return Redirect("/")
@@ -143,7 +144,7 @@ def signup_process(name: str, pwd: str, sess):
     global db
     rows = list(db.app.query("SELECT 1 FROM user WHERE name=?", (name,)))
 
-    if rows: # there's already someone with that name
+    if rows:  # there's already someone with that name
         return Redirect(signup)
 
     db.app.execute(
@@ -157,15 +158,6 @@ def signup_process(name: str, pwd: str, sess):
 
 @auth_rt.get("/profile")
 def profile(sess):
-    try:
-        last_test = list(
-            db.get(sess["name"]).query(
-                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
-            )
-        )[0]
-    except IndexError:
-        last_test = None
-
     return (
         Title(f"Profile: Ay Gogh"),
         Body(
@@ -173,32 +165,13 @@ def profile(sess):
             html_header(sess),
             Main(
                 H1("Profile", id="main-heading"),
-                P(_class="notice")(
-                    f"Hi ",
-                    Mark(sess["name"]),
-                    "! Here's where you can access the system's features.",
-                ),
                 Section(
                     H2("Test"),
-                    Details(
-                        Summary("Your latest test"),
-                        Ul(
-                            *(
-                                Li(
-                                    f"Level {num}: {last_test[f'lv{num}'] / 20:.0%}",
-                                    style="color:red; font-weight: bold; font-size: 2rem"
-                                    if last_test[f"lv{num}"] / 20 < 0.8
-                                    else None,
-                                )
-                                for num in "12345"
-                            ),
-                        ),
-                    )  # only show if last test is finished
-                    if last_test and last_test["progress"] == 100
-                    else P("Your latest finished test's result will be shown here."),
                     A("Browse", href="/test", _class="button"),
                 ),
-                H2("Read"),
+                Section(
+                    H2("Read"),
+                ),
             ),
             html_footer(sess),
         ),

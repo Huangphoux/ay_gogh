@@ -73,14 +73,14 @@ class DatabaseDict:
 
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS test (
-                        day DATE PRIMARY KEY,
-                        form TEXT NOT NULL,
-                        progress INTEGER NOT NULL,
-                        lv1 INTEGER NOT NULL,
-                        lv2 INTEGER NOT NULL,
-                        lv3 INTEGER NOT NULL,
-                        lv4 INTEGER NOT NULL,
-                        lv5 INTEGER NOT NULL
+                        day DATE PRIMARY KEY NOT NULL DEFAULT CURRENT_DATE,
+                        form TEXT NOT NULL DEFAULT "a",
+                        progress INTEGER NOT NULL DEFAULT 0,
+                        lv1 INTEGER NOT NULL DEFAULT 0,
+                        lv2 INTEGER NOT NULL DEFAULT 0,
+                        lv3 INTEGER NOT NULL DEFAULT 0,
+                        lv4 INTEGER NOT NULL DEFAULT 0,
+                        lv5 INTEGER NOT NULL DEFAULT 0
                     )
             """)
 
