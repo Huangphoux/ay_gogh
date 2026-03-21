@@ -30,10 +30,9 @@ def test(sess):
             A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
             html_header(sess),
             Main(
-                A("< Profile", href="/auth/profile"),
                 H1("Test", id="main-heading"),
                 Details(open=last_finished)(
-                    Summary("Analyze of your latest test"),
+                    Summary("Result of your latest test"),
                     P(
                         Span(style="color:red; font-weight: bold")("Red-highlighted"),
                         ": score is below 80%. Target your study around those levels.",
@@ -159,7 +158,7 @@ def progress_view(sess):
             )
         )[0]
     except IndexError:
-        return Redirect("/auth/profile")
+        return Redirect("/")
 
     last_num = last_test["progress"]
 

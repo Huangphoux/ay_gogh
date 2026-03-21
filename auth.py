@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, html_header, html_footer
+from shared import db, html_header, html_footer, is_signed_in
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
@@ -8,7 +8,10 @@ auth_rt: APIRouter = APIRouter("/auth")
 
 
 @auth_rt.get("/login")
-def login():
+def login(req, sess):
+    if is_signed_in(req, sess):
+        return Redirect("/")
+
     return (
         Title(f"Login: Ay Gogh"),
         Body(
@@ -75,21 +78,24 @@ def login_process(name: str, pwd: str, sess):
         return Redirect(login)
 
     sess["name"] = u["name"]
-    return Redirect(profile)
+    return Redirect("/")
 
 
 @auth_rt.get("/logout")
 def logout(sess):
-    # DEBUG
-    # global db
-    # db.close(sess["name"])
+    global db
+    db.close(sess["name"])
 
     del sess["name"]
+
     return Redirect("/")
 
 
 @auth_rt.get("/signup")
-def signup():
+def signup(req, sess):
+    if is_signed_in(req, sess):
+        return Redirect("/")
+
     return (
         Title(f"Signup: Ay Gogh"),
         Body(
@@ -153,26 +159,4 @@ def signup_process(name: str, pwd: str, sess):
     )
 
     sess["name"] = name
-    return Redirect(profile)
-
-
-@auth_rt.get("/profile")
-def profile(sess):
-    return (
-        Title(f"Profile: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(sess),
-            Main(
-                H1("Profile", id="main-heading"),
-                Section(
-                    H2("Test"),
-                    A("Browse", href="/test", _class="button"),
-                ),
-                Section(
-                    H2("Read"),
-                ),
-            ),
-            html_footer(sess),
-        ),
-    )
+    return Redirect("/")

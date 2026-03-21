@@ -16,7 +16,7 @@ def html_header(sess=None):
         )
     else:
         nav = Nav(
-            sess and A("Profile", href="/auth/profile"),  # if … then …
+            sess and A("Profile", href="/"),  # if … then …
             sess
             and A(
                 "Log Out",
@@ -27,23 +27,14 @@ def html_header(sess=None):
         )
 
     return Header(
-        # nav,
+        nav,
         H1("Ay Gogh!"),
+        Small("Just read. It's that easy.")
     )
 
 
 def html_footer(sess=None):
     return Footer(
-        sess
-        and (
-            A(
-                "Log Out",
-                data_on_click=js("confirm('Are you sure?')").if_(
-                    get("/auth/logout"), ""
-                ),
-            ),
-            Br(),
-        ),
         P(
             A(
                 "Ay Gogh!",
@@ -56,3 +47,11 @@ def html_footer(sess=None):
             ".",
         ),
     )
+
+
+def is_signed_in(req, sess):
+    name = req.scope["name"] = sess.get("name", None)
+
+    if name:
+        return True
+    return False

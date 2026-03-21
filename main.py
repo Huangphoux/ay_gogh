@@ -1,42 +1,5 @@
-from shared import html_header, html_footer
+from shared import html_header, html_footer, is_signed_in
 from starhtml import *
-
-
-def not_found(req, exc):
-    return Redirect("/auth/profile")
-    
-    return (
-        Title(f"Not Found: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-content", cls="skip-link"),
-            html_header(),
-            Main(id="main-content")(
-                H1(
-                    "We cannot find that page.",
-                ),
-                P("Alas, we do not have that page in our system."),
-                Img(
-                    title="An image of cats provided by CATAAS, Cat-as-a-Service.",
-                    style="display:grid; place-self:center",
-                    alt="An image of a cat provided by CATAAS, Cat-as-a-Service.",
-                    src="https://cataas.com/cat/says/sowwy?&type=square",
-                    width="200",
-                    height="200",
-                ),
-                Figcaption(
-                    "In the meantime, here's a random image of cats provided by ",
-                    A(
-                        "CATAAS",
-                        href="https://cataas.com/",
-                        target="_blank",
-                        rel="noreferrer",
-                    ),
-                    ", Cat-as-a-Service.",
-                ),
-            ),
-            html_footer(),
-        ),
-    )
 
 
 def set_name(req, sess):
@@ -71,7 +34,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     title="Ay Gogh!",
     htmlkw={"lang": "en"},
     before=(auth_bware,),
-    exception_handlers={404: not_found},
+    exception_handlers={404: lambda req, exc: Redirect("/")},
     middleware=(
         # compression(brotli_quality=8, zstd_level=8, gzip_level=8), # doesn't compress stream
         Middleware(
@@ -82,7 +45,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     ),
     static_path="static",
     hdrs=(  # keep / in href, if not, /auth/custom.css
-        Link(rel="icon", href="https://fav.farm/🔥"),  # favicon
+        Link(rel="icon", href="https://fav.farm/✅"),  # favicon
         Link(rel="stylesheet", href="/simple.min.css"),
         Link(rel="stylesheet", href="/custom.css"),
     ),
@@ -105,19 +68,38 @@ app.register(markdown)
 
 # Page for guests
 @rt
-def index():
-    return (
-        Title(f"Home: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-content", cls="skip-link"),
-            html_header(),
-            Main(id="main-content")(
-                P("This page is in construction.", _class="notice"),
-                A("Get started", href="/auth/login", _class="button"),
+def index(req, sess):
+    if not is_signed_in(req, sess):
+        return (
+            Title(f"Home: Ay Gogh"),
+            Body(
+                A(Strong("Jump to content"), href="#main-content", cls="skip-link"),
+                html_header(),
+                Main(id="main-content")(
+                    P("This page is in construction.", _class="notice"),
+                    A("Get started", href="/auth/login", _class="button"),
+                ),
+                html_footer(),
             ),
-            html_footer(),
-        ),
-    )
+        )
+    else:
+        return (
+            Title("Profile: Ay Gogh"),
+            Body(
+                A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
+                html_header(sess),
+                Main(
+                    H1(id="main-heading")(f"{sess['name']}'s profile"),
+                    Section(
+                        H2(A(href="/test")("Test")),
+                    ),
+                    Section(
+                        H2("Read"),
+                    ),
+                ),
+                html_footer(sess),
+            ),
+        )
 
 
 if __name__ == "__main__":

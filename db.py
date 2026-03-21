@@ -87,9 +87,10 @@ class DatabaseDict:
         return self._user[name]
 
     def close(self, name: str = "app"):
-        self._user[name].close()
-        self._user.pop(name)
-
-
-# no need to manually close connections
-# rely on Python's garbage collector
+        try:
+            self._user[name].close()
+            del self._user[name]
+        except KeyError: 
+            # Newly created then sign out immediately means no DB made yet
+            # but bypassing that is okay tho
+            pass
