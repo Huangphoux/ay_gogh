@@ -30,7 +30,7 @@ def login(req, sess):
                             maxlength="100",
                             autofocus=True,
                             onfocus="let temp=this.value; this.value=''; this.value=temp",
-                            value="asd",  ### DEBUG
+                            value="DEBUG",  ### DEBUG
                         ),
                         Label(B("Password"), _for="name"),
                         Input(
@@ -41,7 +41,7 @@ def login(req, sess):
                             required=True,
                             minlength="8",
                             maxlength="100",
-                            value="asd",  ### DEBUG
+                            value="DEBUG",  ### DEBUG
                         ),
                         Br(),
                         Input(

@@ -44,3 +44,9 @@
 - Chủ động gợi nhớ: trong quá trình đọc, đến một câu chứa từ cần phải ôn vào ngày đấy, người học sẽ phải trả lời trước khi chuyển qua câu tiếp theo. Tính năng này giúp làm giảm thời gian phải chuyển qua chuyển lại hai màn hình đọc và ôn từ vựng.
 - Đến một câu chứa từ cần phải ôn, người đọc cần trả lời trước khi tiếp tục đọc. Những từ không xuất hiện trong bài đọc sẽ được chuẩn bị ở cuối bài đọc để người học thực hiện việc ôn tập ngay trong màn hình đó.
 - Không có màn hình dành riêng cho việc ôn tập từ vựng, để khuyến khích người học đầu tư vào việc đọc nhiều hơn, thay vì tập trung ghi nhớ từ vựng hơn.
+
+# Draw
+- Vẽ hình kèm theo note
+    - Lưu hình kiểu gì: Hình→Text
+    - [Etch-a-Sketch](https://www.theodinproject.com/lessons/foundations-etch-a-sketch): lưu HTML các div
+- Vẽ hình minh hoạ cho những người đọc khác. Like/Dislike để người dùng tự quản lí

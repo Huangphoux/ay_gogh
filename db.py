@@ -24,10 +24,11 @@ class DatabaseDict:
         ### DEBUG
         self.app.execute(
             "INSERT OR REPLACE INTO user (name, pwd) VALUES (?, ?)",
-            ("asd", pwd_context.hash("asd")),
+            ("DEBUG", pwd_context.hash("DEBUG")),
         )
         ### DEBUG
 
+        # Tables for storing NGSLT form a, b, c
         for form in "abc":
             self.app.execute(f"""
                     CREATE TABLE IF NOT EXISTS form_{form} (

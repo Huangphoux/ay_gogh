@@ -5,7 +5,7 @@ from starhtml import *
 def set_name(req, sess):
     name = req.scope["name"] = sess.get("name", None)
     if not name:
-        return Redirect("/auth/login")
+        return Redirect("/")
 
 
 auth_bware = Beforeware(

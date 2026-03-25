@@ -101,7 +101,7 @@ def intro(sess):
             INSERT OR REPLACE INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
             VALUES (CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)
         """,
-        (choice("abc"), 97, 0, 0, 0, 0, 0),  # DEBUG
+        (choice("abc"), 90, 0, 0, 0, 0, 0),  # DEBUG
     )
 
     return (
