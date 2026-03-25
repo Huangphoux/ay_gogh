@@ -10,6 +10,7 @@ dependencies = [
     "python-frontmatter>=1.1.0",
     "starhtml[debug]>=0.5.19",
     "starlette-cramjam>=0.6.0",
+    "starlette==0.52.1"
 ]
 
 [tool.ruff.lint]

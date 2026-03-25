@@ -1,6 +1,7 @@
 from apswutils import Database
 from passlib.context import CryptContext
 import csv
+import frontmatter
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -13,13 +14,15 @@ class DatabaseDict:
         import os
 
         os.makedirs("db", exist_ok=True)
-        self.app: Database = Database("db/app.db", strict=True)
+        self.app: Database = Database(f"db/app.db", strict=True)
+
         self.app.execute("""
                 CREATE TABLE IF NOT EXISTS user (
-                    name TEXT NOT NULL PRIMARY KEY,
-                    pwd TEXT NOT NULL
+                    id INTEGER PRIMARY KEY,
+                    name TEXT NOT NULL UNIQUE,
+                    pwd TEXT NOT NULL UNIQUE
                 )
-        """)
+        """)  # NOT NULL UNIQUE, CHECK, UNIQUE
 
         ### DEBUG
         self.app.execute(
@@ -32,14 +35,14 @@ class DatabaseDict:
         for form in "abc":
             self.app.execute(f"""
                     CREATE TABLE IF NOT EXISTS form_{form} (
-                        number INT NOT NULL PRIMARY KEY,
-                        lemma TEXT NOT NULL,
-                        question TEXT NOT NULL,
-                        a TEXT NOT NULL,
-                        b TEXT NOT NULL,
-                        c TEXT NOT NULL,
-                        d TEXT NOT NULL,
-                        answer TEXT NOT NULL
+                        number INTEGER PRIMARY KEY,
+                        lemma TEXT,
+                        question TEXT,
+                        a TEXT,
+                        b TEXT,
+                        c TEXT,
+                        d TEXT,
+                        answer TEXT
                     )
             """)
 
@@ -68,6 +71,38 @@ class DatabaseDict:
                     row,
                 )
 
+            # Table for storing chapters
+            self.app.execute(f"""
+                    CREATE TABLE IF NOT EXISTS chapter (
+                        number INTEGER PRIMARY KEY,
+                        number_word TEXT,
+                        cardinal TEXT,
+                        cardinal_word TEXT,
+                        title TEXT,
+                        content TEXT
+                    )
+            """)
+
+            for i in range(1, 60 + 1):
+                with open(f"read/chapter/{i}.md", "r") as f:
+                    meta, content = frontmatter.parse(f.read())
+
+                    self.app.execute(
+                        f"""
+                            INSERT OR REPLACE INTO chapter
+                            (number, number_word, cardinal, cardinal_word, title, content)
+                            VALUES (?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            meta["number"],
+                            meta["number_word"],
+                            meta["cardinal_number"],
+                            meta["cardinal_word"],
+                            meta["title"],
+                            content,
+                        ),
+                    )
+
     def get(self, name: str = "app") -> Database:  # db.app, db.name
         if name not in self._user:
             self._user[name] = Database(f"db/{name}.db", strict=True)
@@ -91,7 +126,7 @@ class DatabaseDict:
         try:
             self._user[name].close()
             del self._user[name]
-        except KeyError: 
+        except KeyError:
             # Newly created then sign out immediately means no DB made yet
             # but bypassing that is okay tho
             pass
