@@ -23,7 +23,7 @@ for form in "abc":
         answers: dict[int, str] = {}
 
         # current item state, carried across iterations
-        number: int = -1
+        num: int = -1
         lemma: str = ""
         question: str = ""
         choices: dict[str, str] = {}  # {"a": "...", "b": "...", ...}
@@ -34,10 +34,10 @@ for form in "abc":
             is_answer = re.match(answer_pattern, line)
 
             if is_item:  # 1. case: This is a good case.
-                if number > -1:  # save previous item before starting a new one
+                if num > -1:  # save previous item before starting a new one
                     rows.append(
                         [
-                            str(number),
+                            str(num),
                             lemma,
                             question,
                             choices.get("a", ""),
@@ -47,20 +47,18 @@ for form in "abc":
                         ]
                     )
 
-                number = int(is_item.group(1)) + 1
+                num = int(is_item.group(1)) + 1
                 lemma: str = is_item.group(2)
                 question: str = is_item.group(3)
                 choices: dict[str, str] = {}
 
                 # bold the target word
-                for i, word in enumerate(question_splited := question.split()):
-                    if SequenceMatcher(a=lemma, b=word).ratio() > 0.7:
-                        question_splited[i] = f"**{word}**"
-                        question_splited[i] = re.sub(
-                            r"([?.!,])\*\*", r"**\1", question_splited[i]
-                        )
+                for i, word in enumerate(split := question.split()):
+                    if SequenceMatcher(a=lemma, b=word.lower()).ratio() > 0.7:
+                        split[i] = f"*{word}*"
+                        split[i] = re.sub(r"([?.!,])\*", r"*\1", split[i])  # .* → *.
 
-                question = " ".join(question_splited)
+                question = " ".join(split)
 
             if is_choice:  # a. place to study
                 choices[is_choice.group(1)] = is_choice.group(2)
@@ -68,10 +66,10 @@ for form in "abc":
             if is_answer:  # 65 c
                 answers[int(is_answer.group(1)) - 1] = is_answer.group(2)
 
-        if number > -1:  # save the last item
+        if num > -1:  # save the last item
             rows.append(
                 [
-                    str(number),
+                    str(num),
                     lemma,
                     question,
                     choices.get("a", ""),
@@ -80,6 +78,31 @@ for form in "abc":
                     choices.get("d", ""),
                 ]
             )
+
+        # MANUAL FIX
+        fix = {  # Python doesn't split the periods
+            "steal": "stolen.",
+            "occupy": "occupied.",
+            "freeze": "frozen.",
+            "try": "trying.",
+            "catch": "caught",
+            "snap": "snapped.",
+        }
+
+        for r in rows:  # 0: number, 1: lemma, 2: question
+            num: int = int(r[0])
+            lemma: str = r[1]
+            question: str = r[2]
+
+            if "*" not in question:
+                for i, word in enumerate(split := question.split()):
+                    if split[i] == fix[lemma]:
+                        split[i] = f"*{fix[lemma]}*"
+                        split[i] = re.sub(r"([?.!,])\*", r"*\1", split[i])  # .* →
+                r[2] = " ".join(split)
+
+            if question.count("*") > 2:
+                r[2] = r[2].replace("*it*", "it")
 
         # write rows, attaching the answer from the answer key
         for row_number, row in enumerate(rows, start=1):

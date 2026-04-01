@@ -185,9 +185,7 @@ def progress_view(sess):
                         P(style="margin: 0%")(
                             Strong(next_q["lemma"]),
                             ": ",
-                            Span(data_markdown=True, style="display: inline-block")(
-                                next_q["question"]
-                            ),
+                            Span(next_q["question"]),
                         ),
                         Ul(style="list-style-type: none; margin: 0%; padding: 0%")(
                             *[

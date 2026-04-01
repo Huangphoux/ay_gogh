@@ -21,8 +21,12 @@
 
 # Test
 
+- Markdown: Client (Marked.js) → Server (Mistletoe)
+    - [`render_md`](https://github.com/AnswerDotAI/MonsterUI/blob/main/monsterui/franken.py#L1573)
+    - Safe(), NotStr()
 # Read
 
+- [`select` event](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/select_event)
 - CSV mỗi từ trong nguyên cả cuốn sách
 - Chỉ tập trung từng câu: chia bài đọc ra thành từng câu nhỏ để có thể dễ dàng tập trung. Tách văn bản ra thành mỗi câu một dòng. Người đọc muốn đọc tiếp phải bấm nút để hiện câu tiếp theo.
 - Cá nhân hoá lộ trình học: sử dụng NGSLT và SRS để xác định độ khó của bài đọc.
