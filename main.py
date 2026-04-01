@@ -1,4 +1,3 @@
-from shared import html_header, html_footer, is_signed_in
 from starhtml import *
 
 
@@ -66,6 +65,8 @@ read_rt.to_app(app)
 
 
 from test import is_last_finished
+
+from shared import html_header, html_footer, is_signed_in, db
 
 
 # Page for guests
@@ -158,29 +159,45 @@ def index(req, sess):
                 html_footer(),
             ),
         )
-    else:
-        return (
-            Title("Profile: Ay Gogh"),
-            Body(
-                A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-                html_header(sess),
-                Main(
-                    H1(id="main-heading")(f"{sess['name']}'s profile"),
-                    Section(
-                        H2(A(href="/test")("Test")),
-                        P(_class="notice")(
-                            "As a new user, you should take a test to measure your core vocabulary knowledge."
-                        )
-                        if is_last_finished(sess) is None
-                        else None,
-                    ),
-                    Section(
-                        H2(A(href="/read")("Read")),
-                    ),
-                ),
-                html_footer(sess),
-            ),
+
+    chap_done = db.get(sess["name"]).item("SELECT SUM(done) FROM chapter")
+
+    from apswutils.db import NotFoundError
+
+    try:
+        test_done = db.get(sess["name"]).item(
+            "SELECT progress FROM test WHERE day = (SELECT MAX(day) FROM test)"
         )
+    except NotFoundError:
+        test_done = None
+
+    return (
+        Title("Profile: Ay Gogh"),
+        Body(
+            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
+            html_header(sess),
+            Main(
+                H1(id="main-heading")(f"{sess['name']}'s profile"),
+                Section(
+                    H2(
+                        A(href="/test")(
+                            "Test ", f"({(test_done / 100):.0%})" if test_done else None
+                        )
+                    ),
+                    P(_class="notice")(
+                        "As a new user, you should take a test to measure your core vocabulary knowledge."
+                    )
+                    if is_last_finished(sess) is None
+                    else None,
+                ),
+                Section(
+                    H2(A(href="/read")(f"Read ({chap_done / 60:.0%})")),
+                    P(f"Progress: {chap_done} out of 60 chapters."),
+                ),
+            ),
+            html_footer(sess),
+        ),
+    )
 
 
 if __name__ == "__main__":

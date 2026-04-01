@@ -2,6 +2,7 @@ from apswutils import Database
 from passlib.context import CryptContext
 import csv
 import frontmatter
+from random import choice
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -103,7 +104,7 @@ class DatabaseDict:
                         ),
                     )
 
-    def get(self, name: str = "app") -> Database:  # db.app, db.name
+    def get(self, name: str = "app") -> Database:
         if name not in self._user:
             self._user[name] = Database(f"db/{name}.db", strict=True)
 
@@ -119,6 +120,21 @@ class DatabaseDict:
                         lv5 INTEGER NOT NULL DEFAULT 0
                     )
             """)
+
+            self._user[name].execute("""
+                    CREATE TABLE IF NOT EXISTS chapter (
+                        num INTEGER PRIMARY KEY,
+                        done INTEGER CHECK (done = 0 OR done = 1)
+                    )
+            """)
+
+            ### DEBUG
+            for num in range(1, 60 + 1):
+                self._user[name].execute(
+                    "INSERT OR REPLACE INTO chapter (num, done) VALUES (?, ?)",
+                    (num, choice("01")),
+                )
+            ### DEBUG
 
         return self._user[name]
 
