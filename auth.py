@@ -136,7 +136,7 @@ def signup(req, sess):
                     ),
                     Button("Sign Up"),
                     P(
-                        "Maybe you actually want to ",
+                        "Maybe you want to ",
                         A("Log In", href=login),
                         " instead?",
                     ),

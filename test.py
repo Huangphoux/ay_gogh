@@ -30,10 +30,10 @@ def test(sess):
             Main(
                 H1("Test", id="main-heading"),
                 Details(open=last_finished)(
-                    Summary("Result of your latest test"),
+                    Summary("Your latest test's result"),
                     P(
                         Span(style="color:red; font-weight: bold")("Red-highlighted"),
-                        ": score is below 80%. Target your study around those levels.",
+                        ": score < 80%. Target your study around those levels.",
                     ),
                     Ul(
                         *(
@@ -59,7 +59,7 @@ def test(sess):
                 else None,
                 P(A(_class="button", href=intro)("Take a test")),
                 Ul(
-                    Li("You may continue your latest test if hasn't finished yet."),
+                    Li("You may continue your latest test if it hasn't finished yet."),
                     Li("You may not take more than one test in the same day."),
                 ),
             ),
@@ -166,6 +166,14 @@ def progress_view(sess):
         )
     )[0]
 
+    question: str = next_q["question"].replace("*", "</strong>")  # </strong></strong>
+    # remove the first /
+    for i, char in enumerate(split := list(question)):
+        if char == "/":
+            split[i] = ""
+            break
+    question = "".join(split)
+
     return (
         Title(f"Test, Progress: Ay Gogh"),
         Body(
@@ -185,11 +193,11 @@ def progress_view(sess):
                         P(style="margin: 0%")(
                             Strong(next_q["lemma"]),
                             ": ",
-                            Span(next_q["question"]),
+                            Span(Safe(question)),
                         ),
                         Ul(style="list-style-type: none; margin: 0%; padding: 0%")(
                             *[
-                                Li(
+                                Li(style="display: flex; align-items: center;")(
                                     Input(
                                         type="radio",
                                         name="choice",

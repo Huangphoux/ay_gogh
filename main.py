@@ -64,10 +64,6 @@ from test import test_rt
 auth_rt.to_app(app)
 test_rt.to_app(app)
 
-# Register
-from starhtml.plugins import markdown
-
-app.register(markdown)
 
 from test import is_last_finished
 
