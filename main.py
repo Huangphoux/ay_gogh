@@ -35,9 +35,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     htmlkw={"lang": "en"},
     before=(auth_bware,),
     exception_handlers={
-        404: lambda req, exc: Redirect("/"),
-        405: lambda req, exc: Redirect("/"),
-        500: lambda req, exc: Redirect("/"),
+        code: lambda req, exc: Redirect("/") for code in range(400, 500 + 1)
     },
     middleware=(
         # compression(brotli_quality=8, zstd_level=8, gzip_level=8), # doesn't compress stream
@@ -60,9 +58,11 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
 # Add routes to app
 from auth import auth_rt
 from test import test_rt
+from read import read_rt
 
 auth_rt.to_app(app)
 test_rt.to_app(app)
+read_rt.to_app(app)
 
 
 from test import is_last_finished
@@ -175,7 +175,7 @@ def index(req, sess):
                         else None,
                     ),
                     Section(
-                        H2("Read"),
+                        H2(A(href="/read")("Read")),
                     ),
                 ),
                 html_footer(sess),

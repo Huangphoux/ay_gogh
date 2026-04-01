@@ -19,14 +19,9 @@
 - Đổi mật khẩu
 - Đổi email
 
-# Test
-
-- Markdown: Client (Marked.js) → Server (Mistletoe)
-    - [`render_md`](https://github.com/AnswerDotAI/MonsterUI/blob/main/monsterui/franken.py#L1573)
-    - Safe(), NotStr()
 # Read
 
-- [`select` event](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/select_event)
+- [Selection API](https://developer.mozilla.org/en-US/docs/Web/API/Selection)
 - CSV mỗi từ trong nguyên cả cuốn sách
 - Chỉ tập trung từng câu: chia bài đọc ra thành từng câu nhỏ để có thể dễ dàng tập trung. Tách văn bản ra thành mỗi câu một dòng. Người đọc muốn đọc tiếp phải bấm nút để hiện câu tiếp theo.
 - Cá nhân hoá lộ trình học: sử dụng NGSLT và SRS để xác định độ khó của bài đọc.
@@ -50,6 +45,7 @@
 - Không có màn hình dành riêng cho việc ôn tập từ vựng, để khuyến khích người học đầu tư vào việc đọc nhiều hơn, thay vì tập trung ghi nhớ từ vựng hơn.
 
 # Draw
+
 - Vẽ hình kèm theo note
     - Lưu hình kiểu gì: Hình→Text
     - [Etch-a-Sketch](https://www.theodinproject.com/lessons/foundations-etch-a-sketch): lưu HTML các div
