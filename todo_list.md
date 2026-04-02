@@ -21,7 +21,14 @@
 
 # Read
 
-- [Selection API](https://developer.mozilla.org/en-US/docs/Web/API/Selection)
+- Badge hiện mức độ: xanh dễ, vàng oke, đỏ khó
+- Nút toggle đã hoàn thành bài đọc
+- Từ điển Popup: [Selection API](https://developer.mozilla.org/en-US/docs/Web/API/Selection)
+- Noscript
+
+## Not now
+
+- Kéo thả chú thích: [Freeform Drag](https://starhtml.com/demos/view/16-freeform-drag/)
 - CSV mỗi từ trong nguyên cả cuốn sách
 - Chỉ tập trung từng câu: chia bài đọc ra thành từng câu nhỏ để có thể dễ dàng tập trung. Tách văn bản ra thành mỗi câu một dòng. Người đọc muốn đọc tiếp phải bấm nút để hiện câu tiếp theo.
 - Cá nhân hoá lộ trình học: sử dụng NGSLT và SRS để xác định độ khó của bài đọc.

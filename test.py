@@ -197,7 +197,7 @@ def progress_view(sess):
                         ),
                         Ul(style="list-style-type: none; margin: 0%; padding: 0%")(
                             *[
-                                Li(style="display: flex; align-items: center;")(
+                                Li(style="display: flex; align-items: center; gap: 0.5rem")(
                                     Input(
                                         type="radio",
                                         name="choice",

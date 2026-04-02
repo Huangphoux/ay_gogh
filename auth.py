@@ -35,6 +35,7 @@ def login(req, sess):
                         Label(B("Password"), _for="name"),
                         Input(
                             data_attr_type="$is_show ? 'text' : 'password'",
+                            type="password",
                             id="pwd",
                             name="pwd",
                             placeholder="Enter Password",
@@ -55,6 +56,12 @@ def login(req, sess):
                     Button("Log In"),
                     Span(f" or "),
                     A("Sign Up", href=signup),
+                    Noscript(
+                        P(
+                            Code("Show Password"),
+                            " needs JavaScript to function properly.",
+                        )
+                    ),
                 ),
             ),
             html_footer(),
@@ -118,6 +125,7 @@ def signup(req, sess):
                         Label(B("Password *"), _for="name"),
                         Input(
                             data_attr_type="$is_show ? 'text' : 'password'",
+                            type="password",
                             id="pwd",
                             name="pwd",
                             placeholder="Enter Password",

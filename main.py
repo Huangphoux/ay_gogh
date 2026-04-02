@@ -34,7 +34,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     htmlkw={"lang": "en"},
     before=(auth_bware,),
     exception_handlers={
-        code: lambda req, exc: Redirect("/") for code in range(400, 500 + 1)
+        code: lambda req, exc: Redirect("/") for code in range(400, 500 + 1) # DEBUG
     },
     middleware=(
         # compression(brotli_quality=8, zstd_level=8, gzip_level=8), # doesn't compress stream
@@ -166,7 +166,7 @@ def index(req, sess):
 
     try:
         test_done = db.get(sess["name"]).item(
-            "SELECT progress FROM test WHERE day = (SELECT MAX(day) FROM test)"
+            "SELECT lv1 + lv2 + lv3 + lv4 + lv5 FROM test WHERE day = (SELECT MAX(day) FROM test)"
         )
     except NotFoundError:
         test_done = None
