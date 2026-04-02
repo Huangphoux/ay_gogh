@@ -186,7 +186,7 @@ def progress_view(sess):
                         post(progress_process, {"contentType": "form"}),
                         # ; is for seperation
                         js("; document.querySelector('form').reset()"),
-                    )
+                    ),
                 )(
                     Fieldset(
                         Legend("Choose your answer"),
@@ -197,7 +197,9 @@ def progress_view(sess):
                         ),
                         Ul(style="list-style-type: none; margin: 0%; padding: 0%")(
                             *[
-                                Li(style="display: flex; align-items: center; gap: 0.5rem")(
+                                Li(
+                                    style="display: flex; align-items: center; gap: 0.5rem"
+                                )(
                                     Input(
                                         type="radio",
                                         name="choice",
@@ -215,6 +217,17 @@ def progress_view(sess):
                         ),
                     ),
                     Button("Advance"),
+                    Noscript(
+                        P(
+                            "JavaScript is needed, since this page uses ",
+                            A(
+                                href="https://data-star.dev/",
+                                target="_blank",
+                                rel="noreferrer",
+                            )("Datastar"),
+                            " 🚀 for a smoother testing experience.",
+                        )
+                    ),
                 ),
             ),
             html_footer(sess),
