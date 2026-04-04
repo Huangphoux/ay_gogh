@@ -219,12 +219,8 @@ def progress_view(sess):
                     Button("Advance"),
                     Noscript(
                         P(
-                            "JavaScript is needed, since this page uses ",
-                            A(
-                                href="https://data-star.dev/",
-                                target="_blank",
-                                rel="noreferrer",
-                            )("Datastar"),
+                            "JavaScript is needed here, since this page uses ",
+                            A(href="https://data-star.dev/")("Datastar"),
                             " 🚀 for a smoother testing experience.",
                         )
                     ),

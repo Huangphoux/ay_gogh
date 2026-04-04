@@ -69,7 +69,7 @@ def login(req, sess):
     )
 
 
-@auth_rt.post("/login_process")
+@auth_rt.post("/login")
 def login_process(name: str, pwd: str, sess):
     if not name or not pwd:
         return Redirect(login)
@@ -88,7 +88,7 @@ def login_process(name: str, pwd: str, sess):
     return Redirect("/")
 
 
-@auth_rt.get("/logout")
+@auth_rt.delete("/login")
 def logout(sess):
     global db
     db.close(sess["name"])
@@ -155,7 +155,7 @@ def signup(req, sess):
     )
 
 
-@auth_rt.post("/signup_process")
+@auth_rt.post("/signup")
 def signup_process(name: str, pwd: str, sess):
     if not name or not pwd:
         return Redirect(login)

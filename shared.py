@@ -30,22 +30,14 @@ def html_footer(sess=None):
         sess
         and A(
             "Log Out",
-            data_on_click=js("confirm('Are you sure?')").if_(get("/auth/logout"), ""),
+            data_on_click=js("confirm('Are you sure?')").if_(
+                delete("/auth/login"), ""
+            ),
         ),
         P(
-            A(
-                "Ay Gogh!",
-                href="https://github.com/Huangphoux/ay_gogh",
-                target="_blank",
-                rel="noreferrer",
-            ),
+            A(href="https://github.com/Huangphoux/ay_gogh")("Ay Gogh!"),
             " is created by the ❤️ of  ",
-            A(
-                "huangphoux",
-                href="https://github.com/Huangphoux/",
-                target="_blank",
-                rel="noreferrer",
-            ),
+            A(href="https://github.com/Huangphoux/")("huangphoux"),
             ".",
         ),
         P("Copyright © Ay Gogh! 2026"),

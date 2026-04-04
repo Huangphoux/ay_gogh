@@ -34,7 +34,8 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     htmlkw={"lang": "en"},
     before=(auth_bware,),
     exception_handlers={
-        code: lambda req, exc: Redirect("/") for code in range(400, 500 + 1) # DEBUG
+        code: lambda req, exc: Redirect("/")
+        for code in range(400, 500 + 1)  # DEBUG
     },
     middleware=(
         # compression(brotli_quality=8, zstd_level=8, gzip_level=8), # doesn't compress stream
@@ -99,9 +100,7 @@ def index(req, sess):
                             Aside(_class="notice")(
                                 "Bite-sized reading materials with the ",
                                 A(
-                                    href="https://archive.org/details/english-by-the-nature-method/",
-                                    target="_blank",
-                                    rel="noreferrer",
+                                    href="https://archive.org/details/english-by-the-nature-method/"
                                 )("English by the Nature Method"),
                             ),
                             Img(width="400", height="200")(),
@@ -110,9 +109,7 @@ def index(req, sess):
                             Aside(_class="notice")(
                                 "Supercharge your vocabulary acquisition with the ",
                                 A(
-                                    href="https://www.newgeneralservicelist.com/new-general-service-list",
-                                    target="_blank",
-                                    rel="noreferrer",
+                                    href="https://www.newgeneralservicelist.com/new-general-service-list"
                                 )("NGSL Word List"),
                             ),
                             Img(width="400", height="200")(),
@@ -121,9 +118,7 @@ def index(req, sess):
                             Aside(_class="notice")(
                                 "Remember your words forever with the ",
                                 A(
-                                    href="https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler",
-                                    target="_blank",
-                                    rel="noreferrer",
+                                    href="https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler"
                                 )("FSRS Algorithm"),
                             ),
                             Img(width="400", height="200")(),
@@ -132,9 +127,7 @@ def index(req, sess):
                             Aside(_class="notice")(
                                 "Explore English literature with the ",
                                 A(
-                                    href="https://standardebooks.org/",
-                                    target="_blank",
-                                    rel="noreferrer",
+                                    href="https://standardebooks.org/"
                                 )("Standard Ebooks"),
                             ),
                             Img(width="400", height="200")(),

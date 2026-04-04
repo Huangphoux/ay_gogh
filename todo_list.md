@@ -10,6 +10,8 @@
 
 # Auth
 
+- DELETE /logout → DELETE /login
+
 - Username → Email
     - Lấy email làm khoá chính
 - Đặt điều kiện Validation
