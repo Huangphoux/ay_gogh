@@ -23,7 +23,7 @@ class DatabaseDict:
                     name TEXT NOT NULL UNIQUE,
                     pwd TEXT NOT NULL UNIQUE
                 )
-        """)  # NOT NULL UNIQUE, CHECK, UNIQUE
+        """)  # NOT NULL, UNIQUE, CHECK
 
         ### DEBUG
         self.app.execute(
@@ -123,18 +123,10 @@ class DatabaseDict:
 
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS chapter (
-                        num INTEGER PRIMARY KEY,
+                        number INTEGER PRIMARY KEY,
                         done INTEGER CHECK (done = 0 OR done = 1)
                     )
             """)
-
-            ### DEBUG
-            for num in range(1, 60 + 1):
-                self._user[name].execute(
-                    "INSERT OR REPLACE INTO chapter (num, done) VALUES (?, ?)",
-                    (num, choice("01")),
-                )
-            ### DEBUG
 
         return self._user[name]
 

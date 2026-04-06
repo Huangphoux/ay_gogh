@@ -24,9 +24,8 @@
 # Read
 
 - Nút toggle đã hoàn thành bài đọc
-- Badge hiện mức độ: xanh dễ, vàng oke, đỏ khó
 - Từ điển Popup: [Selection API](https://developer.mozilla.org/en-US/docs/Web/API/Selection)
-- Noscript
+- Badge hiện mức độ: xanh dễ, vàng oke, đỏ khó
 
 ## Not now
 

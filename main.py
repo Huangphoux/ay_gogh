@@ -33,12 +33,11 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     title="Ay Gogh!",
     htmlkw={"lang": "en"},
     before=(auth_bware,),
-    exception_handlers={
-        code: lambda req, exc: Redirect("/")
-        for code in range(400, 500 + 1)  # DEBUG
-    },
+    # exception_handlers={
+    #     code: lambda req, exc: Redirect("/")
+    #     for code in range(400, 500 + 1)  # DEBUG
+    # },
     middleware=(
-        # compression(brotli_quality=8, zstd_level=8, gzip_level=8), # doesn't compress stream
         Middleware(
             CompressionMiddleware,  # ty:ignore[invalid-argument-type]
             compression=[Compression.br, Compression.zstd, Compression.gzip],
@@ -126,9 +125,9 @@ def index(req, sess):
                         Section(
                             Aside(_class="notice")(
                                 "Explore English literature with the ",
-                                A(
-                                    href="https://standardebooks.org/"
-                                )("Standard Ebooks"),
+                                A(href="https://standardebooks.org/")(
+                                    "Standard Ebooks"
+                                ),
                             ),
                             Img(width="400", height="200")(),
                         ),
@@ -174,7 +173,7 @@ def index(req, sess):
                 Section(
                     H2(
                         A(href="/test")(
-                            "Test ", f"({(test_done / 100):.0%})" if test_done else None
+                            "Test", f" ({(test_done / 100):.0%})" if test_done else None
                         )
                     ),
                     P(_class="notice")(
@@ -184,7 +183,11 @@ def index(req, sess):
                     else None,
                 ),
                 Section(
-                    H2(A(href="/read")(f"Read ({chap_done / 60:.0%})")),
+                    H2(
+                        A(href="/read")(
+                            f"Read", f" ({chap_done / 60:.0%})" if chap_done else None
+                        )
+                    ),
                     P(f"Progress: {chap_done} out of 60 chapters."),
                 ),
             ),
