@@ -26,3 +26,14 @@ legend {
     /* Preventing layout shift from scrollbar appearance */
     scrollbar-gutter: stable;
 }
+
+.modal {
+    position: sticky;
+    inset: 0;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+    border: solid;
+    padding: 0.25em;
+    overflow: auto;
+}

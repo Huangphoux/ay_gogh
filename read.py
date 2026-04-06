@@ -125,8 +125,21 @@ def chapter_view(sess, num: int, word: str = ""):
             html_header(sess),
             Main(
                 data_init=get(url=f"/read/{num}/cqrs"),
-                data_on_pointerup=f"@get('/read/{num}?word=document.getSelection().toString().trim()')",
+                data_on_pointerup=(
+                    f"""
+                    $word = document.getSelection().toString().trim().toLowerCase();
+                    @get('/read/{num}/search');
+                    document.getSelection().empty();
+                    """,
+                    {"debounce": 200},
+                ),
             )(
+                Div(_class="notice modal")(
+                    word,
+                    Button(data_on_click=get(f"/read/{num}/close"))("Close"),
+                )
+                if word
+                else None,
                 Section(
                     style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
                 )(
@@ -171,6 +184,12 @@ def complete(sess, num: int):
     relay.publish(f"read.{sess['name']}.{num}", "")
 
 
-@read_rt.get("/{num:int}?word={word:str}")
-def search(sess, num: int, word: str = ""):
-    relay.publish(f"read.{sess['name']}.{num}", word)
+@read_rt.get("/{num:int}/search")
+def search(sess, num: int, word: str):
+    if word:
+        relay.publish(f"read.{sess['name']}.{num}", word)
+
+
+@read_rt.get("/{num:int}/close")
+def close(sess, num: int):
+    relay.publish(f"read.{sess['name']}.{num}", "")
