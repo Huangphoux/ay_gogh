@@ -47,11 +47,11 @@ def read(sess, p: int = 0, all: int = 0):
                 Div(
                     style="display: flex; gap: 1rem; align-items: center; height: 1.5rem"
                 )(
-                    A(href=f"/read?p={p - 1}")("Previous")
+                    A(href=f"/read/?p={p - 1}")("Previous")
                     if not all and p > 0
                     else Span(style="color: var(--border)")("Previous"),
                     *(
-                        A(href=f"/read?p={i}")(i)
+                        A(href=f"/read/?p={i}")(i)
                         if i != p
                         else Span(
                             style="font-style: italic; font-weight: bold; font-size: 3rem"
@@ -59,7 +59,7 @@ def read(sess, p: int = 0, all: int = 0):
                         for i in range(0, 6)
                     ),
                     A(
-                        href=f"/read?p={p + 1}",
+                        href=f"/read/?p={p + 1}",
                     )("Next")
                     if not all and p < 5
                     else Span(style="color: var(--border)")("Next"),
@@ -75,7 +75,7 @@ def read(sess, p: int = 0, all: int = 0):
                                 if "done" in c and c["done"] == 1
                                 else None,
                             )(
-                                f"{c['number']} (DONE)"
+                                "(DONE)"
                                 if "done" in c and c["done"] == 1
                                 else f"Chapter {c['number']}: {c['title']}",
                             ),
@@ -83,9 +83,9 @@ def read(sess, p: int = 0, all: int = 0):
                         for c in chap
                     ),
                 ),
-                A(href="/read?all=1")("Show all")
+                A(href="/read/?all=1")("Show all")
                 if not all
-                else A(href="/read?all=0")("Show less"),
+                else A(href="/read/?all=0")("Show less"),
             ),
             html_footer(sess),
         ),
@@ -94,19 +94,23 @@ def read(sess, p: int = 0, all: int = 0):
 
 @read_rt.get("/{num:int}")
 def chapter_get(sess, num: int):
+    if num not in range(1, 60 + 1):
+        return Redirect("/")
+
     return chapter_view(sess, num)
 
 
 @read_rt.get("/{num:int}/cqrs")
 @sse
 async def cqrs(req, sess, num: int):
-    async for _ in relay.subscribe(f"read.{sess['name']}.chapter{num}"):
-        yield elements(chapter_view(sess, num), use_view_transition=True)
+    async for subject, data in relay.subscribe(f"read.{sess['name']}.{num}"):
+        yield elements(chapter_view(sess, num, data), use_view_transition=True)
 
 
-def chapter_view(sess, num: int):
+def chapter_view(sess, num: int, word: str = ""):
     # execute for INSERT, query for SELECT
     chap = list(db.app.query("SELECT * FROM chapter WHERE number = ? ", (num,)))[0]
+
     try:
         done = db.get(sess["name"]).item(
             "SELECT done FROM chapter WHERE number = ? ", (num,)
@@ -119,9 +123,12 @@ def chapter_view(sess, num: int):
         Body(
             A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
             html_header(sess),
-            Main(data_init=get(url=f"/read/{num}/cqrs"))(
+            Main(
+                data_init=get(url=f"/read/{num}/cqrs"),
+                data_on_pointerup=f"@get('/read/{num}?word=document.getSelection().toString().trim()')",
+            )(
                 Section(
-                    style="display: flex; justify-content: space-between; align-items: center"
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
                 )(
                     P(f"Chapter {chap['number_word']} ({num})"),
                     P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
@@ -130,7 +137,7 @@ def chapter_view(sess, num: int):
                     f"{chap['title']}",
                     " (DONE)" if done else None,
                 ),
-                Section(
+                Section(  # text section
                     P(
                         Safe(
                             mistletoe.markdown(chap["content"]),
@@ -138,13 +145,14 @@ def chapter_view(sess, num: int):
                     ),
                 ),
                 Section(style="display: grid; place-items: center")(
-                    Button(data_on_click=post(url=f"/read/{num}"))("Mark Complete")
+                    # mark complete button section
+                    Button(data_on_click=post(f"/read/{num}"))("Mark Complete")
                     if not done
                     else None,
                     P(_class="notice")("You have marked this chapter as Complete.")
                     if done
                     else None,
-                    A(href=f"/read?p={floor(num / 10)}")("Back to List")
+                    A(href=f"/read/?p={floor(num / 10)}")("Back to List")
                     if done
                     else None,
                 ),
@@ -160,4 +168,9 @@ def complete(sess, num: int):
         "INSERT OR REPLACE INTO chapter (number, done) VALUES (?, ?)", (num, 1)
     )
 
-    relay.publish(f"read.{sess['name']}.chapter{num}", "")
+    relay.publish(f"read.{sess['name']}.{num}", "")
+
+
+@read_rt.get("/{num:int}?word={word:str}")
+def search(sess, num: int, word: str = ""):
+    relay.publish(f"read.{sess['name']}.{num}", word)

@@ -27,7 +27,8 @@ from starlette_cramjam.middleware import CompressionMiddleware
 
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     debug=False,
-    devtools=False,
+    # devtools=True,
+    datastar="cdn", # patches is needed for DevTools
     # devtools.py, devtools_css = (_DEVTOOLS_DIR / "devtools.css").read_text(encoding="utf-8")
     # mainly my fault for setting the locale to Japanese, setting the encoding to cp932
     title="Ay Gogh!",
@@ -39,16 +40,16 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     # },
     middleware=(
         Middleware(
-            CompressionMiddleware,  # ty:ignore[invalid-argument-type]
+            CompressionMiddleware,
             compression=[Compression.br, Compression.zstd, Compression.gzip],
             compression_level=10,
         ),
     ),
     static_path="static",
     hdrs=(  # keep / in href, if not, /auth/custom.css
-        Link(rel="icon", href="https://fav.farm/✅"),  # favicon
-        Link(rel="stylesheet", href="/simple.min.css"),
         Link(rel="stylesheet", href="/custom.css"),
+        Link(rel="icon", href="https://fav.farm/✅"),  # favicon
+        Link(rel="stylesheet", href="https://cdn.simplecss.org/simple.min.css"),
     ),
     sess_https_only=False,  # set Secure flag on cookies
     same_site="strict",
@@ -174,7 +175,7 @@ def index(req, sess):
                 H1(id="main-heading")(f"{sess['name']}'s profile"),
                 Section(
                     H2(
-                        A(href="/test")(
+                        A(href="/test/")(
                             "Test", f" ({(test_done / 100):.0%})" if test_done else None
                         )
                     ),
@@ -186,7 +187,7 @@ def index(req, sess):
                 ),
                 Section(
                     H2(
-                        A(href="/read")(
+                        A(href="/read/")(
                             f"Read", f" ({chap_done / 60:.0%})" if chap_done else None
                         )
                     ),
