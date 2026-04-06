@@ -22,6 +22,7 @@ def html_header(sess=None):
     return Header(
         nav,
         H1("Ay Gogh!"),
+        Noscript(P("JavaScript is needed to ensure the best experience.")),
     )
 
 
@@ -30,9 +31,7 @@ def html_footer(sess=None):
         sess
         and A(
             "Log Out",
-            data_on_click=js("confirm('Are you sure?')").if_(
-                delete("/auth/login"), ""
-            ),
+            data_on_click=js("confirm('Are you sure?')").if_(delete("/auth/login"), ""),
         ),
         P(
             A(href="https://github.com/Huangphoux/ay_gogh")("Ay Gogh!"),

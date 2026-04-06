@@ -56,12 +56,6 @@ def login(req, sess):
                     Button("Log In"),
                     Span(f" or "),
                     A("Sign Up", href=signup),
-                    Noscript(
-                        P(
-                            Code("Show Password"),
-                            " needs JavaScript to function properly.",
-                        )
-                    ),
                 ),
             ),
             html_footer(),

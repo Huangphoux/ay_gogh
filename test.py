@@ -217,13 +217,7 @@ def progress_view(sess):
                         ),
                     ),
                     Button("Advance"),
-                    Noscript(
-                        P(
-                            "JavaScript is needed here, since this page uses ",
-                            A(href="https://data-star.dev/")("Datastar"),
-                            " 🚀 for a smoother testing experience.",
-                        )
-                    ),
+                    
                 ),
             ),
             html_footer(sess),
