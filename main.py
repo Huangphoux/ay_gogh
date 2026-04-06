@@ -152,8 +152,6 @@ def index(req, sess):
             ),
         )
 
-    chap_done = db.get(sess["name"]).item("SELECT SUM(done) FROM chapter")
-
     from apswutils.db import NotFoundError
 
     try:
@@ -162,6 +160,10 @@ def index(req, sess):
         )
     except NotFoundError:
         test_done = None
+
+    chap_done = db.get(sess["name"]).item("SELECT SUM(done) FROM chapter")
+    if not chap_done:
+        chap_done = 0
 
     return (
         Title("Profile: Ay Gogh"),
