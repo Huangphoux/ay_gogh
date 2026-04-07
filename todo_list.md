@@ -23,8 +23,8 @@
 
 # Read
 
-- Từ điển Popup: [Selection API](https://developer.mozilla.org/en-US/docs/Web/API/Selection)
 - Badge hiện mức độ: xanh dễ, vàng oke, đỏ khó
+- Wiktionary Parser chưa cập nhật API
 
 ## Not now
 

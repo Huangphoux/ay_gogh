@@ -9,6 +9,7 @@ dependencies = [
     "mistletoe>=1.5.1",
     "passlib>=1.7.4",
     "python-frontmatter>=1.1.0",
+    "requests>=2.33.1",
     "starhtml[debug]>=0.5.19",
     "starlette-cramjam>=0.6.0",
     "starlette==0.52.1",

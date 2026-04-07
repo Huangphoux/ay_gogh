@@ -5,6 +5,11 @@ from relay import Relay
 db = DatabaseDict()
 relay: Relay[str] = Relay()
 
+def is_signed_in(req, sess):
+    name = req.scope["name"] = sess.get("name", None)
+
+    return True if name else False
+
 
 def html_header(sess=None):
     nav: starhtml.tags.FT
@@ -41,11 +46,3 @@ def html_footer(sess=None):
         ),
         P("Copyright © Ay Gogh! 2026"),
     )
-
-
-def is_signed_in(req, sess):
-    name = req.scope["name"] = sess.get("name", None)
-
-    if name:
-        return True
-    return False

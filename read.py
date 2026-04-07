@@ -3,7 +3,13 @@ from starhtml import *
 from shared import db, html_header, html_footer, relay
 import mistletoe
 from math import floor
+import requests
+import json
+import pprint
 
+
+# from fasthtml.components → from starhtml.tags
+from starhtml.tags import Chapter_number, Search_Popup, Word, Definition
 
 read_rt: APIRouter = APIRouter("/read")
 
@@ -118,6 +124,18 @@ def chapter_view(sess, num: int, word: str = ""):
     except NotFoundError:
         done = 0
 
+    if word:
+        try:
+            fetch = json.loads(
+                requests.get(
+                    f"https://freedictionaryapi.com/api/v1/entries/en/{word}"
+                ).text
+            )["entries"][0]
+            definition = fetch["senses"][0]["definition"]
+
+        except IndexError:
+            definition = None
+
     return (
         Title(f"Read, Chapter {num}: Ay Gogh"),
         Body(
@@ -126,20 +144,29 @@ def chapter_view(sess, num: int, word: str = ""):
             Main(
                 data_init=get(url=f"/read/{num}/cqrs"),
                 data_on_pointerup=(
-                    f"""
-                    $word = document.getSelection().toString().trim().toLowerCase();
-                    @get('/read/{num}/search');
-                    document.getSelection().empty();
-                    """,
+                    f" $word = document.getSelection().toString().trim().toLowerCase(); @get('/read/{num}/search'); document.getSelection().empty();",
                     {"debounce": 200},
                 ),
             )(
-                Div(_class="notice modal")(
-                    word,
-                    Button(data_on_click=get(f"/read/{num}/close"))("Close"),
+                Div(
+                    _class="notice modal",
+                    data_on_click=(
+                        f"@get('/read/{num}/close')",
+                        {"outside": True},
+                    ),
+                )(
+                    P(Span(style="font-size: 3rem;")(word), ": ", definition)
+                    if definition
+                    else P("Sorry, couldn't find it."),
+                    Button(
+                        data_on_click=get(f"/read/{num}/close"),
+                        style="margin-top: 1rem",
+                    )("Close"),
                 )
                 if word
-                else None,
+                else P(_class="notice")(
+                    "Select a word and its definitions will be shown here!"
+                ),
                 Section(
                     style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
                 )(
