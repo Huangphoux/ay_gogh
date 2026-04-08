@@ -131,7 +131,12 @@ def chapter_view(sess, num: int, word: str = ""):
                     f"https://freedictionaryapi.com/api/v1/entries/en/{word}"
                 ).text
             )["entries"][0]
-            definition = fetch["senses"][0]["definition"]
+
+            definition = [
+                s["definition"]
+                for s in fetch["senses"]
+                if "(obsolete)" not in s["definition"]
+            ]
 
         except IndexError:
             definition = None
@@ -155,9 +160,14 @@ def chapter_view(sess, num: int, word: str = ""):
                         {"outside": True},
                     ),
                 )(
-                    P(Span(style="font-size: 3rem;")(word), ": ", definition)
+                    (
+                        H1(word),
+                        Ul(
+                            *(Li(d) for d in definition),
+                        ),
+                    )
                     if definition
-                    else P("Sorry, couldn't find it."),
+                    else P("Sorry, no idea."),
                     Button(
                         data_on_click=get(f"/read/{num}/close"),
                         style="margin-top: 1rem",
