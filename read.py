@@ -147,19 +147,16 @@ def chapter_view(sess, num: int, word: str = ""):
             A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
             html_header(sess),
             Main(
-                data_init=get(url=f"/read/{num}/cqrs"),
+                data_init=(
+                    get(url=f"/read/{num}/cqrs"),
+                    "; document.addEventListener('selectionchange', () => $word = document.getSelection().toString().trim().toLowerCase())",
+                ),
                 data_on_pointerup=(
-                    f" $word = document.getSelection().toString().trim().toLowerCase(); @get('/read/{num}/search'); document.getSelection().empty();",
-                    {"debounce": 200},
+                    get(f"/read/{num}/search", {"debounce": 200}),
+                    "; document.getSelection().empty();",
                 ),
             )(
-                Div(
-                    _class="notice modal",
-                    data_on_click=(
-                        f"@get('/read/{num}/close')",
-                        {"outside": True},
-                    ),
-                )(
+                Div(_class="notice modal")(
                     (
                         H1(word),
                         Ul(
@@ -198,14 +195,8 @@ def chapter_view(sess, num: int, word: str = ""):
                     # mark complete button section
                     Button(
                         data_on_click=post(f"/read/{num}"),
-                        disabled=True if word else None,
                     )("Mark Complete")
                     if not done
-                    else None,
-                    P(_class="notice")(
-                        'Close the popup before clicking the "Mark Complete" button.'
-                    )
-                    if word
                     else None,
                     P(_class="notice")("You have marked this chapter as Complete.")
                     if done
