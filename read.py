@@ -186,8 +186,16 @@ def chapter_view(sess, num: int, word: str = ""):
                 ),
                 Section(style="display: grid; place-items: center")(
                     # mark complete button section
-                    Button(data_on_click=post(f"/read/{num}"))("Mark Complete")
+                    Button(
+                        data_on_click=post(f"/read/{num}"),
+                        disabled=True if word else None,
+                    )("Mark Complete")
                     if not done
+                    else None,
+                    P(_class="notice")(
+                        'Close the popup before clicking the "Mark Complete" button.'
+                    )
+                    if word
                     else None,
                     P(_class="notice")("You have marked this chapter as Complete.")
                     if done
