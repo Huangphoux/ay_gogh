@@ -28,7 +28,7 @@ from starlette_cramjam.middleware import CompressionMiddleware
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     debug=False,
     # devtools=True,
-    datastar="cdn", # patches is needed for DevTools
+    datastar="cdn",  # patches is needed for DevTools
     # devtools.py, devtools_css = (_DEVTOOLS_DIR / "devtools.css").read_text(encoding="utf-8")
     # mainly my fault for setting the locale to Japanese, setting the encoding to cp932
     title="Ay Gogh!",
@@ -153,13 +153,14 @@ def index(req, sess):
             ),
         )
 
-    from apswutils.db import NotFoundError
-
     try:
-        test_done = db.get(sess["name"]).item(
-            "SELECT lv1 + lv2 + lv3 + lv4 + lv5 FROM test WHERE day = (SELECT MAX(day) FROM test)"
-        )
-    except NotFoundError:
+        test_done = list(
+            db.get(sess["name"]).query(
+                "SELECT progress, lv1 + lv2 + lv3 + lv4 + lv5 AS result FROM test WHERE day = (SELECT MAX(day) FROM test)"
+            )
+        )[0]
+
+    except IndexError:
         test_done = None
 
     chap_done = db.get(sess["name"]).item("SELECT SUM(done) FROM chapter")
@@ -176,7 +177,10 @@ def index(req, sess):
                 Section(
                     H2(
                         A(href="/test/")(
-                            "Test", f" ({(test_done / 100):.0%})" if test_done else None
+                            "Test",
+                            f" ({(test_done['result'] / 100):.0%})"
+                            if test_done and test_done["progress"] == 100
+                            else None,
                         )
                     ),
                     P(_class="notice")(

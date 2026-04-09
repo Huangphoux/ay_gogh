@@ -21,6 +21,7 @@ def test(sess):
         last_test = None
 
     last_finished = last_test and last_test["progress"] == 100
+    print(last_finished)
 
     return (
         Title(f"Test: Ay Gogh"),
@@ -29,8 +30,22 @@ def test(sess):
             html_header(sess),
             Main(
                 H1("Test", id="main-heading"),
-                Details(open=last_finished)(
-                    Summary("Your latest test's result"),
+                A(_class="button", href=intro)(
+                    "Take a test",
+                )
+                if not last_finished
+                else P("You may not take more than one test a day."),
+                Figure(
+                    Table(
+                        Thead(Tr(Th(h.title()) for h in header)),
+                        Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),
+                    ),
+                )
+                if tests
+                else None,
+                
+                Section(
+                    H2("Your latest test's result"),
                     P(
                         Span(style="color:red; font-weight: bold")("Red-highlighted"),
                         ": score < 80%. Target your study around those levels.",
@@ -48,19 +63,8 @@ def test(sess):
                     ),
                 )
                 if last_test and last_test["progress"] == 100
-                else None,
-                Figure(
-                    Table(
-                        Thead(Tr(Th(h.title()) for h in header)),
-                        Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),
-                    ),
-                )
-                if tests
-                else None,
-                P(A(_class="button", href=intro)("Take a test")),
-                Ul(
-                    Li("You may continue your latest test if it hasn't finished yet."),
-                    Li("You may not take more than one test in the same day."),
+                else P(_class="notice")(
+                    "An analysis of your latest test result will be shown here."
                 ),
             ),
             html_footer(sess),
@@ -78,7 +82,7 @@ def is_last_finished(sess):
     try:
         last_test = list(
             db.get(sess["name"]).query(
-                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
+                "SELECT progress FROM test WHERE day = (SELECT MAX(day) FROM test)"
             )
         )[0]
     except IndexError:
@@ -101,7 +105,7 @@ def intro(sess):
             INSERT OR REPLACE INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
             VALUES (CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)
         """,
-        (choice("abc"), 90, 0, 0, 0, 0, 0),  # DEBUG
+        (choice("abc"), 95, 0, 0, 0, 0, 0),  # DEBUG
     )
 
     return (
@@ -217,7 +221,6 @@ def progress_view(sess):
                         ),
                     ),
                     Button("Advance"),
-                    
                 ),
             ),
             html_footer(sess),

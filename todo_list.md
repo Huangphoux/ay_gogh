@@ -21,10 +21,15 @@
 - Đổi mật khẩu
 - Đổi email
 
+# Test
+- Hình như chưa check là có phải ngày mới chưa
+
 # Read
 
 - Badge hiện mức độ: xanh dễ, vàng oke, đỏ khó
 - Wiktionary Parser chưa cập nhật API
+
+
 
 ## Not now
 

@@ -110,7 +110,8 @@ class DatabaseDict:
 
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS test (
-                        day DATE PRIMARY KEY NOT NULL DEFAULT CURRENT_DATE,
+                        number INTEGER PRIMARY KEY,
+                        day DATE NOT NULL DEFAULT CURRENT_DATE,
                         form TEXT NOT NULL DEFAULT "a",
                         progress INTEGER NOT NULL DEFAULT 0,
                         lv1 INTEGER NOT NULL DEFAULT 0,
@@ -123,6 +124,13 @@ class DatabaseDict:
 
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS chapter (
+                        number INTEGER PRIMARY KEY,
+                        done INTEGER CHECK (done = 0 OR done = 1)
+                    )
+            """)
+            
+            self._user[name].execute("""
+                    CREATE TABLE IF NOT EXISTS deck (
                         number INTEGER PRIMARY KEY,
                         done INTEGER CHECK (done = 0 OR done = 1)
                     )

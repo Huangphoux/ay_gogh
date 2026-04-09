@@ -5,11 +5,10 @@ import mistletoe
 from math import floor
 import requests
 import json
-import pprint
 
 
 # from fasthtml.components → from starhtml.tags
-from starhtml.tags import Chapter_number, Search_Popup, Word, Definition
+# from starhtml.tags import Chapter_number, Search_Popup, Word, Definition
 
 read_rt: APIRouter = APIRouter("/read")
 
@@ -45,8 +44,6 @@ def read(sess, p: int = 0, all: int = 0):
             A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
             html_header(sess),
             Main(
-                # Pre(style="white-space: pre-wrap;")(str(chap)),
-                # Pre(style="white-space: pre-wrap;")(str(user_chap)),
                 H1(id="main-heading")(
                     f"Read ({p * 10 + 1} to {(p + 1) * 10})" if not all else "Read All",
                 ),
@@ -124,23 +121,6 @@ def chapter_view(sess, num: int, word: str = ""):
     except NotFoundError:
         done = 0
 
-    if word:
-        try:
-            fetch = json.loads(
-                requests.get(
-                    f"https://freedictionaryapi.com/api/v1/entries/en/{word}"
-                ).text
-            )["entries"][0]
-
-            definition = [
-                s["definition"]
-                for s in fetch["senses"]
-                if "(obsolete)" not in s["definition"]
-            ]
-
-        except IndexError:
-            definition = None
-
     return (
         Title(f"Read, Chapter {num}: Ay Gogh"),
         Body(
@@ -156,24 +136,7 @@ def chapter_view(sess, num: int, word: str = ""):
                     "; document.getSelection().empty();",
                 ),
             )(
-                Div(_class="notice modal")(
-                    (
-                        H1(word),
-                        Ul(
-                            *(Li(d) for d in definition),
-                        ),
-                    )
-                    if definition
-                    else P("Sorry, no idea."),
-                    Button(
-                        data_on_click=get(f"/read/{num}/close"),
-                        style="margin-top: 1rem",
-                    )("Close"),
-                )
-                if word
-                else P(_class="notice")(
-                    "Select a word and its definitions will be shown here!"
-                ),
+                popup_view(sess, num, word),
                 Section(
                     style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
                 )(
@@ -192,7 +155,6 @@ def chapter_view(sess, num: int, word: str = ""):
                     ),
                 ),
                 Section(style="display: grid; place-items: center")(
-                    # mark complete button section
                     Button(
                         data_on_click=post(f"/read/{num}"),
                     )("Mark Complete")
@@ -229,3 +191,38 @@ def search(sess, num: int, word: str):
 @read_rt.get("/{num:int}/close")
 def close(sess, num: int):
     relay.publish(f"read.{sess['name']}.{num}", "")
+
+
+def popup_view(sess, num: int, word: str = ""):
+    if not word:
+        return None
+
+    # chap = list(
+    #     db.get(sess["name"]).query("SELECT * FROM chapter WHERE number = ? ", (num,)),
+    # )[0]
+
+    try:
+        fetch = json.loads(
+            requests.get(f"https://freedictionaryapi.com/api/v1/entries/en/{word}").text
+        )["entries"][0]
+
+        definition = [
+            s["definition"]
+            for s in fetch["senses"]
+            if "(obsolete)" not in s["definition"]
+        ]
+
+    except IndexError:
+        definition = None
+
+    return Dl(_class="notice modal")(
+        Button(
+            data_on_click=get(f"/read/{num}/close"),
+        )("Close"),
+        (
+            Dt(word),
+            *(Dd(d) for d in definition),
+        )
+        if definition
+        else P("Sorry, no idea."),
+    )
