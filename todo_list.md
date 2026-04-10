@@ -22,15 +22,15 @@
 - Đổi email
 
 # Test
-- Hình như chưa check là có phải ngày mới chưa
+
+- Chưa check là có phải ngày mới chưa: bỏ cái vụ phải ngày mới mới được test
 - INSERT OR REPLACE INTO → UPSERT
+  - UNIQUE constraint failed?
 
 # Read
 
 - Badge hiện mức độ: xanh dễ, vàng oke, đỏ khó
-- Wiktionary Parser chưa cập nhật API
 - CSS `overflow`
-
 
 ## Not now
 

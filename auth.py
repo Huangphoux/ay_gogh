@@ -161,7 +161,7 @@ def signup_process(name: str, pwd: str, sess):
         return Redirect(signup)
 
     db.app.execute(
-        "INSERT OR REPLACE INTO user (name, pwd) VALUES (?, ?)",
+        "INSERT INTO user (name, pwd) VALUES (?, ?)",
         (name, pwd_context.hash(pwd)),
     )
 

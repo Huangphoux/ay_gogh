@@ -176,7 +176,7 @@ def chapter_view(sess, num: int, word: str = ""):
 @read_rt.post("/{num:int}")
 def complete(sess, num: int):
     db.get(sess["name"]).execute(
-        "INSERT OR REPLACE INTO chapter (number, done) VALUES (?, ?)", (num, 1)
+        "INSERT INTO chapter (number, done) VALUES (?, ?)", (num, 1)
     )
 
     relay.publish(f"read.{sess['name']}.{num}", "")
@@ -280,7 +280,7 @@ def popup_view(sess, num: int, word: str = ""):
 async def save(sess, num: int, word: str, definition: str):
     if word and definition:
         db.get(sess["name"]).execute(
-            "INSERT OR REPLACE INTO deck (front, back) VALUES (?, ?)",
+            "INSERT INTO deck (front, back) VALUES (?, ?)",
             (word, definition),
         )
 
@@ -291,8 +291,8 @@ async def save(sess, num: int, word: str, definition: str):
 async def save(sess, num: int, word: str, definition: str):
     if word and definition:
         db.get(sess["name"]).execute(
-            "INSERT OR REPLACE INTO deck (front, back) VALUES (?, ?)",
-            (word, definition),
+            "UPDATE deck SET back=? WHERE front=?",
+            (definition, word),
         )
 
         relay.publish(f"read.{sess['name']}.{num}", "")

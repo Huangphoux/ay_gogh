@@ -21,13 +21,13 @@ class DatabaseDict:
                 CREATE TABLE IF NOT EXISTS user (
                     id INTEGER PRIMARY KEY,
                     name TEXT NOT NULL UNIQUE,
-                    pwd TEXT NOT NULL UNIQUE
+                    pwd TEXT NOT NULL
                 )
         """)  # NOT NULL, UNIQUE, CHECK
 
         ### DEBUG
         self.app.execute(
-            "INSERT OR REPLACE INTO user (name, pwd) VALUES (?, ?)",
+            "INSERT OR IGNORE INTO user (name, pwd) VALUES (?, ?)",
             ("DEBUG", pwd_context.hash("DEBUG")),
         )
         ### DEBUG
@@ -66,7 +66,7 @@ class DatabaseDict:
             for row in to_db:
                 self.app.execute(
                     f"""
-                        INSERT OR REPLACE INTO form_{form} (number, lemma, question, a, b, c, d, answer)
+                        INSERT OR IGNORE INTO form_{form} (number, lemma, question, a, b, c, d, answer)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     row,
@@ -90,7 +90,7 @@ class DatabaseDict:
 
                     self.app.execute(
                         f"""
-                            INSERT OR REPLACE INTO chapter
+                            INSERT OR IGNORE INTO chapter
                             (number, number_word, cardinal, cardinal_word, title, content)
                             VALUES (?, ?, ?, ?, ?, ?)
                         """,
@@ -111,28 +111,28 @@ class DatabaseDict:
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS test (
                         number INTEGER PRIMARY KEY,
-                        day DATE UNIQUE NOT NULL DEFAULT CURRENT_DATE,
-                        form TEXT NOT NULL DEFAULT "a",
-                        progress INTEGER NOT NULL DEFAULT 0,
-                        lv1 INTEGER NOT NULL DEFAULT 0,
-                        lv2 INTEGER NOT NULL DEFAULT 0,
-                        lv3 INTEGER NOT NULL DEFAULT 0,
-                        lv4 INTEGER NOT NULL DEFAULT 0,
-                        lv5 INTEGER NOT NULL DEFAULT 0
+                        day TEXT NOT NULL,
+                        form TEXT NOT NULL,
+                        progress INTEGER NOT NULL,
+                        lv1 INTEGER NOT NULL,
+                        lv2 INTEGER NOT NULL,
+                        lv3 INTEGER NOT NULL,
+                        lv4 INTEGER NOT NULL,
+                        lv5 INTEGER NOT NULL
                     )
             """)
 
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS chapter (
                         number INTEGER PRIMARY KEY,
-                        done INTEGER CHECK (done = 0 OR done = 1)
+                        done INTEGER CHECK (done = 1)
                     )
             """)
 
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS deck (
                         number INTEGER PRIMARY KEY,
-                        front TEXT UNIQUE NOT NULL,
+                        front TEXT NOT NULL UNIQUE,
                         back TEXT NOT NULL
                     )
             """)

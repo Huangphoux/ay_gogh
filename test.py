@@ -20,9 +20,6 @@ def test(sess):
     except IndexError:
         last_test = None
 
-    last_finished = last_test and last_test["progress"] == 100
-    print(last_finished)
-
     return (
         Title(f"Test: Ay Gogh"),
         Body(
@@ -31,10 +28,10 @@ def test(sess):
             Main(
                 H1("Test", id="main-heading"),
                 A(_class="button", href=intro)(
-                    "Take a test",
-                )
-                if not last_finished
-                else P("You may not take more than one test a day."),
+                    "Continue last test"
+                    if last_test and last_test["progress"] != 100
+                    else "Take a test",
+                ),
                 Figure(
                     Table(
                         Thead(Tr(Th(h.title()) for h in header)),
@@ -43,7 +40,6 @@ def test(sess):
                 )
                 if tests
                 else None,
-                
                 Section(
                     H2("Your latest test's result"),
                     P(
@@ -53,18 +49,19 @@ def test(sess):
                     Ul(
                         *(
                             Li(
-                                f"Level {num}: {last_test[f'lv{num}'] / 20:.0%}",
+                                f"Level {num}: ",
+                                f"{last_test[f'lv{num}'] / 20:.0%}"
+                                if last_test and last_test["progress"] != 100
+                                else None,
                                 style="color:red; font-weight: bold; font-size: 2rem"
-                                if last_test[f"lv{num}"] / 20 < 0.8
+                                if last_test
+                                and last_test["progress"] == 100
+                                and last_test[f"lv{num}"] / 20 < 0.8
                                 else None,
                             )
                             for num in "12345"
                         ),
                     ),
-                )
-                if last_test and last_test["progress"] == 100
-                else P(_class="notice")(
-                    "An analysis of your latest test result will be shown here."
                 ),
             ),
             html_footer(sess),
@@ -97,13 +94,11 @@ def intro(sess):
 
     if last_finished is False:
         return Redirect(progress)
-    elif last_finished is True:
-        return Redirect(test)
 
     db.get(sess["name"]).execute(
         """
-            INSERT OR REPLACE INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
-            VALUES (CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
+            VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
         """,
         (choice("abc"), 95, 0, 0, 0, 0, 0),  # DEBUG
     )
@@ -139,9 +134,6 @@ def intro(sess):
 
 @test_rt.get("/progress")
 def progress(sess):
-    if is_last_finished(sess) is True:
-        return Redirect(test)
-
     return progress_view(sess)
 
 
@@ -253,19 +245,15 @@ async def progress_process(sess, choice: str):
     lvs[f"lv{lv_num}"] += 1 if choice == next_q["answer"] else 0
 
     db.get(sess["name"]).execute(
-        """
-            INSERT OR REPLACE INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """,
+        "UPDATE test SET progress=?, lv1=?, lv2=?, lv3=?, lv4=?, lv5=? WHERE day=?",
         (
-            last_test["day"],
-            last_test["form"],
             last_num + 1,
             lvs["lv1"],
             lvs["lv2"],
             lvs["lv3"],
             lvs["lv4"],
             lvs["lv5"],
+            last_test["day"],
         ),
     )
 
