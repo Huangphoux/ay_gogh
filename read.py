@@ -131,11 +131,7 @@ def chapter_view(sess, num: int, word: str = ""):
                     get(url=f"/read/{num}/cqrs"),
                     "; document.addEventListener('selectionchange', () => $word = document.getSelection().toString().trim())",
                 ),
-                data_on_pointerup=(
-                    f"if ($word !== \"\") {{ @get('/read/{num}/add') }}",
-                ),
             )(
-                Pre(data_json_signals=True),
                 popup_view(sess, num, word),
                 Section(
                     style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
@@ -147,7 +143,11 @@ def chapter_view(sess, num: int, word: str = ""):
                     f"{chap['title']}",
                     " (DONE)" if done else None,
                 ),
-                Section(  # text section
+                Section(
+                    data_on_pointerup=(
+                        f"if ($word !== \"\" ) {{ @get('/read/{num}/add') }};"
+                    )
+                )(  # text section
                     P(
                         Safe(
                             mistletoe.markdown(chap["content"]),
@@ -202,7 +202,9 @@ def popup_view(sess, num: int, word: str = ""):
 
     try:
         fetch = json.loads(
-            requests.get(f"https://freedictionaryapi.com/api/v1/entries/en/{word}").text
+            requests.get(
+                f"https://freedictionaryapi.com/api/v1/entries/en/{word.lower()}"
+            ).text
         )["entries"][0]
 
         definition = [
@@ -232,17 +234,22 @@ def popup_view(sess, num: int, word: str = ""):
             style="resize: none;",
             data_ignore=True,
         ),
-        Details(style="height: 50%; overflow: scroll")(
+        Details(
             Summary("Wiktionary"),
             Ul(
+                style="max-height: 20vh; overflow: auto",
+                data_on_pointerup=(
+                    f"if ($word !== \"\" ) {{ @get('/read/{num}/add') }};"
+                ),
+            )(
                 *(Li(d) for d in definition),
             )
             if definition
             else P("Sorry, no idea."),
         ),
-        Div(
-            Button(data_on_click=get(f"/read/{num}/close"))("Close"),
-            Button("Save"),
+        Div(style="display: flex; gap: 1rem;")(
+            Button(type="reset", data_on_click=get(f"/read/{num}/close"))("Close"),
+            Button(data_on_click=post(f"/read/{num}/save"))("Save"),
         ),
     )
 
