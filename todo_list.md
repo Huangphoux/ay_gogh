@@ -23,6 +23,7 @@
 
 # Test
 - Hình như chưa check là có phải ngày mới chưa
+- INSERT OR REPLACE INTO → UPSERT
 
 # Read
 

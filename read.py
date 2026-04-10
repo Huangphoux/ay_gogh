@@ -196,44 +196,66 @@ def popup_view(sess, num: int, word: str = ""):
     if not word:
         return None
 
-    # chap = list(
-    #     db.get(sess["name"]).query("SELECT * FROM chapter WHERE number = ? ", (num,)),
-    # )[0]
-
     try:
-        fetch = json.loads(
-            requests.get(
-                f"https://freedictionaryapi.com/api/v1/entries/en/{word.lower()}"
-            ).text
-        )["entries"][0]
-
-        definition = [
-            s["definition"]
-            for s in fetch["senses"]
-            if "(obsolete)" not in s["definition"]
-        ]
-
+        card = list(
+            db.get(sess["name"]).query(
+                "SELECT front, back FROM deck WHERE front = ? ", (word,)
+            ),
+        )[0]
     except IndexError:
-        definition = None
+        card = None
+
+    if not card:
+        try:
+            fetch = json.loads(
+                requests.get(
+                    f"https://freedictionaryapi.com/api/v1/entries/en/{word.lower()}"
+                ).text
+            )["entries"][0]
+
+            definition = [
+                s["definition"]
+                for s in fetch["senses"]
+                if "(obsolete)" not in s["definition"]
+            ]
+
+        except IndexError:
+            definition = None
 
     return Form(
         _class="notice modal",
-        data_on_submit=(post(save, {"contentType": "form"}),),
-    )(
-        Label(_for="definition", style="margin-bottom: 1rem;")(
-            "Write your definitions of the word ",
-            Mark(word),
-            " in the text box below.",
+        data_on_submit=(
+            post(
+                f"/read/{num}/save",
+                {"contentType": "form"},
+            )
+            if not card
+            else patch(
+                f"/read/{num}/save",
+                {"contentType": "form"},
+            ),
         ),
+    )(
+        Label(_for="word")("Word (cannot change)"),
+        Input(
+            type="text",
+            id="word",
+            name="word",
+            value=card["front"] if card else word,
+            minlength="1",
+            required=True,
+            placeholder="Write the word you want to collect here.",
+            readonly=True,
+        ),
+        Label(_for="definition")("Definition"),
         Textarea(
             id="definition",
             name="definition",
             placeholder="Write your own definitions in here.",
             required=True,
-            minlength="8",
+            minlength="1",
             style="resize: none;",
-            data_ignore=True,
-        ),
+        )(card["back"] if card else None),
         Details(
             Summary("Wiktionary"),
             Ul(
@@ -243,22 +265,33 @@ def popup_view(sess, num: int, word: str = ""):
                 ),
             )(
                 *(Li(d) for d in definition),
-            )
-            if definition
-            else P("Sorry, no idea."),
-        ),
+            ),
+        )
+        if not card and definition
+        else None,
         Div(style="display: flex; gap: 1rem;")(
             Button(type="reset", data_on_click=get(f"/read/{num}/close"))("Close"),
-            Button(data_on_click=post(f"/read/{num}/save"))("Save"),
+            Button("Save"),
         ),
     )
 
 
 @read_rt.post("/{num:int}/save")
-def save(sess, num: int, word: str, definition: str):
+async def save(sess, num: int, word: str, definition: str):
     if word and definition:
         db.get(sess["name"]).execute(
-            "INSERT INTO deck (front, back) VALUES (?, ?)",
+            "INSERT OR REPLACE INTO deck (front, back) VALUES (?, ?)",
+            (word, definition),
+        )
+
+        relay.publish(f"read.{sess['name']}.{num}", "")
+
+
+@read_rt.patch("/{num:int}/save")
+async def save(sess, num: int, word: str, definition: str):
+    if word and definition:
+        db.get(sess["name"]).execute(
+            "INSERT OR REPLACE INTO deck (front, back) VALUES (?, ?)",
             (word, definition),
         )
 
