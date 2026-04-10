@@ -107,7 +107,7 @@ def chapter_get(sess, num: int):
 @sse
 async def cqrs(req, sess, num: int):
     async for subject, data in relay.subscribe(f"read.{sess['name']}.{num}"):
-        yield elements(chapter_view(sess, num, data), use_view_transition=True)
+        yield elements(chapter_view(sess, num, word=data), use_view_transition=True)
 
 
 def chapter_view(sess, num: int, word: str = ""):
@@ -129,13 +129,13 @@ def chapter_view(sess, num: int, word: str = ""):
             Main(
                 data_init=(
                     get(url=f"/read/{num}/cqrs"),
-                    "; document.addEventListener('selectionchange', () => $word = document.getSelection().toString().trim().toLowerCase())",
+                    "; document.addEventListener('selectionchange', () => $word = document.getSelection().toString().trim())",
                 ),
                 data_on_pointerup=(
-                    get(f"/read/{num}/search", {"debounce": 200}),
-                    "; document.getSelection().empty();",
+                    f"if ($word !== \"\") {{ @get('/read/{num}/add') }}",
                 ),
             )(
+                Pre(data_json_signals=True),
                 popup_view(sess, num, word),
                 Section(
                     style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
@@ -182,10 +182,9 @@ def complete(sess, num: int):
     relay.publish(f"read.{sess['name']}.{num}", "")
 
 
-@read_rt.get("/{num:int}/search")
-def search(sess, num: int, word: str):
-    if word:
-        relay.publish(f"read.{sess['name']}.{num}", word)
+@read_rt.get("/{num:int}/add")
+def add(sess, num: int, word: str):
+    relay.publish(f"read.{sess['name']}.{num}", word)
 
 
 @read_rt.get("/{num:int}/close")
@@ -215,14 +214,45 @@ def popup_view(sess, num: int, word: str = ""):
     except IndexError:
         definition = None
 
-    return Dl(_class="notice modal")(
-        Button(
-            data_on_click=get(f"/read/{num}/close"),
-        )("Close"),
-        (
-            Dt(word),
-            *(Dd(d) for d in definition),
-        )
-        if definition
-        else P("Sorry, no idea."),
+    return Form(
+        _class="notice modal",
+        data_on_submit=(post(save, {"contentType": "form"}),),
+    )(
+        Label(_for="definition", style="margin-bottom: 1rem;")(
+            "Write your definitions of the word ",
+            Mark(word),
+            " in the text box below.",
+        ),
+        Textarea(
+            id="definition",
+            name="definition",
+            placeholder="Write your own definitions in here.",
+            required=True,
+            minlength="8",
+            style="resize: none;",
+            data_ignore=True,
+        ),
+        Details(style="height: 50%; overflow: scroll")(
+            Summary("Wiktionary"),
+            Ul(
+                *(Li(d) for d in definition),
+            )
+            if definition
+            else P("Sorry, no idea."),
+        ),
+        Div(
+            Button(data_on_click=get(f"/read/{num}/close"))("Close"),
+            Button("Save"),
+        ),
     )
+
+
+@read_rt.post("/{num:int}/save")
+def save(sess, num: int, word: str, definition: str):
+    if word and definition:
+        db.get(sess["name"]).execute(
+            "INSERT INTO deck (front, back) VALUES (?, ?)",
+            (word, definition),
+        )
+
+        relay.publish(f"read.{sess['name']}.{num}", "")

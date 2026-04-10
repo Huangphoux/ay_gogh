@@ -128,11 +128,12 @@ class DatabaseDict:
                         done INTEGER CHECK (done = 0 OR done = 1)
                     )
             """)
-            
+
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS deck (
                         number INTEGER PRIMARY KEY,
-                        done INTEGER CHECK (done = 0 OR done = 1)
+                        front TEXT NOT NULL,
+                        back TEXT NOT NULL
                     )
             """)
 

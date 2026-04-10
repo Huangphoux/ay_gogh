@@ -28,7 +28,7 @@
 
 - Badge hiện mức độ: xanh dễ, vàng oke, đỏ khó
 - Wiktionary Parser chưa cập nhật API
-
+- CSS `overflow`
 
 
 ## Not now
