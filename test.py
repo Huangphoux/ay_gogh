@@ -9,7 +9,7 @@ test_rt: APIRouter = APIRouter("/test")
 @test_rt.get("/")
 def test(sess):
     tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
-    header = ["day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
+    header = ["number", "day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
 
     try:
         last_test = list(
@@ -51,7 +51,7 @@ def test(sess):
                             Li(
                                 f"Level {num}: ",
                                 f"{last_test[f'lv{num}'] / 20:.0%}"
-                                if last_test and last_test["progress"] != 100
+                                if last_test and last_test["progress"] == 100
                                 else None,
                                 style="color:red; font-weight: bold; font-size: 2rem"
                                 if last_test
@@ -90,18 +90,28 @@ def is_last_finished(sess):
 
 @test_rt.get("/intro")
 def intro(sess):
-    last_finished = is_last_finished(sess)
+    try:
+        last_test = list(
+            db.get(sess["name"]).query(
+                "SELECT progress FROM test WHERE day = (SELECT MAX(day) FROM test)"
+            )
+        )[0]
+    except IndexError:
+        last_test = None
 
-    if last_finished is False:
+    last_num = last_test["progress"] if last_test else None
+
+    if last_num is None or last_num == 100:
+        db.get(sess["name"]).execute(
+            """
+                INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
+                VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (choice("abc"), 95, 0, 0, 0, 0, 0),  # DEBUG
+        )
+
+    if last_num and last_num < 100:
         return Redirect(progress)
-
-    db.get(sess["name"]).execute(
-        """
-            INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
-            VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (choice("abc"), 95, 0, 0, 0, 0, 0),  # DEBUG
-    )
 
     return (
         Title(f"Test, Intro: Ay Gogh"),
@@ -134,6 +144,9 @@ def intro(sess):
 
 @test_rt.get("/progress")
 def progress(sess):
+    if is_last_finished(sess):
+        return Redirect(test)
+
     return progress_view(sess)
 
 
