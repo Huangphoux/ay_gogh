@@ -52,9 +52,11 @@
 
 # SRS
 
-- Chưa optimize: chỉ đụng tới Scheduler, Card, ReviewLog
-    - Tất cả đều có from_dict(), to_dict()
-    - Scheduler có 3 phương thức riêng
+- Không hiện thẻ cho tới khi qua ngày hôm sau
+- Setting page for Optimize, Desired Retention
+- "Free": lúc nào review cũng được? → Không cần nhắc người dùng?
+- Mark từ nào có card
+- Change word, wiktionary đổi theo, nhớ debounce
 
 ## Not now
 

@@ -5,11 +5,11 @@ import mistletoe
 from math import floor
 import requests
 import json
-from fsrs import Scheduler, Card, ReviewLog, Rating
+from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
 
 
-# from fasthtml.components → from starhtml.tags
+# fasthtml.components → starhtml.tags
 # from starhtml.tags import Chapter_number, Search_Popup, Word, Definition
 
 read_rt: APIRouter = APIRouter("/read")
@@ -108,7 +108,7 @@ def chapter_get(sess, num: int):
 @read_rt.get("/{num:int}/cqrs")
 @sse
 async def cqrs(req, sess, num: int):
-    async for subject, data in relay.subscribe(f"read.{sess['name']}.{num}"):
+    async for _, data in relay.subscribe(f"read.{sess['name']}.{num}"):
         yield elements(chapter_view(sess, num, word=data), use_view_transition=True)
 
 
@@ -131,7 +131,8 @@ def chapter_view(sess, num: int, word: str = ""):
             Main(
                 data_init=(
                     get(url=f"/read/{num}/cqrs"),
-                    "; document.addEventListener('selectionchange', () => $word = document.getSelection().toString().trim())",
+                    "; document.addEventListener('selectionchange',\
+                    () => $word = document.getSelection().toString().trim())",
                 ),
             )(
                 popup_view(sess, num, word),
@@ -184,9 +185,13 @@ def complete(sess, num: int):
     relay.publish(f"read.{sess['name']}.{num}", "")
 
 
+### POP UP
+
+
 @read_rt.get("/{num:int}/open")
 def open(sess, num: int, word: str):
     relay.publish(f"read.{sess['name']}.{num}", word)
+    # pointerup, open(), cqrs(), popup_view()
 
 
 @read_rt.get("/{num:int}/close")
@@ -202,8 +207,10 @@ def popup_view(sess, num: int, word: str = ""):
         card = list(
             db.get(sess["name"]).query(
                 """
-                SELECT front, back, due, CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due
-                                                -- datetime now is after due
+                SELECT
+                    front, back, due,
+                    CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due
+                           -- datetime now is after due
                 FROM deck
                 WHERE front = ?
                 """,
@@ -290,7 +297,7 @@ def popup_view(sess, num: int, word: str = ""):
         )
 
     return Form(_class="notice modal")(
-        Label(_for="word")("Word (cannot modify)"),
+        Label(_for="word")("Can you recall the word below?"),
         Input(
             type="text",
             id="word",
@@ -390,19 +397,20 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
         query["step"],
         query["stability"],
         query["difficulty"],
+        # str → datetime UTC object
         datetime.strptime(query["due"], "%Y-%m-%d %H:%M:%S").replace(
             tzinfo=timezone.utc
         ),
         datetime.strptime(query["last_review"], "%Y-%m-%d %H:%M:%S").replace(
             tzinfo=timezone.utc
-        ) if query["last_review"] else None,
+        )
+        if query["last_review"]
+        else None,
     )
 
-    scheduler = Scheduler()
+    scheduler = Scheduler(desired_retention=0.8)
 
-    card, review_log = scheduler.review_card(
-        card, Rating.Good if not forgot else Rating.Again
-    )
+    card, _ = scheduler.review_card(card, Rating.Good if not forgot else Rating.Again)
 
     db.get(sess["name"]).execute(
         """
@@ -416,7 +424,7 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
             card.step,
             card.stability,
             card.difficulty,
-            card.due.strftime("%Y-%m-%d %H:%M:%S"),
+            card.due.strftime("%Y-%m-%d %H:%M:%S"),  # str → datetime UTC object
             card.last_review.strftime("%Y-%m-%d %H:%M:%S")
             if card.last_review
             else None,
