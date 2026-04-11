@@ -46,6 +46,10 @@
 
 # Mining
 
+- Dễ làm: phiên âm, dịch
+
+## Not now
+
 - Từ điển cá nhân: người học tích góp những từ bản thân muốn ghi nhớ.
 - Người đọc bôi đen một từ, hệ thống sẽ hiện một pop-up bao gồm: phiên âm, giọng đọc, và một ô để người đọc tự điền vào nghĩa của từ đấy, sau đó hệ thống sẽ lưu từ đó vào từ điển cá nhân của người học. Nếu người dùng muốn hệ thống tự động điền thì cần phải trả phí, nhằm hạn chế việc phụ thuộc quá nhiều.
 - Người đọc có thể bôi đen một cụm từ hoặc một câu để có thể nhờ hệ thống dịch sang ngôn ngữ khác. Đây là một tính năng cần trả phí để hạn chế việc lạm dụng.
