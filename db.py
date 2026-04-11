@@ -135,11 +135,22 @@ class DatabaseDict:
                         front TEXT NOT NULL UNIQUE,
                         back TEXT NOT NULL,
                         state INTEGER NOT NULL,
-                        step INTEGER,
+                        step INTEGER NOT NULL,
                         stability REAL,
                         difficulty REAL,
                         due TEXT NOT NULL, -- new cards due upon creation
                         last_review TEXT
+                    )
+            """)
+            
+            self._user[name].execute("""
+                    CREATE TABLE IF NOT EXISTS review_log (
+                        id INTEGER PRIMARY KEY,
+                        card_id INTEGER NOT NULL,
+                        rating INTEGER NOT NULL,
+                        review_datetime TEXT NOT NULL,
+                        review_duration INTEGER,
+                        FOREIGN KEY (card_id) REFERENCES deck(id)
                     )
             """)
 

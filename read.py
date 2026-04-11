@@ -2,10 +2,10 @@ from apswutils.db import NotFoundError
 from starhtml import *
 from shared import db, html_header, html_footer, relay
 import mistletoe
-from math import floor
+from math import ceil
 import requests
 import json
-from fsrs import Scheduler, Card, Rating
+from fsrs import Scheduler, Card, Rating, ReviewLog
 from datetime import datetime, timezone
 
 
@@ -166,7 +166,7 @@ def chapter_view(sess, num: int, word: str = ""):
                     P(_class="notice")("You have marked this chapter as Complete.")
                     if done
                     else None,
-                    A(href=f"/read/?p={floor(num / 10)}")("Back to List")
+                    A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List")
                     if done
                     else None,
                 ),
@@ -410,7 +410,9 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
 
     scheduler = Scheduler(desired_retention=0.8)
 
-    card, _ = scheduler.review_card(card, Rating.Good if not forgot else Rating.Again)
+    card, review_log = scheduler.review_card(
+        card, Rating.Good if not forgot else Rating.Again
+    )
 
     db.get(sess["name"]).execute(
         """
@@ -429,6 +431,19 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
             if card.last_review
             else None,
             word,  # front
+        ),
+    )
+
+    db.get(sess["name"]).execute(
+        """
+            INSERT INTO review_log (card_id, rating, review_datetime, review_duration)
+            VALUES (?, ?, ?, ?)
+        """,
+        (
+            review_log.card_id,
+            review_log.rating,
+            review_log.review_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+            review_log.review_duration,
         ),
     )
 

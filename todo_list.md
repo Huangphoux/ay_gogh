@@ -30,7 +30,7 @@
 # Read
 
 - Badge hiện mức độ: xanh dễ, vàng oke, đỏ khó
-- CSS `overflow`
+- Progressive load từ điển Wiktionary
 
 ## Not now
 
