@@ -211,3 +211,6 @@ if __name__ == "__main__":
 
     os.remove("./.sesskey")
     shutil.rmtree("__pycache__")
+    
+    db.close_all()
+    shutil.rmtree("db")

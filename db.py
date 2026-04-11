@@ -147,3 +147,10 @@ class DatabaseDict:
             # Newly created then sign out immediately means no DB made yet
             # but bypassing that is okay tho
             pass
+
+    def close_all(self):
+        self.app.close()
+
+        for name in self._user:
+            self._user[name].close()
+            del self._user[name]
