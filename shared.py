@@ -19,11 +19,12 @@ def html_header(sess=None):
     if not sess:
         nav = Nav(
             A("Home", href="/"),
-            A("Log In", href="/auth/login"),
+            A("Log In", href="/auth/login/"),
         )
     else:
         nav = Nav(
-            sess and A("Profile", href="/"),  # if … then …
+            A("Profile", href="/"),
+            A("Settings", href="/settings/"),
         )
 
     return Header(
@@ -38,10 +39,10 @@ def html_footer(sess=None):
         sess
         and A(
             "Log Out",
-            data_on_click=js("confirm('Are you sure?')").if_(delete("/auth/login"), ""),
+            data_on_click=js("confirm('Are you sure?')").if_(delete("/auth/login/"), ""),
         ),
         P(
-            A(href="https://github.com/Huangphoux/ay_gogh")("Ay Gogh!"),
+            A(href="https://github.com/Huangphoux/ay_gogh/")("Ay Gogh!"),
             " is created by the ❤️ of  ",
             A(href="https://github.com/Huangphoux/")("huangphoux"),
             ".",

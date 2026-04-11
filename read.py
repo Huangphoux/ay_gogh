@@ -5,7 +5,7 @@ import mistletoe
 from math import ceil
 import requests
 import json
-from fsrs import Scheduler, Card, Rating, ReviewLog
+from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
 
 
@@ -98,7 +98,7 @@ def read(sess, p: int = 0, all: int = 0):
 
 
 @read_rt.get("/{num:int}")
-def chapter_get(sess, num: int):
+def chapter(sess, num: int):
     if num not in range(1, 60 + 1):
         return Redirect("/")
 
@@ -297,7 +297,7 @@ def popup_view(sess, num: int, word: str = ""):
         )
 
     return Form(_class="notice modal")(
-        Label(_for="word")("Can you recall the word below?"),
+        Label(_for="word")("Word (Recall before reveal)"),
         Input(
             type="text",
             id="word",
@@ -308,7 +308,7 @@ def popup_view(sess, num: int, word: str = ""):
             placeholder="Write the word you want to collect here.",
             readonly=True,
         ),
-        Label(_for="definition")("Definition"),
+        Label(_for="definition")("Definition (You can change the notes)"),
         Textarea(
             id="definition",
             name="definition",
@@ -321,7 +321,7 @@ def popup_view(sess, num: int, word: str = ""):
         Div(style="display: flex; gap: 1rem;")(
             Button(
                 data_on_click=("$show = true", {"prevent": True}), data_show="!$show"
-            )("Show Answer"),
+            )("Reveal"),
             Button(
                 data_show="$show",
                 data_on_click=(patch(f"/read/{num}/forgot", {"contentType": "form"}),),
@@ -408,7 +408,19 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
         else None,
     )
 
-    scheduler = Scheduler(desired_retention=0.8)
+    settings = list(
+        db.get(sess["name"]).query(
+            "SELECT setting, value FROM settings",
+        ),
+    )
+
+    for s in settings:
+        if s["setting"] == "desired_retention":
+            desired_retention = s["value"]
+        if s["setting"] == "parameters":
+            parameters = [float(p.strip()) for p in s["value"].split(",")]
+
+    scheduler = Scheduler(desired_retention=desired_retention, parameters=parameters)
 
     card, review_log = scheduler.review_card(
         card, Rating.Good if not forgot else Rating.Again
@@ -426,7 +438,7 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
             card.step,
             card.stability,
             card.difficulty,
-            card.due.strftime("%Y-%m-%d %H:%M:%S"),  # str → datetime UTC object
+            card.due.strftime("%Y-%m-%d %H:%M:%S"),  # datetime UTC object to string
             card.last_review.strftime("%Y-%m-%d %H:%M:%S")
             if card.last_review
             else None,

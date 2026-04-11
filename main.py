@@ -59,10 +59,12 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
 from auth import auth_rt
 from test import test_rt
 from read import read_rt
+from settings import set_rt
 
 auth_rt.to_app(app)
 test_rt.to_app(app)
 read_rt.to_app(app)
+set_rt.to_app(app)
 
 
 from test import is_last_finished
