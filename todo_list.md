@@ -25,7 +25,7 @@
 
 - Chưa check là có phải ngày mới chưa: bỏ cái vụ phải ngày mới mới được test
 - INSERT OR REPLACE INTO → UPSERT
-  - UNIQUE constraint failed?
+    - UNIQUE constraint failed?
 
 # Read
 
@@ -51,6 +51,12 @@
 - spaCy: phân tích part of speech của từ bôi đen để lọc ra kết quả Wiktionary Parser
 
 # SRS
+
+- Chưa optimize: chỉ đụng tới Scheduler, Card, ReviewLog
+    - Tất cả đều có from_dict(), to_dict()
+    - Scheduler có 3 phương thức riêng
+
+## Not now
 
 - Py-FSRS
 - Chủ động gợi nhớ: trong quá trình đọc, đến một câu chứa từ cần phải ôn vào ngày đấy, người học sẽ phải trả lời trước khi chuyển qua câu tiếp theo. Tính năng này giúp làm giảm thời gian phải chuyển qua chuyển lại hai màn hình đọc và ôn từ vựng.

@@ -34,3 +34,13 @@ legend {
     height: fit-content;
     overflow: auto;
 }
+
+.outline {
+    border: solid var(--accent);
+    color: var(--accent);
+    background: var(--accent-bg);
+}
+
+.outline:hover {
+    color: var(--accent-text);
+}

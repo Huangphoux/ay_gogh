@@ -213,4 +213,4 @@ if __name__ == "__main__":
     shutil.rmtree("__pycache__")
     
     db.close_all()
-    shutil.rmtree("db")
+    shutil.rmtree("db") # DEBUG

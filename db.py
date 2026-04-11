@@ -131,9 +131,15 @@ class DatabaseDict:
 
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS deck (
-                        number INTEGER PRIMARY KEY,
+                        id INTEGER PRIMARY KEY,
                         front TEXT NOT NULL UNIQUE,
-                        back TEXT NOT NULL
+                        back TEXT NOT NULL,
+                        state INTEGER NOT NULL,
+                        step INTEGER,
+                        stability REAL,
+                        difficulty REAL,
+                        due TEXT NOT NULL, -- new cards due upon creation
+                        last_review TEXT
                     )
             """)
 

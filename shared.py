@@ -2,8 +2,10 @@ from starhtml import *
 from db import DatabaseDict
 from relay import Relay
 
+
 db = DatabaseDict()
 relay: Relay[str] = Relay()
+
 
 def is_signed_in(req, sess):
     name = req.scope["name"] = sess.get("name", None)

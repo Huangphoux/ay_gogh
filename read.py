@@ -5,6 +5,8 @@ import mistletoe
 from math import floor
 import requests
 import json
+from fsrs import Scheduler, Card, ReviewLog, Rating
+from datetime import datetime, timezone
 
 
 # from fasthtml.components → from starhtml.tags
@@ -145,7 +147,7 @@ def chapter_view(sess, num: int, word: str = ""):
                 ),
                 Section(
                     data_on_pointerup=(
-                        f"if ($word !== \"\" ) {{ @get('/read/{num}/add') }};"
+                        f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
                     )
                 )(  # text section
                     P(
@@ -182,8 +184,8 @@ def complete(sess, num: int):
     relay.publish(f"read.{sess['name']}.{num}", "")
 
 
-@read_rt.get("/{num:int}/add")
-def add(sess, num: int, word: str):
+@read_rt.get("/{num:int}/open")
+def open(sess, num: int, word: str):
     relay.publish(f"read.{sess['name']}.{num}", word)
 
 
@@ -199,7 +201,13 @@ def popup_view(sess, num: int, word: str = ""):
     try:
         card = list(
             db.get(sess["name"]).query(
-                "SELECT front, back FROM deck WHERE front = ? ", (word,)
+                """
+                SELECT front, back, due, CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due
+                                                -- datetime now is after due
+                FROM deck
+                WHERE front = ?
+                """,
+                (word,),
             ),
         )[0]
     except IndexError:
@@ -222,26 +230,72 @@ def popup_view(sess, num: int, word: str = ""):
         except IndexError:
             definition = None
 
-    return Form(
-        _class="notice modal",
-        data_on_submit=(
-            post(
-                f"/read/{num}/save",
-                {"contentType": "form"},
-            )
-            if not card
-            else patch(
-                f"/read/{num}/save",
-                {"contentType": "form"},
+        return Form(
+            _class="notice modal",
+            data_on_submit=(post(f"/read/{num}/save", {"contentType": "form"})),
+        )(
+            Label(_for="word")("Word (cannot modify)"),
+            Input(
+                type="text",
+                id="word",
+                name="word",
+                value=word,
+                minlength="1",
+                required=True,
+                placeholder="Write the word you want to collect here.",
+                readonly=True,
             ),
-        ),
-    )(
-        Label(_for="word")("Word (cannot change)"),
+            Label(_for="definition")("Definition"),
+            Textarea(
+                id="definition",
+                name="definition",
+                placeholder="Write your own definitions in here.",
+                required=True,
+                minlength="1",
+                style="resize: none;",
+            ),
+            Details(
+                Summary("Wiktionary"),
+                Ul(
+                    style="max-height: 20vh; overflow: auto",
+                    data_on_pointerup=(
+                        f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
+                    ),
+                )(
+                    *(Li(d) for d in definition),
+                ),
+            )
+            if definition
+            else None,
+            Div(style="display: flex; gap: 1rem;")(
+                Button(
+                    type="reset",
+                    data_on_click=get(f"/read/{num}/close"),
+                    _class="outline",
+                )("Close"),
+                Button("Save"),
+            ),
+        )
+
+    if not card["is_due"]:
+        time_delta = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
+            tzinfo=timezone.utc
+        ) - datetime.now(timezone.utc)
+
+        return Div(_class="notice modal")(
+            P(
+                f"Card due in {str(time_delta).split('.')[0]}."
+            ),  # take only what is before the point
+            Button(data_on_click=get(f"/read/{num}/close"))("Close"),
+        )
+
+    return Form(_class="notice modal")(
+        Label(_for="word")("Word (cannot modify)"),
         Input(
             type="text",
             id="word",
             name="word",
-            value=card["front"] if card else word,
+            value=card["front"],
             minlength="1",
             required=True,
             placeholder="Write the word you want to collect here.",
@@ -255,44 +309,119 @@ def popup_view(sess, num: int, word: str = ""):
             required=True,
             minlength="1",
             style="resize: none;",
-        )(card["back"] if card else None),
-        Details(
-            Summary("Wiktionary"),
-            Ul(
-                style="max-height: 20vh; overflow: auto",
-                data_on_pointerup=(
-                    f"if ($word !== \"\" ) {{ @get('/read/{num}/add') }};"
-                ),
-            )(
-                *(Li(d) for d in definition),
-            ),
-        )
-        if not card and definition
-        else None,
+            data_show="$show",
+        )(card["back"]),
         Div(style="display: flex; gap: 1rem;")(
-            Button(type="reset", data_on_click=get(f"/read/{num}/close"))("Close"),
-            Button("Save"),
+            Button(
+                data_on_click=("$show = true", {"prevent": True}), data_show="!$show"
+            )("Show Answer"),
+            Button(
+                data_show="$show",
+                data_on_click=(patch(f"/read/{num}/forgot", {"contentType": "form"}),),
+            )("I forgot!"),
+            Button(
+                data_show="$show",
+                data_on_click=(
+                    patch(f"/read/{num}/remembered", {"contentType": "form"})
+                ),
+            )("I remembered!"),
         ),
     )
 
 
 @read_rt.post("/{num:int}/save")
 async def save(sess, num: int, word: str, definition: str):
-    if word and definition:
-        db.get(sess["name"]).execute(
-            "INSERT INTO deck (front, back) VALUES (?, ?)",
-            (word, definition),
-        )
+    if not word and not definition:
+        return Redirect("/")
 
-        relay.publish(f"read.{sess['name']}.{num}", "")
+    card = Card()
+
+    db.get(sess["name"]).execute(
+        """
+        INSERT INTO deck (id, front, back, state, step, stability, difficulty, due, last_review)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            card.card_id,
+            word,  # front
+            definition,  # back
+            card.state,
+            card.step,
+            card.stability,
+            card.difficulty,
+            card.due.strftime("%Y-%m-%d %H:%M:%S"),  # due
+            card.last_review,
+        ),
+    )
+
+    relay.publish(f"read.{sess['name']}.{num}", "")
 
 
-@read_rt.patch("/{num:int}/save")
-async def save(sess, num: int, word: str, definition: str):
-    if word and definition:
-        db.get(sess["name"]).execute(
-            "UPDATE deck SET back=? WHERE front=?",
-            (definition, word),
-        )
+@read_rt.patch("/{num:int}/remembered")
+async def remembered(sess, num: int, word: str, definition: str):
+    rate_card(sess, num, word, definition, forgot=False)
 
-        relay.publish(f"read.{sess['name']}.{num}", "")
+
+@read_rt.patch("/{num:int}/forgot")
+async def forgot(sess, num: int, word: str, definition: str):
+    rate_card(sess, num, word, definition, forgot=True)
+
+
+def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
+    if not word and not definition:
+        return Redirect("/")
+
+    query = list(
+        db.get(sess["name"]).query(
+            """
+                SELECT id, state, step, stability, difficulty, due, last_review
+                FROM deck
+                WHERE front = ?
+            """,
+            (
+                word,  # front
+            ),
+        ),
+    )[0]
+
+    card = Card(
+        query["id"],
+        query["state"],
+        query["step"],
+        query["stability"],
+        query["difficulty"],
+        datetime.strptime(query["due"], "%Y-%m-%d %H:%M:%S").replace(
+            tzinfo=timezone.utc
+        ),
+        datetime.strptime(query["last_review"], "%Y-%m-%d %H:%M:%S").replace(
+            tzinfo=timezone.utc
+        ) if query["last_review"] else None,
+    )
+
+    scheduler = Scheduler()
+
+    card, review_log = scheduler.review_card(
+        card, Rating.Good if not forgot else Rating.Again
+    )
+
+    db.get(sess["name"]).execute(
+        """
+            UPDATE deck
+            SET back=?, state=?, step=?, stability=?, difficulty=?, due=?, last_review=?
+            WHERE front=?
+        """,
+        (
+            definition,  # back
+            card.state,
+            card.step,
+            card.stability,
+            card.difficulty,
+            card.due.strftime("%Y-%m-%d %H:%M:%S"),
+            card.last_review.strftime("%Y-%m-%d %H:%M:%S")
+            if card.last_review
+            else None,
+            word,  # front
+        ),
+    )
+
+    relay.publish(f"read.{sess['name']}.{num}", word)
