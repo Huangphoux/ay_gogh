@@ -7,6 +7,7 @@ import requests
 import json
 from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
+import datetime as dt
 
 
 # fasthtml.components → starhtml.tags
@@ -132,7 +133,7 @@ def chapter_view(sess, num: int, word: str = ""):
                 data_init=(
                     get(url=f"/read/{num}/cqrs"),
                     "; document.addEventListener('selectionchange',\
-                    () => $word = document.getSelection().toString().trim())",
+                    () => $word = document.getSelection().toString().trim().toLowerCase())",
                 ),
             )(
                 popup_view(sess, num, word),
@@ -208,7 +209,7 @@ def popup_view(sess, num: int, word: str = ""):
             db.get(sess["name"]).query(
                 """
                 SELECT
-                    front, back, due,
+                    front, back, due, last_review,
                     CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due
                            -- datetime now is after due
                 FROM deck
@@ -284,18 +285,35 @@ def popup_view(sess, num: int, word: str = ""):
             ),
         )
 
-    if not card["is_due"]:
+    if not card["last_review"]:  # mới tạo, chưa có review
+        due_dt = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
+            tzinfo=timezone.utc
+        )
+        now = datetime.now(timezone.utc)
+        age = now - due_dt
+
+        if age < dt.timedelta(days=1):  # chưa qua 1 ngày
+            remaining = dt.timedelta(days=1) - age
+            return Div(_class="notice modal")(
+                P(f"You will be able to review this word after 24 hours."),
+                P(f"Time remaining: {str(remaining).split('.')[0]}"),
+                Button(data_on_click=get(f"/read/{num}/close"))("Close"),
+            )
+        # else: đã qua 1 ngày
+
+    if not card["is_due"]:  # đã review, chưa tới hạn
         time_delta = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
             tzinfo=timezone.utc
         ) - datetime.now(timezone.utc)
 
         return Div(_class="notice modal")(
             P(
-                f"Card due in {str(time_delta).split('.')[0]}."
+                f"Next review is in {str(time_delta).split('.')[0]}."
             ),  # take only what is before the point
             Button(data_on_click=get(f"/read/{num}/close"))("Close"),
         )
 
+    # default is >= due
     return Form(_class="notice modal")(
         Label(_for="word")("Word (Recall before reveal)"),
         Input(
@@ -361,7 +379,7 @@ async def save(sess, num: int, word: str, definition: str):
         ),
     )
 
-    relay.publish(f"read.{sess['name']}.{num}", "")
+    relay.publish(f"read.{sess['name']}.{num}", word)
 
 
 @read_rt.patch("/{num:int}/remembered")
