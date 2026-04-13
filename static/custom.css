@@ -44,3 +44,18 @@ legend {
 .outline:hover {
     color: var(--accent-text);
 }
+
+.due {
+    background: red;
+    color: var(--bg);
+}
+
+.not-due {
+    background: green;
+    color: var(--text);
+}
+
+.not-yet {
+    background: yellow;
+    color: var(--bg);
+}

@@ -58,10 +58,7 @@
 
 # SRS
 
-- Không hiện thẻ cho tới khi qua ngày hôm sau
-- Setting page for Optimize, Desired Retention
 - "Free": lúc nào review cũng được? → Không cần nhắc người dùng?
-- Mark từ nào có card
 - Change word, wiktionary đổi theo, nhớ debounce
 - review_duration is only matter for computing optimal retention
 - Kiểm tra giá trị khi gửi đến server

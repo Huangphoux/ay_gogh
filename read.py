@@ -8,7 +8,8 @@ import json
 from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
 import datetime as dt
-
+from mistletoe.html_renderer import HTMLRenderer
+import re
 
 # fasthtml.components → starhtml.tags
 # from starhtml.tags import Chapter_number, Search_Popup, Word, Definition
@@ -113,6 +114,12 @@ async def cqrs(req, sess, num: int):
         yield elements(chapter_view(sess, num, word=data), use_view_transition=True)
 
 
+class MyRenderer(HTMLRenderer):
+    def render_block_code(self, token):  # code block → aside
+        code = self.escape_html_text(token.children[0].content)
+        return f"<aside><pre>{code}</pre></aside>"
+
+
 def chapter_view(sess, num: int, word: str = ""):
     # execute for INSERT, query for SELECT
     chap = list(db.app.query("SELECT * FROM chapter WHERE number = ? ", (num,)))[0]
@@ -123,6 +130,37 @@ def chapter_view(sess, num: int, word: str = ""):
         )
     except NotFoundError:
         done = 0
+
+    try:
+        cards = list(
+            db.get(sess["name"]).query(
+                """
+                SELECT
+                    front, back, due, last_review,
+                    CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
+                           -- datetime now is after due
+                    CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) >= 1) THEN 1 ELSE 0 END AS is_new_day
+                FROM deck
+                """
+            ),
+        )
+    except IndexError:
+        cards = None
+
+    if cards:
+        for c in cards:
+            for item in (c["front"], c["front"].title()):
+                due_class = "not-due"
+
+                if not c["is_new_day"]:
+                    due_class = "not-yet"
+                elif c["is_due"]:
+                    due_class = "due"
+
+                chap["content"] = chap["content"].replace(
+                    item,
+                    f"<span class='{due_class}'>{item}</span>",
+                )
 
     return (
         Title(f"Read, Chapter {num}: Ay Gogh"),
@@ -154,7 +192,7 @@ def chapter_view(sess, num: int, word: str = ""):
                 )(  # text section
                     P(
                         Safe(
-                            mistletoe.markdown(chap["content"]),
+                            mistletoe.markdown(chap["content"], MyRenderer),
                         ),
                     ),
                 ),
@@ -210,8 +248,9 @@ def popup_view(sess, num: int, word: str = ""):
                 """
                 SELECT
                     front, back, due, last_review,
-                    CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due
+                    CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
                            -- datetime now is after due
+                    CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) >= 1) THEN 1 ELSE 0 END AS is_new_day
                 FROM deck
                 WHERE front = ?
                 """,
@@ -285,21 +324,16 @@ def popup_view(sess, num: int, word: str = ""):
             ),
         )
 
-    if not card["last_review"]:  # mới tạo, chưa có review
-        due_dt = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
-            tzinfo=timezone.utc
+    if not card["is_new_day"]:  # mới tạo, chưa có review
+        return Div(_class="notice modal")(
+            P(
+                "※ ",
+                Span(_class="not-yet")("Yellow background"),
+                ": the word can't be revealed until after 24 hours.",
+            ),
+            Button(data_on_click=get(f"/read/{num}/close"))("Close"),
         )
-        now = datetime.now(timezone.utc)
-        age = now - due_dt
-
-        if age < dt.timedelta(days=1):  # chưa qua 1 ngày
-            remaining = dt.timedelta(days=1) - age
-            return Div(_class="notice modal")(
-                P(f"You will be able to review this word after 24 hours."),
-                P(f"Time remaining: {str(remaining).split('.')[0]}"),
-                Button(data_on_click=get(f"/read/{num}/close"))("Close"),
-            )
-        # else: đã qua 1 ngày
+    # else: đã qua 1 ngày
 
     if not card["is_due"]:  # đã review, chưa tới hạn
         time_delta = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
@@ -308,6 +342,11 @@ def popup_view(sess, num: int, word: str = ""):
 
         return Div(_class="notice modal")(
             P(
+                "※ ",
+                Span(_class="not-due")("Green background"),
+                ": the word is not due for a review yet.",
+            ),
+            P(
                 f"Next review is in {str(time_delta).split('.')[0]}."
             ),  # take only what is before the point
             Button(data_on_click=get(f"/read/{num}/close"))("Close"),
@@ -315,6 +354,11 @@ def popup_view(sess, num: int, word: str = ""):
 
     # default is >= due
     return Form(_class="notice modal")(
+        P(
+            "※ ",
+            Span(_class="due")("Red background"),
+            ": the word is due for a review.",
+        ),
         Label(_for="word")("Word (Recall before reveal)"),
         Input(
             type="text",
