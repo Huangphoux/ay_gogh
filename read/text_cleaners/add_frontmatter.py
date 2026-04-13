@@ -1,6 +1,7 @@
 import os
 import re
 import frontmatter
+import string
 
 
 save_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "chapter")
@@ -18,7 +19,7 @@ def add_frontmatter(fname):
 
         for index, line in enumerate(all_lines[:]):
             if not has_title and line.isupper() and ":" not in line:
-                post["title"] = line.upper().strip()
+                post["title"] = string.capwords(line).strip()
                 all_lines.remove(line)
                 has_title = True
 
