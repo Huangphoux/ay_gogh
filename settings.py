@@ -57,7 +57,24 @@ def fsrs_view(sess, notif: str = ""):
             html_header(sess),
             Main(data_init=get(fsrs_cqrs))(
                 H1("FSRS", id="main-heading"),
+                P(
+                    "FSRS, the Free Spaced Repetition Scheduling algorithm, \
+                     is the backbone of the spaced retention aspect of this app."
+                ),
+                H2("Desired Retention"),
                 Form(
+                    P(
+                        "From the Anki manual:",
+                        Blockquote(
+                            cite="https://docs.ankiweb.net/deck-options.html#desired-retention"
+                        )(
+                            "Desired retention controls how likely you are to remember cards \
+                            when they are scheduled for a review. The default value of 0.90 \
+                            will schedule cards so you have a 90% chance of remembering them \
+                            when they come up for review again. This should normally translate to \
+                            remembering around 90% cards when they are reviewed, and only failing around 10%."
+                        ),
+                    ),
                     Label(_for="desired_retention")("Desired Retention (70-100)"),
                     Input(
                         id="desired_retention",
@@ -74,6 +91,22 @@ def fsrs_view(sess, notif: str = ""):
                             "/settings/fsrs/save", {"contentType": "form"}
                         )
                     )("Save"),
+                ),
+                H2("Parameters"),
+                Form(
+                    P(
+                        "From the Anki manual:",
+                        Blockquote(
+                            cite="https://docs.ankiweb.net/deck-options.html#fsrs-parameters"
+                        )(
+                            "FSRS parameters affect how cards are scheduled. \
+                            Do not change the parameters manually or copy them from someone else. \
+                            The FSRS optimizer uses machine learning to learn your memory patterns and \
+                            find parameters that best fit your review history. To do this, the optimizer \
+                            requires several reviews to fine-tune the parameters. \
+                            There is no need to optimize your parameters frequently: once every month is sufficient."
+                        ),
+                    ),
                     Label(_for="parameters")("Parameters (cannot modify)"),
                     Textarea(
                         id="parameters",
@@ -134,8 +167,6 @@ def optimize(sess):
 
     optimal_parameters = optimizer.compute_optimal_parameters()  # ty:ignore[unresolved-attribute]
 
-    print(optimal_parameters)
-    
     db.get(sess["name"]).execute(
         "UPDATE settings SET value=? WHERE setting=?",
         (", ".join([str(p) for p in optimal_parameters]), "parameters"),
