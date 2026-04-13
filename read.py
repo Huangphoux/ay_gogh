@@ -139,7 +139,8 @@ def chapter_view(sess, num: int, word: str = ""):
                     front, back, due, last_review,
                     CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
                            -- datetime now is after due
-                    CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) >= 1) THEN 1 ELSE 0 END AS is_new_day
+                    CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) < 1) THEN 0 ELSE 1 END AS is_new_day
+                           --  no last_review       &   it has been 24 hours
                 FROM deck
                 """
             ),
@@ -250,7 +251,8 @@ def popup_view(sess, num: int, word: str = ""):
                     front, back, due, last_review,
                     CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
                            -- datetime now is after due
-                    CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) >= 1) THEN 1 ELSE 0 END AS is_new_day
+                    CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) < 1) THEN 0 ELSE 1 END AS is_new_day
+                           --  no last_review       &   it has been 24 hours
                 FROM deck
                 WHERE front = ?
                 """,
@@ -324,7 +326,7 @@ def popup_view(sess, num: int, word: str = ""):
             ),
         )
 
-    if not card["is_new_day"]:  # mới tạo, chưa có review
+    if not card["is_new_day"]:
         return Div(_class="notice modal")(
             P(
                 "※ ",
@@ -333,9 +335,8 @@ def popup_view(sess, num: int, word: str = ""):
             ),
             Button(data_on_click=get(f"/read/{num}/close"))("Close"),
         )
-    # else: đã qua 1 ngày
 
-    if not card["is_due"]:  # đã review, chưa tới hạn
+    if not card["is_due"]:
         time_delta = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
             tzinfo=timezone.utc
         ) - datetime.now(timezone.utc)
@@ -480,7 +481,7 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
         if s["setting"] == "desired_retention":
             desired_retention = s["value"]
         if s["setting"] == "parameters":
-            parameters = [float(p.strip()) for p in s["value"].split(",")]
+            parameters = [float(p) for p in s["value"].split(",")]
 
     scheduler = Scheduler(desired_retention=desired_retention, parameters=parameters)
 
