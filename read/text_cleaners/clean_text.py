@@ -1,10 +1,12 @@
+import os
+
 from split_chapter import remove_test, split_chapter
 from add_code_block import add_code_block
 from delete_line import delete_line
 from delete_code_block import delete_code_block
 from add_frontmatter import add_frontmatter
+from remove_linebreak import remove_linebreak
 
-import os
 
 root_path = os.path.dirname(os.path.dirname(__file__))
 
@@ -32,6 +34,7 @@ def clean_text():
                     add_frontmatter,
                     add_code_block,
                     delete_code_block,
+                    remove_linebreak,
                 ]
 
                 for step in steps:
@@ -40,10 +43,10 @@ def clean_text():
             except Exception as e:
                 print(f"{e.__class__.__name__}: {fname}: {str(e)}")
 
-        # Remove preface
-        os.remove(os.path.join(save_path, "0.md"))
-        # Remove useless n+1 file
-        # os.remove(os.path.join(save_path, f"{test_number + 1}.md"))
+        os.remove(os.path.join(save_path, "0.md"))  # Remove preface
+
+        if test_number < 60:  # Remove useless n+1 file
+            os.remove(os.path.join(save_path, f"{test_number + 1}.md"))
 
 
 if __name__ == "__main__":

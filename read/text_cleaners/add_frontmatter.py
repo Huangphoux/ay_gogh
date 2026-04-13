@@ -1,7 +1,6 @@
 import os
 import re
 import frontmatter
-import string
 
 
 save_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "chapter")
@@ -15,10 +14,13 @@ def add_frontmatter(fname):
         post = frontmatter.loads(content)
         all_lines = content.splitlines(keepends=True)
 
-        for line in all_lines[:]:
-            if line.isupper() and ":" not in line:
-                post["title"] = string.capwords(line).strip()
+        has_title = False
+
+        for index, line in enumerate(all_lines[:]):
+            if not has_title and line.isupper() and ":" not in line:
+                post["title"] = line.upper().strip()
                 all_lines.remove(line)
+                has_title = True
 
             is_line_chapter = re.match(chapter_regex, line)
             is_line_the_chapter = re.match(the_chapter_regex, line)
@@ -34,5 +36,6 @@ def add_frontmatter(fname):
                 all_lines.remove(line)
 
     post.content = "".join(all_lines)
+
     with open(fname, mode="wb") as f:
         f.write(frontmatter.dumps(post).encode("utf-8"))
