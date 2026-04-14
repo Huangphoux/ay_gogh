@@ -130,7 +130,7 @@ def fsrs_view(sess, notif: str = ""):
 @set_rt.patch("/fsrs/save")
 def save(sess, desired_retention: int):
     if not desired_retention:
-        return Redirect("/")
+        return Redirect(fsrs)
 
     db.get(sess["name"]).execute(
         "UPDATE settings SET value=? WHERE setting=?",

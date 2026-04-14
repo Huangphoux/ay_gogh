@@ -20,7 +20,7 @@ read_rt: APIRouter = APIRouter("/read")
 @read_rt.get("/")
 def read(sess, p: int = 0, all: int = 0):
     if p < 0 or p > 5 or all not in (0, 1):
-        return Redirect("/")
+        return Redirect(read)
 
     chap = list(
         db.app.query("SELECT number, title FROM chapter")
@@ -102,7 +102,7 @@ def read(sess, p: int = 0, all: int = 0):
 @read_rt.get("/{num:int}")
 def chapter(sess, num: int):
     if num not in range(1, 60 + 1):
-        return Redirect("/")
+        return Redirect(read)
 
     return chapter_view(sess, num)
 
@@ -376,9 +376,7 @@ def popup_view(sess, num: int, word: str = ""):
             placeholder="Write the word you want to collect here.",
             readonly=True,
         ),
-        Label(_for="definition")(
-            "Definition (Changable, save using either buttons)"
-        ),
+        Label(_for="definition")("Definition (Changable, save using either buttons)"),
         Textarea(
             id="definition",
             name="definition",
@@ -409,7 +407,7 @@ def popup_view(sess, num: int, word: str = ""):
 @read_rt.post("/{num:int}/save")
 async def save(sess, num: int, word: str, definition: str):
     if not word and not definition:
-        return Redirect("/")
+        return Redirect(chapter(sess, num=num))
 
     card = Card()
 
@@ -447,7 +445,7 @@ async def forgot(sess, num: int, word: str, definition: str):
 
 def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
     if not word and not definition:
-        return Redirect("/")
+        return Redirect(chapter(sess, num=num))
 
     query = list(
         db.get(sess["name"]).query(
