@@ -151,16 +151,20 @@ def chapter_view(sess, num: int, word: str = ""):
     if cards:
         for c in cards:
             for item in (c["front"], c["front"].title()):
-                due_class = "not-due"
+                due_class = "n0t-du3"
 
                 if not c["is_new_day"]:
-                    due_class = "not-yet"
+                    due_class = "n0t-y3t"
                 elif c["is_due"]:
-                    due_class = "due"
+                    due_class = "du3"
 
                 chap["content"] = chap["content"].replace(
                     item,
-                    f"<span class='{due_class}'>{item}</span>",
+                    Safe(
+                        Span(
+                            _class=due_class,
+                        )(item)
+                    ),
                 )
 
     return (
@@ -328,10 +332,11 @@ def popup_view(sess, num: int, word: str = ""):
 
     if not card["is_new_day"]:
         return Div(_class="notice modal")(
-            P(
+            Small(
                 "※ ",
-                Span(_class="not-yet")("Yellow background"),
+                Span(_class="n0t-y3t")("Yellow background"),
                 ": the word can't be revealed until after 24 hours.",
+                Br(),
             ),
             Button(data_on_click=get(f"/read/{num}/close"))("Close"),
         )
@@ -342,9 +347,9 @@ def popup_view(sess, num: int, word: str = ""):
         ) - datetime.now(timezone.utc)
 
         return Div(_class="notice modal")(
-            P(
-                "※ ",
-                Span(_class="not-due")("Green background"),
+            Small(
+                " ※ ",
+                Span(_class="n0t-du3")("Green background"),
                 ": the word is not due for a review yet.",
             ),
             P(
@@ -355,9 +360,9 @@ def popup_view(sess, num: int, word: str = ""):
 
     # default is >= due
     return Form(_class="notice modal")(
-        P(
+        Small(
             "※ ",
-            Span(_class="due")("Red background"),
+            Span(_class="du3")("Red background"),
             ": the word is due for a review.",
         ),
         Label(_for="word")("Word (Recall before reveal)"),
@@ -371,7 +376,9 @@ def popup_view(sess, num: int, word: str = ""):
             placeholder="Write the word you want to collect here.",
             readonly=True,
         ),
-        Label(_for="definition")("Definition (You can change the notes)"),
+        Label(_for="definition")(
+            "Definition (Changable, save using either buttons)"
+        ),
         Textarea(
             id="definition",
             name="definition",
