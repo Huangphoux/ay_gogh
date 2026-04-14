@@ -10,8 +10,6 @@
 
 # Auth
 
-- DELETE /logout → DELETE /login
-
 - Username → Email
     - Lấy email làm khoá chính
 - Đặt điều kiện Validation
@@ -22,10 +20,6 @@
 - Đổi email
 
 # Test
-
-- Chưa check là có phải ngày mới chưa: bỏ cái vụ phải ngày mới mới được test
-- INSERT OR REPLACE INTO → UPSERT
-    - UNIQUE constraint failed?
 
 # Read
 
@@ -47,6 +41,7 @@
 # Mining
 
 - Dễ làm: phiên âm, dịch
+- thẻ man, woman, Germany, many. bôi man trước, không bôi toàn bộ woman, Germany, many
 
 ## Not now
 

@@ -7,12 +7,8 @@ import requests
 import json
 from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
-import datetime as dt
 from mistletoe.html_renderer import HTMLRenderer
-import re
 
-# fasthtml.components → starhtml.tags
-# from starhtml.tags import Chapter_number, Search_Popup, Word, Definition
 
 read_rt: APIRouter = APIRouter("/read")
 
@@ -148,24 +144,25 @@ def chapter_view(sess, num: int, word: str = ""):
     except IndexError:
         cards = None
 
+    due_elsewhere: list[dict] | None = []
+
     if cards:
         for c in cards:
-            for item in (c["front"], c["front"].title()):
-                due_class = "n0t-du3"
+            if c["front"].lower() in chap["content"].lower():
+                for item in (c["front"], c["front"].title()):
+                    due_class = "n0t-du3"
 
-                if not c["is_new_day"]:
-                    due_class = "n0t-y3t"
-                elif c["is_due"]:
-                    due_class = "du3"
+                    if not c["is_new_day"]:
+                        due_class = "n0t-y3t"
+                    elif c["is_due"]:
+                        due_class = "du3"
 
-                chap["content"] = chap["content"].replace(
-                    item,
-                    Safe(
-                        Span(
-                            _class=due_class,
-                        )(item)
-                    ),
-                )
+                    chap["content"] = chap["content"].replace(
+                        item,
+                        Safe(Span(_class=due_class)(item)),
+                    )
+            elif c["is_due"]:
+                due_elsewhere.append(c)
 
     return (
         Title(f"Read, Chapter {num}: Ay Gogh"),
@@ -201,6 +198,17 @@ def chapter_view(sess, num: int, word: str = ""):
                         ),
                     ),
                 ),
+                Section(
+                    H2("Due, but not in this chapter"),
+                    P("Deal with these before completing this chapter."),
+                    Ul(
+                        data_on_pointerup=(
+                            f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
+                        )
+                    )(*(Li(c["front"]) for c in due_elsewhere)),
+                )
+                if due_elsewhere
+                else None,
                 Section(style="display: grid; place-items: center")(
                     Button(
                         data_on_click=post(f"/read/{num}"),
@@ -213,7 +221,9 @@ def chapter_view(sess, num: int, word: str = ""):
                     A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List")
                     if done
                     else None,
-                ),
+                )
+                if not due_elsewhere
+                else None,
             ),
             html_footer(sess),
         ),
@@ -376,7 +386,7 @@ def popup_view(sess, num: int, word: str = ""):
             placeholder="Write the word you want to collect here.",
             readonly=True,
         ),
-        Label(_for="definition")("Definition (Changable, save using either buttons)"),
+        Label(_for="definition")("Definition (Changeable, save using either buttons)"),
         Textarea(
             id="definition",
             name="definition",

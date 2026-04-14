@@ -107,7 +107,7 @@ def intro(sess):
                 INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
                 VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (choice("abc"), 95, 0, 0, 0, 0, 0),  # DEBUG
+            (choice("abc"), 0, 0, 0, 0, 0, 0),  # DEBUG
         )
 
     if last_num and last_num < 100:
@@ -216,10 +216,7 @@ def progress_view(sess):
                                         id=answer,
                                         required=True,
                                     ),
-                                    Label(
-                                        next_q[answer],
-                                        _for=answer,
-                                    ),
+                                    Label(_for=answer)(next_q[answer]),
                                 )
                                 for answer in "abcd"
                             ],
