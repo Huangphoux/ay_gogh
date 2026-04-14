@@ -45,17 +45,17 @@ legend {
     color: var(--accent-text);
 }
 
-.due {
+.du3 {
     background: red;
-    color: var(--bg);
+    color: light-dark(var(--text), var(--bg));
 }
 
-.not-due {
-    background: green;
-    color: var(--text);
+.n0t-du3 {
+    background: lime;
+    color: light-dark(var(--text), var(--bg));
 }
 
-.not-yet {
-    background: yellow;
-    color: var(--bg);
+.n0t-y3t {
+    background: gold;
+    color: light-dark(var(--text), var(--bg));
 }
