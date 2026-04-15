@@ -295,7 +295,7 @@ def popup_view(sess, num: int, word: str = ""):
 
         return Form(
             _class="notice modal",
-            data_on_submit=(post(f"/read/{num}/save", {"contentType": "form"})),
+            data_on_submit=(post(f"/read/{num}/save", contentType="form")),
         )(
             Label(_for="word")("Word (cannot modify)"),
             Input(
@@ -402,13 +402,11 @@ def popup_view(sess, num: int, word: str = ""):
             )("Reveal"),
             Button(
                 data_show="$show",
-                data_on_click=(patch(f"/read/{num}/forgot", {"contentType": "form"}),),
+                data_on_click=(patch(f"/read/{num}/forgot", contentType="form"),),
             )("I forgot!"),
             Button(
                 data_show="$show",
-                data_on_click=(
-                    patch(f"/read/{num}/remembered", {"contentType": "form"})
-                ),
+                data_on_click=(patch(f"/read/{num}/remembered", contentType="form")),
             )("I remembered!"),
         ),
     )

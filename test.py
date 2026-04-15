@@ -192,7 +192,7 @@ def progress_view(sess):
                 H1(f"Question {last_num + 1}", id="main-heading"),
                 Form(
                     data_on_submit=(
-                        post(progress_process, {"contentType": "form"}),
+                        post(progress_process, contentType="form"),
                         # ; is for seperation
                         js("; document.querySelector('form').reset()"),
                     ),

@@ -87,9 +87,7 @@ def fsrs_view(sess, notif: str = ""):
                         placeholder="e.g. 80",
                     ),
                     Button(
-                        data_on_click=patch(
-                            "/settings/fsrs/save", {"contentType": "form"}
-                        )
+                        data_on_click=patch("/settings/fsrs/save", contentType="form")
                     )("Save"),
                 ),
                 H2("Parameters"),
