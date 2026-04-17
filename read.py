@@ -170,10 +170,12 @@ def chapter_view(sess, num: int, word: str = ""):
             A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
             html_header(sess),
             Main(
-                data_init=(
-                    get(url=f"/read/{num}/cqrs"),
-                    "; document.addEventListener('selectionchange',\
-                    () => $word = document.getSelection().toString().trim().toLowerCase())",
+                data_init=get(url=f"/read/{num}/cqrs"),
+                data_on_selectionchange=(
+                    "$word = document.getSelection().toString().trim().toLowerCase()",
+                    {
+                        "document": True,
+                    },
                 ),
             )(
                 popup_view(sess, num, word),
@@ -194,7 +196,7 @@ def chapter_view(sess, num: int, word: str = ""):
                 )(  # text section
                     P(
                         Safe(
-                            mistletoe.markdown(chap["content"], MyRenderer),
+                            mistletoe.markdown(chap["content"], HTMLRenderer),
                         ),
                     ),
                 ),

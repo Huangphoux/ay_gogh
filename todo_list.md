@@ -3,6 +3,7 @@
 - Stario `relay.py` → StarHTML `Relay`
 - `data-attr:disabled`
 - thêm `#region`
+- sess["name"] → name in argument
 
 # DB
 
