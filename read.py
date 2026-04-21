@@ -161,7 +161,7 @@ def chapter_main(auth, num: int, word: str = ""):
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
         data_on_selectionchange=(
-            "$word = document.getSelection().toString().trim().toLowerCase()",
+            "$word = document.getSelection().toString().trim()",
             {
                 "document": True,
             },
@@ -260,7 +260,7 @@ def popup_view(auth, num: int, word: str = ""):
         try:
             fetch = json.loads(
                 requests.get(
-                    f"https://freedictionaryapi.com/api/v1/entries/en/{word.lower()}"
+                    f"https://freedictionaryapi.com/api/v1/entries/en/{word}"
                 ).text
             )["entries"][0]
 

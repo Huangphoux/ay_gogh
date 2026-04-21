@@ -5,9 +5,7 @@
 - Văn bản → mỗi câu một dòng
 - Standard Ebooks
 - spaCy
-- Lỗi API từ điển không tìm được England
 - Kiểm tra độ dài khi gửi đến server
-- Test: Progressive Enhancement
 - Read: Progressive Enhancement
 
 # Code
