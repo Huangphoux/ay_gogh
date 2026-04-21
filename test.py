@@ -136,7 +136,7 @@ def progress(auth):
     if is_last_finished(auth):
         return Redirect(test)
 
-    return template("Settings, FSRS", auth=auth, main=progress_main(auth))
+    return template("Test, Progress", auth=auth, main=progress_main(auth))
 
 
 @test_rt.get("/cqrs")

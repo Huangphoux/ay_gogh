@@ -88,11 +88,13 @@ def read(auth, p: int = 0, all: int = 0):
 
 
 @read_rt.get("/{num:int}")
-def chapter(auth, num: int):
+def chapter(auth, num: int, word: str = ""):
     if num not in range(1, 60 + 1):
         return Redirect(read)
 
-    return template("Settings, FSRS", auth=auth, main=chapter_main(auth, num))
+    return template(
+        f"Read, Chapter {num}/60", auth=auth, main=chapter_main(auth, num, word)
+    )
 
 
 @read_rt.get("/{num:int}/cqrs")
@@ -138,8 +140,6 @@ def chapter_main(auth, num: int, word: str = ""):
     except IndexError:
         cards = None
 
-    due_elsewhere: list[dict] | None = []
-
     if cards:
         for c in cards:
             if c["front"].lower() in chap["content"].lower():
@@ -155,8 +155,6 @@ def chapter_main(auth, num: int, word: str = ""):
                         item,
                         Safe(Span(_class=due_class)(item)),
                     )
-            elif c["is_due"]:
-                due_elsewhere.append(c)
 
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
@@ -188,15 +186,15 @@ def chapter_main(auth, num: int, word: str = ""):
             ),
         ),
         Section(
-            H2("Due, but not in this chapter"),
+            H2("Due words that you may have missed"),
             P("Deal with these before completing this chapter."),
             Ul(
                 data_on_pointerup=(
                     f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
                 )
-            )(*(Li(c["front"]) for c in due_elsewhere)),
+            )(*(Li(c["front"]) for c in cards if c["is_due"])),
         )
-        if due_elsewhere
+        if cards and [1 for c in cards if c["is_due"] == 1]
         else None,
         Section(style="display: grid; place-items: center")(
             Button(
@@ -208,9 +206,7 @@ def chapter_main(auth, num: int, word: str = ""):
             if done
             else None,
             A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List") if done else None,
-        )
-        if not due_elsewhere
-        else None,
+        ),
     )
 
 
@@ -235,7 +231,25 @@ def close(auth, num: int):
 
 def popup_view(auth, num: int, word: str = ""):
     if not word:
-        return None
+        return Noscript(
+            Form(
+                action=f"/read/{num}/?word={word}",
+                _class="notice modal",
+            )(
+                Label(_for="word")("Word"),
+                Input(
+                    type="text",
+                    id="word",
+                    name="word",
+                    value=word,
+                    minlength="1",
+                    required=True,
+                    placeholder="Write the word you want to search in your memory here.",
+                    style="width: 100%;",
+                ),
+                Button("Search"),
+            )
+        )
 
     try:
         card = list(
