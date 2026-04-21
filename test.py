@@ -179,6 +179,8 @@ def progress_main(auth):
                 post(progress_process, contentType="form"),
                 js("; document.querySelector('form').reset()"),
             ),
+            action=progress_process,
+            method="post",
         )(
             Fieldset(
                 Legend("Choose your answer"),
@@ -242,8 +244,9 @@ async def progress_process(auth, choice: str):
             last_test["day"],
         ),
     )
-
+    
     if is_last_finished(auth) is True:
         return Redirect(test)
     elif is_last_finished(auth) is False:
         relay.publish(f"test.{auth}.progress", "")
+        return Redirect(progress)
