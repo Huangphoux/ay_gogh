@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, html_header, html_footer, is_signed_in
+from shared import db, is_signed_in, template
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
@@ -12,55 +12,49 @@ def login(req, sess):
     if is_signed_in(req, sess):
         return Redirect("/")
 
-    return (
-        Title(f"Login: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(),
-            Main(
-                H1("Log In", id="main-heading"),
-                Form(action=login_process, method="post")(
-                    Fieldset(
-                        Label(B("Username"), _for="name"),
-                        Input(
-                            id="name",
-                            name="name",
-                            placeholder="Enter Username",
-                            required=True,
-                            maxlength="100",
-                            autofocus=True,
-                            onfocus="let temp=this.value; this.value=''; this.value=temp",
-                            value="DEBUG",  ### DEBUG
-                        ),
-                        Label(B("Password"), _for="name"),
-                        Input(
-                            data_attr_type="$is_show ? 'text' : 'password'",
-                            type="password",
-                            id="pwd",
-                            name="pwd",
-                            placeholder="Enter Password",
-                            required=True,
-                            minlength="8",
-                            maxlength="100",
-                            value="DEBUG",  ### DEBUG
-                        ),
-                        Br(),
-                        Input(
-                            id="show_pwd",
-                            name="show_pwd",
-                            type="checkbox",
-                            data_bind="is_show",
-                        ),
-                        Label("Show Password", _for="show_pwd"),
-                    ),
-                    Button("Log In"),
-                    Span(f" or "),
-                    A("Sign Up", href=signup),
+    main = Main(
+        H1("Log In", id="main-heading"),
+        Form(action=login_process, method="post")(
+            Fieldset(
+                Label(B("Username"), _for="name"),
+                Input(
+                    id="name",
+                    name="name",
+                    placeholder="Enter Username",
+                    required=True,
+                    maxlength="100",
+                    autofocus=True,
+                    onfocus="let temp=this.value; this.value=''; this.value=temp",
+                    value="DEBUG",  ### DEBUG
                 ),
+                Label(B("Password"), _for="name"),
+                Input(
+                    data_attr_type="$is_show ? 'text' : 'password'",
+                    type="password",
+                    id="pwd",
+                    name="pwd",
+                    placeholder="Enter Password",
+                    required=True,
+                    minlength="8",
+                    maxlength="100",
+                    value="DEBUG",  ### DEBUG
+                ),
+                Br(),
+                Input(
+                    id="show_pwd",
+                    name="show_pwd",
+                    type="checkbox",
+                    data_bind="is_show",
+                ),
+                Label("Show Password", _for="show_pwd"),
             ),
-            html_footer(),
+            Button("Log In"),
+            Span(f" or "),
+            A("Sign Up", href=signup),
         ),
     )
+
+    return template("Log In", main, sess.get("auth", None))
 
 
 @auth_rt.post("/login")
@@ -78,16 +72,16 @@ def login_process(name: str, pwd: str, sess):
     if not pwd_context.verify(pwd, u["pwd"]):
         return Redirect(login)
 
-    sess["name"] = u["name"]
+    sess["auth"] = u["name"]
     return Redirect("/")
 
 
 @auth_rt.delete("/login")
 def logout(sess):
     global db
-    db.close(sess["name"])
+    db.close(sess["auth"])
 
-    del sess["name"]
+    del sess["auth"]
 
     return Redirect("/")
 
@@ -97,56 +91,50 @@ def signup(req, sess):
     if is_signed_in(req, sess):
         return Redirect("/")
 
-    return (
-        Title(f"Signup: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(),
-            Main(
-                H1("Sign Up", id="main-heading"),
-                Form(action=signup_process, method="post")(
-                    Fieldset(
-                        Label(B("Username *"), _for="name"),
-                        Input(
-                            id="name",
-                            name="name",
-                            placeholder="Enter Username",
-                            required=True,
-                            maxlength="100",
-                            autofocus=True,
-                            onfocus="let temp=this.value; this.value=''; this.value=temp",
-                        ),
-                        Label(B("Password *"), _for="name"),
-                        Input(
-                            data_attr_type="$is_show ? 'text' : 'password'",
-                            type="password",
-                            id="pwd",
-                            name="pwd",
-                            placeholder="Enter Password",
-                            required=True,
-                            minlength="8",
-                            maxlength="100",
-                        ),
-                        Br(),
-                        Input(
-                            id="show_pwd",
-                            name="show_pwd",
-                            type="checkbox",
-                            data_bind="is_show",
-                        ),
-                        Label("Show Password", _for="show_pwd"),
-                    ),
-                    Button("Sign Up"),
-                    P(
-                        "Maybe you want to ",
-                        A("Log In", href=login),
-                        " instead?",
-                    ),
+    main = Main(
+        H1("Sign Up", id="main-heading"),
+        Form(action=signup_process, method="post")(
+            Fieldset(
+                Label(B("Username *"), _for="name"),
+                Input(
+                    id="name",
+                    name="name",
+                    placeholder="Enter Username",
+                    required=True,
+                    maxlength="100",
+                    autofocus=True,
+                    onfocus="let temp=this.value; this.value=''; this.value=temp",
                 ),
+                Label(B("Password *"), _for="name"),
+                Input(
+                    data_attr_type="$is_show ? 'text' : 'password'",
+                    type="password",
+                    id="pwd",
+                    name="pwd",
+                    placeholder="Enter Password",
+                    required=True,
+                    minlength="8",
+                    maxlength="100",
+                ),
+                Br(),
+                Input(
+                    id="show_pwd",
+                    name="show_pwd",
+                    type="checkbox",
+                    data_bind="is_show",
+                ),
+                Label("Show Password", _for="show_pwd"),
             ),
-            html_footer(),
+            Button("Sign Up"),
+            P(
+                "Maybe you want to ",
+                A("Log In", href=login),
+                " instead?",
+            ),
         ),
     )
+
+    return template("Sign Up", main, sess.get("auth", None))
 
 
 @auth_rt.post("/signup")
@@ -165,5 +153,5 @@ def signup_process(name: str, pwd: str, sess):
         (name, pwd_context.hash(pwd)),
     )
 
-    sess["name"] = name
+    sess["auth"] = name
     return Redirect("/")

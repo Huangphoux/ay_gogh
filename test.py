@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, html_header, html_footer, relay
+from shared import db, relay, template
 from math import ceil
 from random import choice
 
@@ -7,69 +7,63 @@ test_rt: APIRouter = APIRouter("/test")
 
 
 @test_rt.get("/")
-def test(sess):
-    tests = list(db.get(sess["name"]).query("SELECT * FROM test"))
+def test(auth):
+    tests = list(db.get(auth).query("SELECT * FROM test"))
     header = ["number", "day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
 
     try:
         last_test = list(
-            db.get(sess["name"]).query(
+            db.get(auth).query(
                 "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
             )
         )[0]
     except IndexError:
         last_test = None
 
-    return (
-        Title(f"Test: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(sess),
-            Main(
-                H1("Test", id="main-heading"),
-                A(_class="button", href=intro)(
-                    "Continue last test"
-                    if last_test and last_test["progress"] != 100
-                    else "Take a test",
-                ),
-                Figure(
-                    Table(
-                        Thead(Tr(Th(h.title()) for h in header)),
-                        Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),
-                    ),
-                )
-                if tests
-                else None,
-                Section(
-                    H2("Your latest test's result"),
-                    P(
-                        Span(style="color:red; font-weight: bold")("Red-highlighted"),
-                        ": score < 80%. Target your study around those levels.",
-                    ),
-                    Ul(
-                        *(
-                            Li(
-                                f"Level {num}: ",
-                                f"{last_test[f'lv{num}'] / 20:.0%}"
-                                if last_test and last_test["progress"] == 100
-                                else None,
-                                style="color:red; font-weight: bold; font-size: 2rem"
-                                if last_test
-                                and last_test["progress"] == 100
-                                and last_test[f"lv{num}"] / 20 < 0.8
-                                else None,
-                            )
-                            for num in "12345"
-                        ),
-                    ),
+    main = Main(
+        H1("Test", id="main-heading"),
+        A(_class="button", href=intro)(
+            "Continue last test"
+            if last_test and last_test["progress"] != 100
+            else "Take a test",
+        ),
+        Figure(
+            Table(
+                Thead(Tr(Th(h.title()) for h in header)),
+                Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),
+            ),
+        )
+        if tests
+        else None,
+        Section(
+            H2("Your latest test's result"),
+            P(
+                Span(style="color:red; font-weight: bold")("Red-highlighted"),
+                ": score < 80%. Target your study around those levels.",
+            ),
+            Ul(
+                *(
+                    Li(
+                        f"Level {num}: ",
+                        f"{last_test[f'lv{num}'] / 20:.0%}"
+                        if last_test and last_test["progress"] == 100
+                        else None,
+                        style="color:red; font-weight: bold; font-size: 2rem"
+                        if last_test
+                        and last_test["progress"] == 100
+                        and last_test[f"lv{num}"] / 20 < 0.8
+                        else None,
+                    )
+                    for num in "12345"
                 ),
             ),
-            html_footer(sess),
         ),
     )
 
+    return template("Test", main, auth)
 
-def is_last_finished(sess):
+
+def is_last_finished(auth):
     """
     True: Last test exists, is finished.
     False: Last test exists, not finished.
@@ -78,7 +72,7 @@ def is_last_finished(sess):
 
     try:
         last_test = list(
-            db.get(sess["name"]).query(
+            db.get(auth).query(
                 "SELECT progress FROM test WHERE day = (SELECT MAX(day) FROM test)"
             )
         )[0]
@@ -89,10 +83,10 @@ def is_last_finished(sess):
 
 
 @test_rt.get("/intro")
-def intro(sess):
+def intro(auth):
     try:
         last_test = list(
-            db.get(sess["name"]).query(
+            db.get(auth).query(
                 "SELECT progress FROM test WHERE day = (SELECT MAX(day) FROM test)"
             )
         )[0]
@@ -102,7 +96,7 @@ def intro(sess):
     last_num = last_test["progress"] if last_test else None
 
     if last_num is None or last_num == 100:
-        db.get(sess["name"]).execute(
+        db.get(auth).execute(
             """
                 INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
                 VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
@@ -113,54 +107,49 @@ def intro(sess):
     if last_num and last_num < 100:
         return Redirect(progress)
 
-    return (
-        Title(f"Test, Intro: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(sess),
-            Main(
-                H1("Intro", id="main-heading"),
-                P("This is a test of basic vocabulary knowledge."),
-                P(
-                    "Each test item has a target word in ",
-                    Strong("bold"),
-                    " font, followed by an example sentence which uses this target word. Below the example sentence are four answer choices.",
-                ),
-                Ul(
-                    Li(
-                        "Choose the answer choice that best matches the meaning of the target word."
-                    ),
-                    Li("You should answer every question before continuing."),
-                    Li(
-                        "There is no time limit, but this should take you 20 to 30 minutes to finish.",
-                    ),
-                ),
-                A(_class="button", href=progress)("Start"),
-            ),
-            html_footer(sess),
+    main = Main(
+        H1("Intro", id="main-heading"),
+        P("This is a test of basic vocabulary knowledge."),
+        P(
+            "Each test item has a target word in ",
+            Strong("bold"),
+            " font, followed by a sentence which uses this target word. \
+            Below the sentence are four answer choices.",
         ),
+        Ul(
+            Li(
+                "Choose the answer choice that best matches the meaning of the target word."
+            ),
+            Li("Answer the question before continuing."),
+            Li(
+                "There is no time limit.",
+            ),
+        ),
+        A(_class="button", href=progress)("Start"),
     )
+
+    return template("Test, Intro", main, auth)
 
 
 @test_rt.get("/progress")
-def progress(sess):
-    if is_last_finished(sess):
+def progress(auth):
+    if is_last_finished(auth):
         return Redirect(test)
 
-    return progress_view(sess)
+    return template("Settings, FSRS", auth=auth, main=progress_main(auth))
 
 
 @test_rt.get("/cqrs")
 @sse
-async def cqrs(req, sess):
-    async for _ in relay.subscribe(f"test.{sess['name']}.progress"):
-        yield elements(progress_view(sess), use_view_transition=True)
+async def cqrs(req, auth):
+    async for _ in relay.subscribe(f"test.{auth}.progress"):
+        yield elements(progress_main(auth), selector="main", use_view_transition=True)
 
 
-def progress_view(sess):
+def progress_main(auth):
     try:
         last_test = list(
-            db.get(sess["name"]).query(
+            db.get(auth).query(
                 "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
             )
         )[0]
@@ -183,62 +172,49 @@ def progress_view(sess):
             break
     question = "".join(split)
 
-    return (
-        Title(f"Test, Progress: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(sess),
-            Main(data_init=get(cqrs))(
-                H1(f"Question {last_num + 1}", id="main-heading"),
-                Form(
-                    data_on_submit=(
-                        post(progress_process, contentType="form"),
-                        # ; is for seperation
-                        js("; document.querySelector('form').reset()"),
-                    ),
-                )(
-                    Fieldset(
-                        Legend("Choose your answer"),
-                        P(style="margin: 0%")(
-                            Strong(next_q["lemma"]),
-                            ": ",
-                            Span(Safe(question)),
-                        ),
-                        Ul(style="list-style-type: none; margin: 0%; padding: 0%")(
-                            *[
-                                Li(
-                                    style="display: flex; align-items: center; gap: 0.5rem"
-                                )(
-                                    Input(
-                                        type="radio",
-                                        name="choice",
-                                        value=next_q[answer],
-                                        id=answer,
-                                        required=True,
-                                    ),
-                                    Label(_for=answer)(next_q[answer]),
-                                )
-                                for answer in "abcd"
-                            ],
-                        ),
-                    ),
-                    Button("Advance"),
+    return Main(data_init=get(cqrs))(
+        H1(f"Question {last_num + 1}", id="main-heading"),
+        Form(
+            data_on_submit=(
+                post(progress_process, contentType="form"),
+                js("; document.querySelector('form').reset()"),
+            ),
+        )(
+            Fieldset(
+                Legend("Choose your answer"),
+                P(style="margin: 0%")(
+                    Strong(next_q["lemma"]),
+                    ": ",
+                    Span(Safe(question)),
+                ),
+                Ul(style="list-style-type: none; margin: 0%; padding: 0%")(
+                    *[
+                        Li(style="display: flex; align-items: center; gap: 0.5rem")(
+                            Input(
+                                type="radio",
+                                name="choice",
+                                value=next_q[answer],
+                                id=answer,
+                                required=True,
+                            ),
+                            Label(_for=answer)(next_q[answer]),
+                        )
+                        for answer in "abcd"
+                    ],
                 ),
             ),
-            html_footer(sess),
+            Button("Advance"),
         ),
     )
 
 
 @test_rt.post("/progress_process")
-async def progress_process(sess, choice: str):
+async def progress_process(auth, choice: str):
     if not choice:
         return Redirect(test)
 
     last_test = list(
-        db.get(sess["name"]).query(
-            "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
-        )
+        db.get(auth).query("SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)")
     )[0]
 
     last_num = last_test["progress"]
@@ -254,7 +230,7 @@ async def progress_process(sess, choice: str):
     lv_num = ceil((last_num + 1) / 20)  # lv1 is 1→20, lv2 is 21→30
     lvs[f"lv{lv_num}"] += 1 if choice == next_q["answer"] else 0
 
-    db.get(sess["name"]).execute(
+    db.get(auth).execute(
         "UPDATE test SET progress=?, lv1=?, lv2=?, lv3=?, lv4=?, lv5=? WHERE day=?",
         (
             last_num + 1,
@@ -267,7 +243,7 @@ async def progress_process(sess, choice: str):
         ),
     )
 
-    if is_last_finished(sess) is True:
+    if is_last_finished(auth) is True:
         return Redirect(test)
-    elif is_last_finished(sess) is False:
-        relay.publish(f"test.{sess['name']}.progress", "")
+    elif is_last_finished(auth) is False:
+        relay.publish(f"test.{auth}.progress", "")

@@ -7,7 +7,13 @@
 - spaCy
 - Lỗi API từ điển không tìm được England
 - Kiểm tra độ dài khi gửi đến server
-- sess["name"] → name → auth
+- Test: Progressive Enhancement
+- Read: Progressive Enhancement
+
+# Code
+
+- @timed_cache
+- db.get(auth) → db.auth
 
 # Misc
 
@@ -57,6 +63,7 @@
 
 - Dễ làm: phiên âm, dịch
 - thẻ man, woman, Germany, many. bôi man trước, không bôi toàn bộ woman, Germany, many
+    - Cái tính năng bôi này bug vl
 - spaCy: phân tích part of speech của từ bôi đen để lọc ra kết quả Wiktionary Parser
 
 # SRS

@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, html_header, html_footer, relay
+from shared import db, relay, template
 from fsrs import ReviewLog, Optimizer
 from datetime import datetime, timezone
 
@@ -7,39 +7,34 @@ set_rt: APIRouter = APIRouter("/settings")
 
 
 @set_rt.get("/")
-def index(sess):
-    return (
-        Title(f"Settings: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(sess),
-            Main(
-                H1("Settings", id="main-heading"),
-                Ul(
-                    Li(A(href=fsrs)("FSRS")),
-                    Li(A(href="/")("Reset Password")),
-                ),
-            ),
-            html_footer(sess),
+def index(auth):
+    main = Main(
+        H1("Settings", id="main-heading"),
+        Ul(
+            Li(A(href=fsrs)("FSRS")),
         ),
     )
 
+    return template("Settings", main, auth)
+
 
 @set_rt.get("/fsrs")
-def fsrs(sess):
-    return fsrs_view(sess)
+def fsrs(auth):
+    return template("Settings, FSRS", fsrs_main(auth), auth)
 
 
 @set_rt.get("/fsrs/cqrs")
 @sse
-async def fsrs_cqrs(req, sess):
-    async for _, data in relay.subscribe(f"settings.{sess['name']}.fsrs"):
-        yield elements(fsrs_view(sess, notif=data), use_view_transition=True)
+async def fsrs_cqrs(req, auth):
+    async for _, data in relay.subscribe(f"settings.{auth}.fsrs"):
+        yield elements(
+            fsrs_main(auth, notif=data), selector="main", use_view_transition=True
+        )
 
 
-def fsrs_view(sess, notif: str = ""):
+def fsrs_main(auth, notif: str = ""):
     settings = list(
-        db.get(sess["name"]).query(
+        db.get(auth).query(
             "SELECT setting, value FROM settings",
         ),
     )
@@ -50,101 +45,94 @@ def fsrs_view(sess, notif: str = ""):
         if s["setting"] == "parameters":
             parameters = [float(p.strip()) for p in s["value"].split(",")]
 
-    return (
-        Title(f"Settings, FSRS: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(sess),
-            Main(data_init=get(fsrs_cqrs))(
-                H1("FSRS", id="main-heading"),
-                P(
-                    "FSRS, the Free Spaced Repetition Scheduling algorithm, \
+    return Main(data_init=get(fsrs_cqrs))(
+        H1("FSRS", id="main-heading"),
+        P(
+            "FSRS, the Free Spaced Repetition Scheduling algorithm, \
                      is the backbone of the spaced retention aspect of this app."
-                ),
-                H2("Desired Retention"),
-                Form(
-                    P(
-                        "From the Anki manual:",
-                        Blockquote(
-                            cite="https://docs.ankiweb.net/deck-options.html#desired-retention"
-                        )(
-                            "Desired retention controls how likely you are to remember cards \
+        ),
+        H2("Desired Retention"),
+        Form(
+            P(
+                "From the Anki manual:",
+                Blockquote(
+                    cite="https://docs.ankiweb.net/deck-options.html#desired-retention"
+                )(
+                    "Desired retention controls how likely you are to remember cards \
                             when they are scheduled for a review. The default value of 0.90 \
                             will schedule cards so you have a 90% chance of remembering them \
                             when they come up for review again. This should normally translate to \
                             remembering around 90% cards when they are reviewed, and only failing around 10%."
-                        ),
-                    ),
-                    Label(_for="desired_retention")("Desired Retention (70-100)"),
-                    Input(
-                        id="desired_retention",
-                        name="desired_retention",
-                        value=int(float(desired_retention) * 100),
-                        type="number",
-                        max="100",
-                        min="70",
-                        required="True",
-                        placeholder="e.g. 80",
-                    ),
-                    Button(
-                        data_on_click=patch("/settings/fsrs/save", contentType="form")
-                    )("Save"),
                 ),
-                H2("Parameters"),
-                Form(
-                    P(
-                        "From the Anki manual:",
-                        Blockquote(
-                            cite="https://docs.ankiweb.net/deck-options.html#fsrs-parameters"
-                        )(
-                            "FSRS parameters affect how cards are scheduled. \
+            ),
+            Label(_for="desired_retention")("Desired Retention (70-100)"),
+            Input(
+                id="desired_retention",
+                name="desired_retention",
+                value=int(float(desired_retention) * 100),
+                type="number",
+                max="100",
+                min="70",
+                required="True",
+                placeholder="e.g. 80",
+            ),
+            Button(data_on_click=patch("/settings/fsrs/save", contentType="form"))(
+                "Save"
+            ),
+        ),
+        P(_class="notice")(notif) if "retention" in notif else None,
+        H2("Parameters"),
+        Form(
+            P(
+                "From the Anki manual:",
+                Blockquote(
+                    cite="https://docs.ankiweb.net/deck-options.html#fsrs-parameters"
+                )(
+                    "FSRS parameters affect how cards are scheduled. \
                             Do not change the parameters manually or copy them from someone else. \
                             The FSRS optimizer uses machine learning to learn your memory patterns and \
                             find parameters that best fit your review history. To do this, the optimizer \
                             requires several reviews to fine-tune the parameters. \
                             There is no need to optimize your parameters frequently: once every month is sufficient."
-                        ),
-                    ),
-                    Label(_for="parameters")("Parameters (cannot modify)"),
-                    Textarea(
-                        id="parameters",
-                        name="parameters",
-                        style="resize: none;",
-                    )(parameters),
-                    Button(
-                        data_on_click=patch(optimize),
-                        data_indicator="optimizing",
-                        data_attr_disabled="$optimizing",
-                    )("Optimize"),
                 ),
-                P(_class="notice", data_show="$optimizing")("Optimizing…"),
-                P(_class="notice")(notif) if notif else None,
             ),
-            html_footer(sess),
+            Label(_for="parameters")("Parameters (cannot modify manually)"),
+            Textarea(
+                id="parameters",
+                name="parameters",
+                style="resize: none;",
+            )(parameters),
+            Button(
+                data_on_click=patch(optimize),
+                data_indicator="optimizing",
+                data_attr_disabled="$optimizing",
+            )("Optimize"),
         ),
+        P(_class="notice", data_show="$optimizing")("Optimizing…"),
+        P(_class="notice")(notif) if "parameter" in notif else None,
     )
 
 
 @set_rt.patch("/fsrs/save")
-def save(sess, desired_retention: int):
+def save(auth, desired_retention: int):
     if not desired_retention:
         return Redirect(fsrs)
 
-    db.get(sess["name"]).execute(
+    db.get(auth).execute(
         "UPDATE settings SET value=? WHERE setting=?",
         (desired_retention / 100, "desired_retention"),
     )
 
     relay.publish(
-        f"settings.{sess['name']}.fsrs",
+        f"settings.{auth}.fsrs",
         "Your desired retention value has been updated.",
     )
 
 
 @set_rt.patch("/fsrs/optimize")
-def optimize(sess):
+def optimize(auth):
     query = list(
-        db.get(sess["name"]).query(
+        db.get(auth).query(
             "SELECT * FROM review_log",
         ),
     )
@@ -165,11 +153,9 @@ def optimize(sess):
 
     optimal_parameters = optimizer.compute_optimal_parameters()  # ty:ignore[unresolved-attribute]
 
-    db.get(sess["name"]).execute(
+    db.get(auth).execute(
         "UPDATE settings SET value=? WHERE setting=?",
         (", ".join([str(p) for p in optimal_parameters]), "parameters"),
     )
 
-    relay.publish(
-        f"settings.{sess['name']}.fsrs", "Your parameters have been optimized."
-    )
+    relay.publish(f"settings.{auth}.fsrs", "Your parameters have been optimized.")

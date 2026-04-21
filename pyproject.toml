@@ -17,10 +17,6 @@ dependencies = [
 
 [tool.ruff.lint]
 select = ["F401"]
-ignore = ["F403", "F405"]
-
-[tool.ty.rules]
-unresolved-reference = "ignore"
 
 [dependency-groups]
 dev = [

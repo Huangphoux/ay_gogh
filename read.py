@@ -1,6 +1,6 @@
 from apswutils.db import NotFoundError
 from starhtml import *
-from shared import db, html_header, html_footer, relay
+from shared import db, relay, template
 import mistletoe
 from math import ceil
 import requests
@@ -14,7 +14,7 @@ read_rt: APIRouter = APIRouter("/read")
 
 
 @read_rt.get("/")
-def read(sess, p: int = 0, all: int = 0):
+def read(auth, p: int = 0, all: int = 0):
     if p < 0 or p > 5 or all not in (0, 1):
         return Redirect(read)
 
@@ -26,7 +26,7 @@ def read(sess, p: int = 0, all: int = 0):
         )
     )
 
-    user_chap = list(db.get(sess["name"]).query("SELECT number, done FROM chapter"))
+    user_chap = list(db.get(auth).query("SELECT number, done FROM chapter"))
 
     if user_chap:
         for uc in user_chap:
@@ -34,80 +34,76 @@ def read(sess, p: int = 0, all: int = 0):
                 if uc["number"] == c["number"]:
                     c["done"] = 1
 
-    return (
-        Title(
-            f"Read, {p * 10 + 1} to {(p + 1) * 10}: Ay Gogh"
-            if not all
-            else "Read All: Ay Gogh"
+    main = Main(
+        H1(id="main-heading")(
+            f"Read ({p * 10 + 1} to {(p + 1) * 10})" if not all else "Read All",
         ),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(sess),
-            Main(
-                H1(id="main-heading")(
-                    f"Read ({p * 10 + 1} to {(p + 1) * 10})" if not all else "Read All",
-                ),
-                Div(
-                    style="display: flex; gap: 1rem; align-items: center; height: 1.5rem"
-                )(
-                    A(href=f"/read/?p={p - 1}")("Previous")
-                    if not all and p > 0
-                    else Span(style="color: var(--border)")("Previous"),
-                    *(
-                        A(href=f"/read/?p={i}")(i)
-                        if i != p
-                        else Span(
-                            style="font-style: italic; font-weight: bold; font-size: 3rem"
-                        )(i)
-                        for i in range(0, 6)
-                    ),
-                    A(
-                        href=f"/read/?p={p + 1}",
-                    )("Next")
-                    if not all and p < 5
-                    else Span(style="color: var(--border)")("Next"),
-                )
-                if not all
-                else None,
-                Ul(
-                    *(
-                        Li(
-                            A(
-                                href=f"/read/{c['number']}",
-                                style="color: var(--border)"
-                                if "done" in c and c["done"] == 1
-                                else None,
-                            )(
-                                "(DONE)"
-                                if "done" in c and c["done"] == 1
-                                else f"Chapter {c['number']}: {c['title']}",
-                            ),
-                        )
-                        for c in chap
-                    ),
-                ),
-                A(href="/read/?all=1")("Show all")
-                if not all
-                else A(href="/read/?all=0")("Show less"),
+        Div(style="display: flex; gap: 1rem; align-items: center; height: 1.5rem")(
+            A(href=f"/read/?p={p - 1}")("Previous")
+            if not all and p > 0
+            else Span(style="color: var(--border)")("Previous"),
+            *(
+                A(href=f"/read/?p={i}")(i)
+                if i != p
+                else Span(
+                    style="font-style: italic; font-weight: bold; font-size: 3rem"
+                )(i)
+                for i in range(0, 6)
             ),
-            html_footer(sess),
+            A(
+                href=f"/read/?p={p + 1}",
+            )("Next")
+            if not all and p < 5
+            else Span(style="color: var(--border)")("Next"),
+        )
+        if not all
+        else None,
+        Ul(
+            *(
+                Li(
+                    A(
+                        href=f"/read/{c['number']}",
+                        style="color: var(--border)"
+                        if "done" in c and c["done"] == 1
+                        else None,
+                    )(
+                        "(DONE)"
+                        if "done" in c and c["done"] == 1
+                        else f"Chapter {c['number']}: {c['title']}",
+                    ),
+                )
+                for c in chap
+            ),
         ),
+        A(href="/read/?all=1")("Show all")
+        if not all
+        else A(href="/read/?all=0")("Show less"),
+    )
+
+    return template(
+        f"Read, {p * 10 + 1} to {(p + 1) * 10}" if not all else "Read All",
+        main,
+        auth,
     )
 
 
 @read_rt.get("/{num:int}")
-def chapter(sess, num: int):
+def chapter(auth, num: int):
     if num not in range(1, 60 + 1):
         return Redirect(read)
 
-    return chapter_view(sess, num)
+    return template("Settings, FSRS", auth=auth, main=chapter_main(auth, num))
 
 
 @read_rt.get("/{num:int}/cqrs")
 @sse
-async def cqrs(req, sess, num: int):
-    async for _, data in relay.subscribe(f"read.{sess['name']}.{num}"):
-        yield elements(chapter_view(sess, num, word=data), use_view_transition=True)
+async def cqrs(req, auth, num: int):
+    async for _, data in relay.subscribe(f"read.{auth}.{num}"):
+        yield elements(
+            chapter_main(auth, num, word=data),
+            selector="main",
+            use_view_transition=True,
+        )
 
 
 class MyRenderer(HTMLRenderer):
@@ -116,20 +112,18 @@ class MyRenderer(HTMLRenderer):
         return f"<aside><pre>{code}</pre></aside>"
 
 
-def chapter_view(sess, num: int, word: str = ""):
+def chapter_main(auth, num: int, word: str = ""):
     # execute for INSERT, query for SELECT
     chap = list(db.app.query("SELECT * FROM chapter WHERE number = ? ", (num,)))[0]
 
     try:
-        done = db.get(sess["name"]).item(
-            "SELECT done FROM chapter WHERE number = ? ", (num,)
-        )
+        done = db.get(auth).item("SELECT done FROM chapter WHERE number = ? ", (num,))
     except NotFoundError:
         done = 0
 
     try:
         cards = list(
-            db.get(sess["name"]).query(
+            db.get(auth).query(
                 """
                 SELECT
                     front, back, due, last_review,
@@ -164,104 +158,88 @@ def chapter_view(sess, num: int, word: str = ""):
             elif c["is_due"]:
                 due_elsewhere.append(c)
 
-    return (
-        Title(f"Read, Chapter {num}: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(sess),
-            Main(
-                data_init=get(url=f"/read/{num}/cqrs"),
-                data_on_selectionchange=(
-                    "$word = document.getSelection().toString().trim().toLowerCase()",
-                    {
-                        "document": True,
-                    },
-                ),
-            )(
-                popup_view(sess, num, word),
-                Section(
-                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
-                )(
-                    P(f"Chapter {chap['number_word']} ({num})"),
-                    P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
-                ),
-                H1(id="main-heading", style="display:grid; place-items: center")(
-                    f"{chap['title']}",
-                    " (DONE)" if done else None,
-                ),
-                Section(
-                    data_on_pointerup=(
-                        f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
-                    )
-                )(  # text section
-                    P(
-                        Safe(
-                            mistletoe.markdown(chap["content"], HTMLRenderer),
-                        ),
-                    ),
-                ),
-                Section(
-                    H2("Due, but not in this chapter"),
-                    P("Deal with these before completing this chapter."),
-                    Ul(
-                        data_on_pointerup=(
-                            f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
-                        )
-                    )(*(Li(c["front"]) for c in due_elsewhere)),
-                )
-                if due_elsewhere
-                else None,
-                Section(style="display: grid; place-items: center")(
-                    Button(
-                        data_on_click=post(f"/read/{num}"),
-                    )("Mark Complete")
-                    if not done
-                    else None,
-                    P(_class="notice")("You have marked this chapter as Complete.")
-                    if done
-                    else None,
-                    A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List")
-                    if done
-                    else None,
-                )
-                if not due_elsewhere
-                else None,
-            ),
-            html_footer(sess),
+    return Main(
+        data_init=get(url=f"/read/{num}/cqrs"),
+        data_on_selectionchange=(
+            "$word = document.getSelection().toString().trim().toLowerCase()",
+            {
+                "document": True,
+            },
         ),
+    )(
+        popup_view(auth, num, word),
+        Section(
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
+        )(
+            P(f"Chapter {chap['number_word']} ({num})"),
+            P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
+        ),
+        H1(id="main-heading", style="display:grid; place-items: center")(
+            f"{chap['title']}",
+            " (DONE)" if done else None,
+        ),
+        Section(
+            data_on_pointerup=(f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};")
+        )(  # text section
+            P(
+                Safe(
+                    mistletoe.markdown(chap["content"], HTMLRenderer),
+                ),
+            ),
+        ),
+        Section(
+            H2("Due, but not in this chapter"),
+            P("Deal with these before completing this chapter."),
+            Ul(
+                data_on_pointerup=(
+                    f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
+                )
+            )(*(Li(c["front"]) for c in due_elsewhere)),
+        )
+        if due_elsewhere
+        else None,
+        Section(style="display: grid; place-items: center")(
+            Button(
+                data_on_click=post(f"/read/{num}"),
+            )("Mark Complete")
+            if not done
+            else None,
+            P(_class="notice")("You have marked this chapter as Complete.")
+            if done
+            else None,
+            A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List") if done else None,
+        )
+        if not due_elsewhere
+        else None,
     )
 
 
 @read_rt.post("/{num:int}")
-def complete(sess, num: int):
-    db.get(sess["name"]).execute(
-        "INSERT INTO chapter (number, done) VALUES (?, ?)", (num, 1)
-    )
-
-    relay.publish(f"read.{sess['name']}.{num}", "")
+def complete(auth, num: int):
+    db.get(auth).execute("INSERT INTO chapter (number, done) VALUES (?, ?)", (num, 1))
+    relay.publish(f"read.{auth}.{num}", "")
 
 
 ### POP UP
 
 
 @read_rt.get("/{num:int}/open")
-def open(sess, num: int, word: str):
-    relay.publish(f"read.{sess['name']}.{num}", word)
-    # pointerup, open(), cqrs(), popup_view()
+def open(auth, num: int, word: str):
+    relay.publish(f"read.{auth}.{num}", word)  # pointerup→open()→cqrs()→popup_view()
 
 
 @read_rt.get("/{num:int}/close")
-def close(sess, num: int):
-    relay.publish(f"read.{sess['name']}.{num}", "")
+def close(auth, num: int):
+    relay.publish(f"read.{auth}.{num}", "")
 
 
-def popup_view(sess, num: int, word: str = ""):
+def popup_view(auth, num: int, word: str = ""):
     if not word:
         return None
 
     try:
         card = list(
-            db.get(sess["name"]).query(
+            db.get(auth).query(
                 """
                 SELECT
                     front, back, due, last_review,
@@ -309,6 +287,7 @@ def popup_view(sess, num: int, word: str = ""):
                 required=True,
                 placeholder="Write the word you want to collect in here.",
                 readonly=True,
+                style="width: 100%;",
             ),
             Label(_for="definition")("Definition"),
             Textarea(
@@ -342,16 +321,16 @@ def popup_view(sess, num: int, word: str = ""):
             ),
         )
 
-    if not card["is_new_day"]:
-        return Div(_class="notice modal")(
-            Small(
-                "※ ",
-                Span(_class="n0t-y3t")("Yellow background"),
-                ": the word can't be revealed until after 24 hours.",
-                Br(),
-            ),
-            Button(data_on_click=get(f"/read/{num}/close"))("Close"),
-        )
+    # if not card["is_new_day"]:
+    #     return Div(_class="notice modal")(
+    #         Small(
+    #             "※ ",
+    #             Span(_class="n0t-y3t")("Yellow background"),
+    #             ": the word can't be revealed until tomorrow.",
+    #             Br(),
+    #         ),
+    #         Button(data_on_click=get(f"/read/{num}/close"))("Close"),
+    #     )
 
     if not card["is_due"]:
         time_delta = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
@@ -415,13 +394,13 @@ def popup_view(sess, num: int, word: str = ""):
 
 
 @read_rt.post("/{num:int}/save")
-async def save(sess, num: int, word: str, definition: str):
+async def save(auth, num: int, word: str, definition: str):
     if not word and not definition:
-        return Redirect(chapter(sess, num=num))
+        return Redirect(chapter(auth, num=num))
 
     card = Card()
 
-    db.get(sess["name"]).execute(
+    db.get(auth).execute(
         """
         INSERT INTO deck (id, front, back, state, step, stability, difficulty, due, last_review)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -440,25 +419,25 @@ async def save(sess, num: int, word: str, definition: str):
         ),
     )
 
-    relay.publish(f"read.{sess['name']}.{num}", word)
+    relay.publish(f"read.{auth}.{num}", word)
 
 
 @read_rt.patch("/{num:int}/remembered")
-async def remembered(sess, num: int, word: str, definition: str):
-    rate_card(sess, num, word, definition, forgot=False)
+async def remembered(auth, num: int, word: str, definition: str):
+    rate_card(auth, num, word, definition, forgot=False)
 
 
 @read_rt.patch("/{num:int}/forgot")
-async def forgot(sess, num: int, word: str, definition: str):
-    rate_card(sess, num, word, definition, forgot=True)
+async def forgot(auth, num: int, word: str, definition: str):
+    rate_card(auth, num, word, definition, forgot=True)
 
 
-def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
+def rate_card(auth, num: int, word: str, definition: str, forgot: bool = False):
     if not word and not definition:
-        return Redirect(chapter(sess, num=num))
+        return Redirect(chapter(auth, num=num))
 
     query = list(
-        db.get(sess["name"]).query(
+        db.get(auth).query(
             """
                 SELECT id, state, step, stability, difficulty, due, last_review
                 FROM deck
@@ -488,7 +467,7 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
     )
 
     settings = list(
-        db.get(sess["name"]).query(
+        db.get(auth).query(
             "SELECT setting, value FROM settings",
         ),
     )
@@ -505,7 +484,7 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
         card, Rating.Good if not forgot else Rating.Again
     )
 
-    db.get(sess["name"]).execute(
+    db.get(auth).execute(
         """
             UPDATE deck
             SET back=?, state=?, step=?, stability=?, difficulty=?, due=?, last_review=?
@@ -525,7 +504,7 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
         ),
     )
 
-    db.get(sess["name"]).execute(
+    db.get(auth).execute(
         """
             INSERT INTO review_log (card_id, rating, review_datetime, review_duration)
             VALUES (?, ?, ?, ?)
@@ -538,4 +517,4 @@ def rate_card(sess, num: int, word: str, definition: str, forgot: bool = False):
         ),
     )
 
-    relay.publish(f"read.{sess['name']}.{num}", word)
+    relay.publish(f"read.{auth}.{num}", word)

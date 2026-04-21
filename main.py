@@ -2,8 +2,8 @@ from starhtml import *
 
 
 def set_name(req, sess):
-    name = req.scope["name"] = sess.get("name", None)
-    if not name:
+    auth = req.scope["auth"] = sess.get("auth", None)
+    if not auth:
         return Redirect("/")
 
 
@@ -79,140 +79,125 @@ set_rt.to_app(app)
 
 from test import is_last_finished
 
-from shared import html_header, html_footer, is_signed_in, db
+from shared import template, is_signed_in, db
 
 
-# Page for guests
 @rt
 def index(req, sess):
+    auth = sess.get("auth", None)
     if not is_signed_in(req, sess):
-        return (
-            Title(f"Home: Ay Gogh"),
-            Body(
-                A(Strong("Jump to content"), href="#main-content", cls="skip-link"),
-                html_header(),
-                Main(
-                    Section(
-                        style="display: grid; place-items: center; text-align: center; margin-top: 0"
-                    )(
-                        H1(id="main-content")("Just Read."),
-                        Small("It's that simple."),
-                        P("Read. Collect. Review. Rinse and repeat."),
-                        A(href="/auth/signup", _class="button")("Sign up"),
-                        Video(style="padding-top: 1rem")(
-                            width="1280", height="720", playsinline=True, controls=True
-                        )(),
+        main = Main(
+            Section(
+                style="display: grid; place-items: center; text-align: center; margin-top: 0"
+            )(
+                H1(id="main-content")("Just Read."),
+                Small("It's that simple."),
+                P("Read. Collect. Review. Rinse and repeat."),
+                A(href="/auth/signup", _class="button")("Sign up"),
+                Video(style="padding-top: 1rem")(
+                    width="1280", height="720", playsinline=True, controls=True
+                )(),
+            ),
+            Section(
+                P(style="text-align: center")(
+                    B("Ay Gogh!"),
+                    " is a English learning platform,\
+                      created to promote the input-driven immersion-based language learning method.",
+                ),
+                Section(
+                    Aside(_class="notice")(
+                        "Bite-sized reading materials with the ",
+                        A(
+                            href="https://archive.org/details/english-by-the-nature-method/"
+                        )("English by the Nature Method"),
                     ),
-                    Section(
-                        P(style="text-align: center")(
-                            B("Ay Gogh!"),
-                            " is a English learning platform, created to promote the input-driven immersion-based language learning method.",
+                    Img(width="400", height="200")(),
+                ),
+                Section(
+                    Aside(_class="notice")(
+                        "Supercharge your vocabulary acquisition with the ",
+                        A(
+                            href="https://www.newgeneralservicelist.com/new-general-service-list"
+                        )("NGSL Word List"),
+                    ),
+                    Img(width="400", height="200")(),
+                ),
+                Section(
+                    Aside(_class="notice")(
+                        "Remember your words forever with the ",
+                        A(
+                            href="https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler"
+                        )("FSRS Algorithm"),
+                    ),
+                    Img(width="400", height="200")(),
+                ),
+                Section(
+                    Aside(_class="notice")(
+                        "Explore English literature with the ",
+                        A(href="https://standardebooks.org/")("Standard Ebooks"),
+                    ),
+                    Img(width="400", height="200")(),
+                ),
+                Section(
+                    Blockquote(
+                        P(
+                            "Oh yeah, Ay Gogh is great. What else can I not say about it?"
                         ),
-                        Section(
-                            Aside(_class="notice")(
-                                "Bite-sized reading materials with the ",
-                                A(
-                                    href="https://archive.org/details/english-by-the-nature-method/"
-                                )("English by the Nature Method"),
-                            ),
-                            Img(width="400", height="200")(),
-                        ),
-                        Section(
-                            Aside(_class="notice")(
-                                "Supercharge your vocabulary acquisition with the ",
-                                A(
-                                    href="https://www.newgeneralservicelist.com/new-general-service-list"
-                                )("NGSL Word List"),
-                            ),
-                            Img(width="400", height="200")(),
-                        ),
-                        Section(
-                            Aside(_class="notice")(
-                                "Remember your words forever with the ",
-                                A(
-                                    href="https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler"
-                                )("FSRS Algorithm"),
-                            ),
-                            Img(width="400", height="200")(),
-                        ),
-                        Section(
-                            Aside(_class="notice")(
-                                "Explore English literature with the ",
-                                A(href="https://standardebooks.org/")(
-                                    "Standard Ebooks"
-                                ),
-                            ),
-                            Img(width="400", height="200")(),
-                        ),
-                        Section(
-                            Blockquote(
-                                P(
-                                    "Oh yeah, Ay Gogh is great. What else can I not say about it?"
-                                ),
-                                P(Cite("– Random guy of the street")),
-                            ),
-                        ),
-                        Section(style="display: grid; place-items: center")(
-                            P(_class="notice")(
-                                "It's time for you to actually sign up now."
-                            ),
-                            P("It's free. Did you know that?"),
-                            A(href="/auth/signup", _class="button")("Sign up"),
-                        ),
+                        P(Cite("– Random guy of the street")),
                     ),
                 ),
-                html_footer(),
+                Section(style="display: grid; place-items: center")(
+                    P(_class="notice")("It's time for you to actually sign up now."),
+                    P("It's free. Did you know that?"),
+                    A(href="/auth/signup", _class="button")("Sign up"),
+                ),
+            ),
+        )
+    else:
+        try:
+            test_done = list(
+                db.get(auth).query(
+                    "SELECT progress, lv1 + lv2 + lv3 + lv4 + lv5 AS result \
+                     FROM test \
+                     WHERE day = (SELECT MAX(day) FROM test)"
+                )
+            )[0]
+
+        except IndexError:
+            test_done = None
+
+        chap_done = db.get(auth).item("SELECT SUM(done) FROM chapter")
+        if not chap_done:
+            chap_done = 0
+
+        main = Main(
+            H1(id="main-heading")(f"{auth}'s profile"),
+            Section(
+                H2(
+                    A(href="/test/")(
+                        "Test",
+                        f" ({(test_done['result'] / 100):.0%})"
+                        if test_done and test_done["progress"] == 100
+                        else None,
+                    )
+                ),
+                P(_class="notice")(
+                    "As a new user, you should take a test to measure your core vocabulary knowledge."
+                )
+                if is_last_finished(sess.get("auth", None)) is None
+                else None,
+            ),
+            Section(
+                H2(
+                    A(href="/read/")(
+                        f"Read", f" ({chap_done / 60:.0%})" if chap_done else None
+                    )
+                ),
+                P(f"Progress: {chap_done} out of 60 chapters."),
             ),
         )
 
-    try:
-        test_done = list(
-            db.get(sess["name"]).query(
-                "SELECT progress, lv1 + lv2 + lv3 + lv4 + lv5 AS result FROM test WHERE day = (SELECT MAX(day) FROM test)"
-            )
-        )[0]
-
-    except IndexError:
-        test_done = None
-
-    chap_done = db.get(sess["name"]).item("SELECT SUM(done) FROM chapter")
-    if not chap_done:
-        chap_done = 0
-
-    return (
-        Title("Profile: Ay Gogh"),
-        Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            html_header(sess),
-            Main(
-                H1(id="main-heading")(f"{sess['name']}'s profile"),
-                Section(
-                    H2(
-                        A(href="/test/")(
-                            "Test",
-                            f" ({(test_done['result'] / 100):.0%})"
-                            if test_done and test_done["progress"] == 100
-                            else None,
-                        )
-                    ),
-                    P(_class="notice")(
-                        "As a new user, you should take a test to measure your core vocabulary knowledge."
-                    )
-                    if is_last_finished(sess) is None
-                    else None,
-                ),
-                Section(
-                    H2(
-                        A(href="/read/")(
-                            f"Read", f" ({chap_done / 60:.0%})" if chap_done else None
-                        )
-                    ),
-                    P(f"Progress: {chap_done} out of 60 chapters."),
-                ),
-            ),
-            html_footer(sess),
-        ),
-    )
+    return template("Home", main, auth)
 
 
 if __name__ == "__main__":
