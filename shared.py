@@ -39,16 +39,15 @@ def template(title: str, main, auth=None):
                     A(href="https://github.com/Huangphoux/ay_gogh/")("Ay Gogh!"),
                     " is created by the ❤️ of  ",
                     A(href="https://github.com/Huangphoux/")("huangphoux"),
-                    ".",
+                    ". Copyright © Ay Gogh! 2026.",
                 ),
-                P("Copyright © Ay Gogh! 2026"),
                 P(_class="no-js")(
                     "Proudly powered by ",
                     A(href="https://data-star.dev/")("Datastar"),
-                    " 🚀",
+                    " 🚀 and ",
+                    A(href="https://starhtml.com/")("StarHTML"),
+                    " ⭐",
                 ),
             ),
         ),
     )
-
-
