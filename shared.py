@@ -34,13 +34,7 @@ def template(title: str, main, auth=None):
             ),
             main,
             Footer(
-                auth
-                and A(
-                    "Log Out",
-                    data_on_click=js("confirm('Are you sure?')").if_(
-                        delete("/auth/login/"), ""
-                    ),
-                ),
+                auth and Form(action="/auth/logout", method="post")(Button("Log Out")),
                 P(
                     A(href="https://github.com/Huangphoux/ay_gogh/")("Ay Gogh!"),
                     " is created by the ❤️ of  ",

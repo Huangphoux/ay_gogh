@@ -77,8 +77,8 @@ def login_process(name: str, pwd: str, sess):
     return Redirect("/")
 
 
-@auth_rt.delete("/login")
-@auth_rt.post("/login")
+# @auth_rt.delete("/logout")
+@auth_rt.post("/logout")
 def logout(sess):
     global db
     db.close(sess["auth"])
