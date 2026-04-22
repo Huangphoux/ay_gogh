@@ -222,21 +222,25 @@ def complete(auth, num: int):
 @read_rt.get("/{num:int}/open")
 def open(auth, num: int, word: str):
     relay.publish(f"read.{auth}.{num}", word)  # pointerup→open()→cqrs()→popup_view()
+    return Redirect(f"/read/{num}?word={word}")
 
 
 @read_rt.get("/{num:int}/close")
 def close(auth, num: int):
     relay.publish(f"read.{auth}.{num}", "")
+    return Redirect(f"/read/{num}")
 
 
 def popup_view(auth, num: int, word: str = ""):
     if not word:
         return Noscript(
             Form(
-                action=f"/read/{num}/?word={word}",
+                action=f"/read/{num}/open",
                 _class="notice modal",
             )(
-                Label(_for="word")("Word"),
+                Label(_for="word")(
+                    "Write the word you want to search in your memory here."
+                ),
                 Input(
                     type="text",
                     id="word",
@@ -244,7 +248,7 @@ def popup_view(auth, num: int, word: str = ""):
                     value=word,
                     minlength="1",
                     required=True,
-                    placeholder="Write the word you want to search in your memory here.",
+                    placeholder="e.g. hawk tuah",
                     style="width: 100%;",
                 ),
                 Button("Search"),
@@ -287,10 +291,7 @@ def popup_view(auth, num: int, word: str = ""):
         except IndexError:
             definition = None
 
-        return Form(
-            _class="notice modal",
-            data_on_submit=(post(f"/read/{num}/save", contentType="form")),
-        )(
+        return Form(_class="notice modal")(
             Label(_for="word")("Word (cannot modify)"),
             Input(
                 type="text",
@@ -327,31 +328,41 @@ def popup_view(auth, num: int, word: str = ""):
             else None,
             Div(style="display: flex; gap: 1rem;")(
                 Button(
-                    type="reset",
-                    data_on_click=get(f"/read/{num}/close"),
+                    data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
                     _class="outline",
+                    type="submit",
+                    formmethod="get",
+                    formaction=f"/read/{num}/close",
+                    formnovalidate=True,
                 )("Close"),
-                Button("Save"),
+                Button(
+                    data_on_click=(post(f"/read/{num}/save", contentType="form")),
+                    type="submit",
+                    formmethod="post",
+                    formaction=f"/read/{num}/save",
+                )("Save"),
             ),
         )
 
-    # if not card["is_new_day"]:
-    #     return Div(_class="notice modal")(
-    #         Small(
-    #             "※ ",
-    #             Span(_class="n0t-y3t")("Yellow background"),
-    #             ": the word can't be revealed until tomorrow.",
-    #             Br(),
-    #         ),
-    #         Button(data_on_click=get(f"/read/{num}/close"))("Close"),
-    #     )
+    if not card["is_new_day"]:
+        return Form(_class="notice modal")(
+            Small(
+                "※ ",
+                Span(_class="n0t-y3t")("Yellow background"),
+                ": the word can't be revealed until tomorrow.",
+                Br(),
+            ),
+            Button(
+                data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
+            )("Close"),
+        )
 
     if not card["is_due"]:
         time_delta = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
             tzinfo=timezone.utc
         ) - datetime.now(timezone.utc)
 
-        return Div(_class="notice modal")(
+        return Form(_class="notice modal")(
             Small(
                 " ※ ",
                 Span(_class="n0t-du3")("Green background"),
@@ -360,7 +371,9 @@ def popup_view(auth, num: int, word: str = ""):
             P(
                 f"Next review is in {str(time_delta).split('.')[0]}."
             ),  # take only what is before the point
-            Button(data_on_click=get(f"/read/{num}/close"))("Close"),
+            Button(
+                data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
+            )("Close"),
         )
 
     # default is >= due
@@ -370,7 +383,7 @@ def popup_view(auth, num: int, word: str = ""):
             Span(_class="du3")("Red background"),
             ": the word is due for a review.",
         ),
-        Label(_for="word")("Word (Recall before reveal)"),
+        Label(_for="word")("Word"),
         Input(
             type="text",
             id="word",
@@ -380,29 +393,37 @@ def popup_view(auth, num: int, word: str = ""):
             required=True,
             placeholder="Write the word you want to collect here.",
             readonly=True,
+            style="width: 100%;",
         ),
-        Label(_for="definition")("Definition (Changeable, save using either buttons)"),
-        Textarea(
-            id="definition",
-            name="definition",
-            placeholder="Write your own definitions in here.",
-            required=True,
-            minlength="1",
-            style="resize: none;",
-            data_show="$show",
-        )(card["back"]),
-        Div(style="display: flex; gap: 1rem;")(
-            Button(
-                data_on_click=("$show = true", {"prevent": True}), data_show="!$show"
-            )("Reveal"),
-            Button(
-                data_show="$show",
-                data_on_click=(patch(f"/read/{num}/forgot", contentType="form"),),
-            )("I forgot!"),
-            Button(
-                data_show="$show",
-                data_on_click=(patch(f"/read/{num}/remembered", contentType="form")),
-            )("I remembered!"),
+        Details(
+            Summary("Try to recall before reveal"),
+            Label(_for="definition")(
+                "Definition (Changeable, save using either buttons)"
+            ),
+            Textarea(
+                id="definition",
+                name="definition",
+                placeholder="Write your own definitions in here.",
+                required=True,
+                minlength="1",
+                style="resize: none;",
+            )(card["back"]),
+            Div(style="display: flex; gap: 1rem;")(
+                Input(
+                    data_on_click=(post(f"/read/{num}/forgot", contentType="form"),),
+                    type="submit",
+                    formaction=f"/read/{num}/forgot",
+                    formmethod="post",
+                    value="I forgot!",
+                ),
+                Input(
+                    data_on_click=(post(f"/read/{num}/remembered", contentType="form")),
+                    type="submit",
+                    formaction=f"/read/{num}/remembered",
+                    formmethod="post",
+                    value="I remembered!",
+                ),
+            ),
         ),
     )
 
@@ -435,15 +456,19 @@ async def save(auth, num: int, word: str, definition: str):
 
     relay.publish(f"read.{auth}.{num}", word)
 
+    return Redirect(f"/read/{num}?word={word}")
 
-@read_rt.patch("/{num:int}/remembered")
+
+@read_rt.post("/{num:int}/remembered")
 async def remembered(auth, num: int, word: str, definition: str):
     rate_card(auth, num, word, definition, forgot=False)
+    return Redirect(f"/read/{num}?word={word}")
 
 
-@read_rt.patch("/{num:int}/forgot")
+@read_rt.post("/{num:int}/forgot")
 async def forgot(auth, num: int, word: str, definition: str):
     rate_card(auth, num, word, definition, forgot=True)
+    return Redirect(f"/read/{num}?word={word}")
 
 
 def rate_card(auth, num: int, word: str, definition: str, forgot: bool = False):
