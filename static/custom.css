@@ -59,3 +59,9 @@ legend {
     background: gold;
     color: light-dark(var(--text), var(--bg));
 }
+
+@media (scripting: none) {
+    .no-js {
+        display: none !important; 
+    }
+}

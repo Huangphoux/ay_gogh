@@ -7,6 +7,7 @@
 - spaCy
 - Kiểm tra độ dài khi gửi đến server
 - Read: Progressive Enhancement
+- Graceful degradation, not progressive enhancement
 
 # Code
 

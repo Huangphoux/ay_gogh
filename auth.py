@@ -45,8 +45,9 @@ def login(req, sess):
                     name="show_pwd",
                     type="checkbox",
                     data_bind="is_show",
+                    _class="no-js",
                 ),
-                Label("Show Password", _for="show_pwd"),
+                Label("Show Password", _for="show_pwd", _class="no-js"),
             ),
             Button("Log In"),
             Span(f" or "),
@@ -77,6 +78,7 @@ def login_process(name: str, pwd: str, sess):
 
 
 @auth_rt.delete("/login")
+@auth_rt.post("/login")
 def logout(sess):
     global db
     db.close(sess["auth"])
@@ -122,8 +124,13 @@ def signup(req, sess):
                     name="show_pwd",
                     type="checkbox",
                     data_bind="is_show",
+                    _class="no-js",
                 ),
-                Label("Show Password", _for="show_pwd"),
+                Label(
+                    "Show Password",
+                    _for="show_pwd",
+                    _class="no-js",
+                ),
             ),
             Button("Sign Up"),
             P(
