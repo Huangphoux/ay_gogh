@@ -42,6 +42,13 @@ def template(title: str, main, auth=None):
                     ".",
                 ),
                 P("Copyright © Ay Gogh! 2026"),
+                P(_class="no-js")(
+                    "Proudly powered by ",
+                    A(href="https://data-star.dev/")("Datastar"),
+                    " 🚀",
+                ),
             ),
         ),
     )
+
+
