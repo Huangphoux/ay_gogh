@@ -1,8 +1,5 @@
-#set page(margin: (top: 3cm, bottom: 3.5cm, left: 3.5cm, right: 2cm))
-#set par(leading: 21pt, spacing: 1.5em, first-line-indent: 0pt, justify: true)
-// leading: giữa các dòng; spacing: giữa các đoạn văn
-#show heading: set block(above: 1.4em, below: 1em)
 #set text(font: "Times New Roman", size: 13pt)
+
 
 // only first level headings on a new page
 #show heading.where(level: 1): it => {
@@ -12,34 +9,37 @@
 
 #include "000_front_matter/001_cover_page.typ"
 
+#set page(margin: (top: 3cm, bottom: 3.5cm, left: 3.5cm, right: 2cm))
+#set par(leading: 21pt, spacing: 1.5em, first-line-indent: 0pt, justify: true)
+// leading: giữa các dòng; spacing: giữa các đoạn văn
+#show heading: set block(above: 1.4em, below: 1em)
+#set text(font: "Times New Roman", size: 13pt)
 
 // = Declaration of Authorship
 // #include "000_front_matter/002_declaration_of_authorship.typ"
 
-#heading(level: 1, outlined: false)[Acknowledgments]
+#align(center, [#heading(level: 1, outlined: false)[LỜI CẢM ƠN]])
 #include "000_front_matter/003_acknowledgments.typ"
 
 #show outline.entry.where(
   level: 1,
 ): set block(above: 1.2em)
 
-#heading(level: 1, outlined: false)[Abstract]
-#include "000_front_matter/004_abstract.typ"
+// #heading(level: 1, outlined: false)[Problem Statement]
+// #include "000_front_matter/005_problem_statement.typ"
 
-#heading(level: 1, outlined: false)[Problem Statement]
-#include "000_front_matter/005_problem_statement.typ"
+// #heading(level: 1, outlined: false)[System Objectives]
+// #include "000_front_matter/006_system_objectives_summary.typ"
 
-#heading(level: 1, outlined: false)[System Objectives]
-#include "000_front_matter/006_system_objectives_summary.typ"
+// #heading(level: 1, outlined: false)[Proposed Solution]
+// #include "000_front_matter/007_proposed_solution.typ"
 
-#heading(level: 1, outlined: false)[Proposed Solution]
-#include "000_front_matter/007_proposed_solution.typ"
+// #heading(level: 1, outlined: false)[Technologies Used]
+// #include "000_front_matter/008_technologies_used.typ"
 
-#heading(level: 1, outlined: false)[Technologies Used]
-#include "000_front_matter/008_technologies_used.typ"
+// #heading(level: 1, outlined: false)[Achieved Results]
+// #include "000_front_matter/009_achieved_results.typ"
 
-#heading(level: 1, outlined: false)[Achieved Results]
-#include "000_front_matter/009_achieved_results.typ"
 
 #outline(title: "Table of Contents")
 
@@ -47,6 +47,10 @@
   title: "List of Figures",
   target: figure.where(kind: image),
 )
+
+#align(center, [#heading(level: 1, outlined: false)[TÓM TẮT ĐỒ ÁN]])
+#include "000_front_matter/004_abstract.typ"
+
 
 #set page(numbering: "1")
 #counter(page).update(1)
@@ -164,3 +168,5 @@
 
 // // = APPENDIX
 // // #include "800_references_appendix/802_appendix.typ"
+
+#bibliography("bib.bib")
