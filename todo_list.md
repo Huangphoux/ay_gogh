@@ -20,7 +20,6 @@
     - [Speech Synthesis](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API#speech_synthesis)
 - Cân nhắc [Free Dictionary API](https://dictionaryapi.dev/)
 - thẻ man, woman, Germany, many. bôi man trước, không bôi toàn bộ woman, Germany, many
-    - Cái tính năng bôi này bug vl
 - spaCy: phân tích part of speech của từ bôi đen để lọc ra kết quả Wiktionary Parser
 
 # SRS

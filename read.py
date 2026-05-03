@@ -255,6 +255,16 @@ def popup_view(auth, num: int, word: str = ""):
             )
         )
 
+    if " " in word:
+        return Form(_class="notice modal")(
+            P(
+                'You can only collect a single word, like "six" or "seven". Spaces are not allowed.'
+            ),
+            Button(
+                data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
+            )("Close"),
+        )
+
     try:
         card = list(
             db.get(auth).query(
@@ -344,18 +354,18 @@ def popup_view(auth, num: int, word: str = ""):
             ),
         )
 
-    # if not card["is_new_day"]:
-    #     return Form(_class="notice modal")(
-    #         Small(
-    #             "※ ",
-    #             Span(_class="n0t-y3t")("Yellow background"),
-    #             ": the word can't be revealed until tomorrow.",
-    #             Br(),
-    #         ),
-    #         Button(
-    #             data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
-    #         )("Close"),
-    #     )
+    if not card["is_new_day"]:
+        return Form(_class="notice modal")(
+            Small(
+                "※ ",
+                Span(_class="n0t-y3t")("Yellow background"),
+                ": the word can't be revealed until tomorrow.",
+                Br(),
+            ),
+            Button(
+                data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
+            )("Close"),
+        )
 
     if not card["is_due"]:
         time_delta = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
