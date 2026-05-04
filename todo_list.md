@@ -10,6 +10,7 @@
     - Bấm tiếp theo thì thêm câu tiếp theo vào section
     - Load từng câu vào bộ nhớ. Khi người dùng bấm tiếp theo thì pop ở đầu mảng. Hàng đợi.
 - Standard Ebooks: tuyển chọn và giới thiệu cho người đọc các tác phẩm văn học đình đám được viết bằng tiếng Anh. Người đọc có thể chủ động tìm đọc ở ngoài hệ thống để không cần phải phụ thuộc vào kết nối mạng, hoặc có thể đọc và thu thập từ vựng ngay thẳng trong hệ thống.
+- Khi không có JS, popup là một trang riêng?
 
 # Mining
 
@@ -21,6 +22,7 @@
 - Cân nhắc [Free Dictionary API](https://dictionaryapi.dev/)
 - thẻ man, woman, Germany, many. bôi man trước, không bôi toàn bộ woman, Germany, many
 - spaCy: phân tích part of speech của từ bôi đen để lọc ra kết quả Wiktionary Parser
+- Nếu mà viết hoa không có thì tìm viết thường
 
 # SRS
 
@@ -28,6 +30,14 @@
 - spaCy: yêu cầu phải tách mỗi câu một dòng trước
 - Kiểm tra độ dài khi gửi đến server
 - Đánh dấu học thuộc: Anki's `Suspend`
+
+# Auth
+
+- Khi không có JS, nút đăng xuất chuyển hướng người dùng đến trang để hỏi muốn đăng xuất không.
+
+# Setting
+
+- Tối ưu thông số: Background Task
 
 # Code
 
