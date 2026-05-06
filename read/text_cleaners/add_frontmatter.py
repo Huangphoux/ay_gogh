@@ -17,7 +17,7 @@ def add_frontmatter(fname):
 
         has_title = False
 
-        for index, line in enumerate(all_lines[:]):
+        for line in all_lines[:]:
             if not has_title and line.isupper() and ":" not in line:
                 post["title"] = string.capwords(line).strip()
                 all_lines.remove(line)
