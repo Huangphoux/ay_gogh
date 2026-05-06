@@ -22,6 +22,7 @@ with open(ngsl_path, mode="r", encoding="utf-8") as f:
     # ValueError, I/O operation on closed file
     # OH MY GOD ?!
     # the solution was simply to make the csv.reader a list to avoid file closure???
+    # Claude Haiku pointed this out for me, I am so ashamed for resorting to LLM
 
     ngsl: dict[str, str] = {}
 
@@ -90,8 +91,10 @@ def add_ngsl_level(fname):
         post = frontmatter.load(f)
         # f being busy being read by f.readlines() so has to make a new open()
 
-        for i in range(0, 5 + 1):
-            post[f"lv{i}"] = lv[i] / sum
+        # for i in range(0, 5 + 1):
+            # post[f"lv{i}"] = lv[i] / sum
+
+        post["ngsl"] = (lv[1] + lv[2] + lv[3] + lv[4] + lv[5]) / sum
 
     with open(fname, mode="wb") as f:
         f.write(frontmatter.dumps(post).encode("utf-8"))
