@@ -79,7 +79,8 @@ class DatabaseDict:
                         cardinal TEXT,
                         cardinal_word TEXT,
                         title TEXT,
-                        content TEXT
+                        content TEXT,
+                        ngsl REAL
                     )
             """)
 
@@ -90,8 +91,8 @@ class DatabaseDict:
                     self.app.execute(
                         f"""
                             INSERT OR IGNORE INTO chapter
-                            (number, number_word, cardinal, cardinal_word, title, content)
-                            VALUES (?, ?, ?, ?, ?, ?)
+                            (number, number_word, cardinal, cardinal_word, title, content, ngsl)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)
                         """,
                         (
                             meta["number"],
@@ -100,6 +101,7 @@ class DatabaseDict:
                             meta["cardinal_word"],
                             meta["title"],
                             content,
+                            meta["ngsl"],
                         ),
                     )
 
@@ -120,6 +122,16 @@ class DatabaseDict:
                         lv5 INTEGER NOT NULL
                     )
             """)
+
+            ### DEBUG
+            self._user[name].execute(
+                """
+                INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
+                VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
+            """,
+                ("c", 100, 20, 19, 20, 20, 20),  # Phuc, (UTC) 2026-05-06 07:57:12
+            )
+            ### DEBUG
 
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS chapter (
@@ -152,7 +164,7 @@ class DatabaseDict:
                         FOREIGN KEY (card_id) REFERENCES deck(id)
                     )
             """)
-            
+
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS settings (
                         id INTEGER PRIMARY KEY,

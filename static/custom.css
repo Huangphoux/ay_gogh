@@ -45,23 +45,32 @@ legend {
     color: var(--accent-text);
 }
 
-.du3 {
+.du3,
+.hard,
+.n0t-du3,
+.easy,
+.n0t-y3t,
+.medium {
+    color: light-dark(var(--text), var(--bg));
+}
+
+.du3,
+.hard {
     background: red;
-    color: light-dark(var(--text), var(--bg));
 }
 
-.n0t-du3 {
+.n0t-du3,
+.easy {
     background: lime;
-    color: light-dark(var(--text), var(--bg));
 }
 
-.n0t-y3t {
+.n0t-y3t,
+.medium {
     background: gold;
-    color: light-dark(var(--text), var(--bg));
 }
 
 @media (scripting: none) {
     .no-js {
-        display: none !important; 
+        display: none !important;
     }
 }

@@ -13,16 +13,30 @@ from mistletoe.html_renderer import HTMLRenderer
 read_rt: APIRouter = APIRouter("/read")
 
 
+def get_ease(score: int, ngsl: float):
+    ease = score * ngsl
+    # return ease
+
+    if ease > 90:
+        return "easy"
+
+    if 80 <= ease <= 90:
+        return "medium"
+
+    if ease < 80:  # why did i write 80 < ease :'(
+        return "hard"
+
+
 @read_rt.get("/")
 def read(auth, p: int = 0, all: int = 0):
     if p < 0 or p > 5 or all not in (0, 1):
         return Redirect(read)
 
     chap = list(
-        db.app.query("SELECT number, title FROM chapter")
+        db.app.query("SELECT number, title, ngsl FROM chapter")
         if all
         else db.app.query(
-            "SELECT number, title FROM chapter LIMIT 10 OFFSET ?", (p * 10,)
+            "SELECT number, title, ngsl FROM chapter LIMIT 10 OFFSET ?", (p * 10,)
         )
     )
 
@@ -34,13 +48,28 @@ def read(auth, p: int = 0, all: int = 0):
                 if uc["number"] == c["number"]:
                     c["done"] = 1
 
+    try:
+        last_test = list(
+            db.get(auth).query(
+                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
+            )
+        )[0]
+    except IndexError:
+        last_test = None
+
+    score = (
+        sum(last_test[f"lv{x}"] for x in range(1, 5 + 1))
+        if last_test and last_test["progress"] == 100
+        else None
+    )
+
     main = Main(
         H1(id="main-heading")(
-            f"Read ({p * 10 + 1} to {(p + 1) * 10})" if not all else "Read All",
+            f"Read, {p * 10 + 1} to {(p + 1) * 10}" if not all else "Read All",
         ),
         Div(style="display: flex; gap: 1rem; align-items: center; height: 1.5rem")(
             A(href=f"/read/?p={p - 1}")("Previous")
-            if not all and p > 0
+            if p > 0
             else Span(style="color: var(--border)")("Previous"),
             *(
                 A(href=f"/read/?p={i}")(i)
@@ -53,14 +82,14 @@ def read(auth, p: int = 0, all: int = 0):
             A(
                 href=f"/read/?p={p + 1}",
             )("Next")
-            if not all and p < 5
+            if p < 5
             else Span(style="color: var(--border)")("Next"),
         )
         if not all
         else None,
         Ul(
             *(
-                Li(
+                Li(style="display: flex; justify-content: space-between;")(
                     A(
                         href=f"/read/{c['number']}",
                         style="color: var(--border)"
@@ -69,8 +98,15 @@ def read(auth, p: int = 0, all: int = 0):
                     )(
                         "(DONE)"
                         if "done" in c and c["done"] == 1
-                        else f"Chapter {c['number']}: {c['title']}",
+                        else f"Chapter {c['number']}: {c['title']}"
                     ),
+                    A(style="display: grid;  place-items: center;")(
+                        _class=(ease := get_ease(score, c["ngsl"])),
+                        href=f"/read/{c['number']}/ease",
+                        title=f"You know {score * c['ngsl']:.2f}% of the words in chapter {c['number']}.",
+                    )(ease.title())
+                    if score and not ("done" in c and c["done"] == 1)
+                    else None,
                 )
                 for c in chap
             ),
@@ -82,6 +118,87 @@ def read(auth, p: int = 0, all: int = 0):
 
     return template(
         f"Read, {p * 10 + 1} to {(p + 1) * 10}" if not all else "Read All",
+        main,
+        auth,
+    )
+
+
+@read_rt.get("/{num:int}/ease")
+def ease(auth, num: int):
+    chap = list(db.app.query("SELECT ngsl FROM chapter WHERE number = ? ", (num,)))[0]
+
+    try:
+        last_test = list(
+            db.get(auth).query(
+                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
+            )
+        )[0]
+    except IndexError:
+        last_test = None
+
+    if last_test:
+        score = sum(last_test[f"lv{x}"] for x in range(1, 5 + 1))
+        ease = get_ease(score, chap["ngsl"])
+    else:
+        return Redirect(f"/read/{num}")
+
+    main = Main(
+        H1(id="main-heading")(f"Chapter {num}'s Reading Ease"),
+        A(href=f"/read/?p={ceil(num / 10) - 1}")("< Back"),
+        Section(
+            Table(
+                Thead(
+                    Tr(
+                        Th("Explanation"),
+                        Th("Percentage"),
+                    )
+                ),
+                Tbody(
+                    Tr(Td(f"NGSL words in chapter {num}"), Td(f"{chap['ngsl']:.2%}")),
+                    Tr(Td(f"NGSL words that you know"), Td(f"{score}%")),
+                    Tr(
+                        Td(f"NGSL words that you know in chapter {num}"),
+                        Td(_class=ease)(f"{score * chap['ngsl']:.2f}%"),
+                    ),
+                ),
+            ),
+            P(
+                "This chapter is deemed of ",
+                Span(_class=ease)(ease.title()),
+                " difficulty for you.",
+            ),
+            A(href=f"/read/{num}", _class="button")("Let's read!"),
+        ),
+        Section(
+            P(
+                "The table below refers to how difficult a chapter is \
+                if you know a centain percentage of words in a chapter."
+            ),
+            P(
+                "This information is taken from ",
+                A(href="https://www.newgeneralservicelist.com/coverage")(
+                    "The Importance of Coverage in Vocabulary Learning"
+                ),
+                " by the New General Service List Project.",
+            ),
+            Table(
+                Thead(
+                    Tr(
+                        Th("Percentage"),
+                        Th("Difficulty"),
+                    )
+                ),
+                Tbody(
+                    Tr(Td(f"≥ 90%"), Td(_class="easy")("Easy")),
+                    Tr(Td(f"80% < x < 90%"), Td(_class="medium")("Medium")),
+                    Tr(Td(f"≤ 80%"), Td(_class="hard")("Hard")),
+                ),
+            ),
+        ),
+    )
+
+    return template(
+        f"Read, Chapter {num}'s reading ease",
         main,
         auth,
     )
@@ -116,9 +233,10 @@ class MyRenderer(HTMLRenderer):
 
 def chapter_main(auth, num: int, word: str = ""):
     # execute for INSERT, query for SELECT
+    # this one is app
     chap = list(db.app.query("SELECT * FROM chapter WHERE number = ? ", (num,)))[0]
 
-    try:
+    try:  # this one is user's "done"
         done = db.get(auth).item("SELECT done FROM chapter WHERE number = ? ", (num,))
     except NotFoundError:
         done = 0
