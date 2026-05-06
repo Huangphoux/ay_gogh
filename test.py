@@ -101,7 +101,7 @@ def intro(auth):
                 INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
                 VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (choice("abc"), 0, 0, 0, 0, 0, 0),  # DEBUG
+            (choice("abc"), 0, 0, 0, 0, 0, 0),
         )
 
     if last_num and last_num < 100:
@@ -172,11 +172,11 @@ def progress_main(auth):
             break
     question = "".join(split)
 
-    return Main(data_init=get(cqrs))(
+    return Main(data_init=get("/test/cqrs"))(
         H1(f"Question {last_num + 1}", id="main-heading"),
         Form(
             data_on_submit=(
-                post(progress_process, contentType="form"),
+                post("/test/progress_process", contentType="form"),
                 js("; document.querySelector('form').reset()"),
             ),
             action=progress_process,
@@ -191,7 +191,7 @@ def progress_main(auth):
                 ),
                 Ul(style="list-style-type: none; margin: 0%; padding: 0%")(
                     *[
-                        Li(style="display: flex; align-items: center; gap: 0.5rem")(
+                        Li(style="display: flex;")(
                             Input(
                                 type="radio",
                                 name="choice",
@@ -199,13 +199,13 @@ def progress_main(auth):
                                 id=answer,
                                 required=True,
                             ),
-                            Label(_for=answer)(next_q[answer]),
+                            Label(_for=answer, style="padding-left: 0.5rem")(next_q[answer]),
                         )
                         for answer in "abcd"
                     ],
                 ),
             ),
-            Button("Advance"),
+            Button("Next"),
         ),
     )
 
