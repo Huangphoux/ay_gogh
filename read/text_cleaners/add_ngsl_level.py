@@ -13,9 +13,10 @@ lemma_path = os.path.join(
     "ngsl",
     "NGSL_1.2_lemmatized_for_teaching_modified.csv",
 )
+skip_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "skip_list.txt")
 
 nlp = spacy.load("en_core_web_sm")
-
+words = set(nlp.vocab.strings)
 
 with open(ngsl_path, mode="r", encoding="utf-8") as f:
     # ValueError, I/O operation on closed file
@@ -34,6 +35,9 @@ with open(lemma_path, mode="r", encoding="utf-8") as f:
         for item in row:
             form_to_lemma[item] = row[0]
 
+with open(skip_path, mode="r", encoding="utf-8") as f:
+    skip = {line.strip() for line in f}
+
 
 def add_ngsl_level(fname):
     with open(fname, mode="r", encoding="utf-8") as f:
@@ -50,6 +54,14 @@ def add_ngsl_level(fname):
 
         for token in nlp(content):
             if token.is_alpha:
+                if (
+                    token.lemma_ in skip
+                    or token.lemma_.istitle()
+                    or token.lemma_ not in words
+                ):
+                    # words doesn't consider outdated vocab tho
+                    continue
+
                 if (
                     token.lemma_ in form_to_lemma
                     and token.lemma_ != form_to_lemma[token.lemma_]
@@ -70,6 +82,7 @@ def add_ngsl_level(fname):
 
         sum = len(lemma)
 
+        # print(f"{1 - (lv[0] / sum):.2%}")
         # print([f"{lv[i] / sum:.2%}" for i in range(0, 5 + 1)])
         # đa số lý do lv0 nhiều là do còn dư âm của phiên âm IPA
 
