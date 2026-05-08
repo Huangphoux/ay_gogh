@@ -124,12 +124,22 @@ class DatabaseDict:
             """)
 
             ### DEBUG
+            # self._user[name].execute(
+            #     """
+            #     INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
+            #     VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
+            # """,  # Truong Hoang Phuc, (UTC) 2026-05-06 07:57:12
+            #     ("c", 100, 20, 19, 20, 20, 20),
+            # )
+            ### DEBUG
+
+            ### DEBUG
             self._user[name].execute(
                 """
                 INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
                 VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
-            """,
-                ("c", 100, 20, 19, 20, 20, 20),  # Phuc, (UTC) 2026-05-06 07:57:12
+            """,  # Le Minh Phat, (UTC) 2026-05-08 01:48:52
+                ("c", 100, 18, 18, 20, 17, 16),
             )
             ### DEBUG
 
