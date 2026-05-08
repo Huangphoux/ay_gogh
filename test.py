@@ -9,7 +9,7 @@ test_rt: APIRouter = APIRouter("/test")
 @test_rt.get("/")
 def test(auth):
     tests = list(db.get(auth).query("SELECT * FROM test"))
-    header = ["number", "day", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
+    header = ["number", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
 
     try:
         last_test = list(
@@ -19,6 +19,10 @@ def test(auth):
         )[0]
     except IndexError:
         last_test = None
+
+    result = (
+        sum((last_test[f"lv{num}"] for num in range(1, 5 + 1))) if last_test else None
+    )
 
     main = Main(
         H1("Test", id="main-heading"),
@@ -36,7 +40,7 @@ def test(auth):
         if tests
         else None,
         Section(
-            H2("Your latest test's result"),
+            H2("Your result"),
             P(
                 Span(style="color:red; font-weight: bold")("Red-highlighted"),
                 ": score < 80%. Target your study around those levels.",
@@ -45,18 +49,25 @@ def test(auth):
                 *(
                     Li(
                         f"Level {num}: ",
-                        f"{last_test[f'lv{num}'] / 20:.0%}"
-                        if last_test and last_test["progress"] == 100
-                        else None,
+                        f"{last_test[f'lv{num}'] / 20:.0%}",
                         style="color:red; font-weight: bold; font-size: 2rem"
-                        if last_test
-                        and last_test["progress"] == 100
-                        and last_test[f"lv{num}"] / 20 < 0.8
+                        if last_test[f"lv{num}"] / 20 < 0.8
                         else None,
                     )
                     for num in "12345"
                 ),
             ),
+            P(
+                style="color:red; font-weight: bold; font-size: 2rem"
+                if result and result < 80
+                else None,
+            )(f"You know {result}% of NGSL words.")
+            if result
+            else None,
+        )
+        if last_test and last_test["progress"] == 100
+        else P(_class="notice")(
+            "An analysis of your test score will be shown here after you finish."
         ),
     )
 
@@ -111,19 +122,19 @@ def intro(auth):
         H1("Intro", id="main-heading"),
         P("This is a test of basic vocabulary knowledge."),
         P(
-            "Each test item has a target word in ",
-            Strong("bold"),
-            " font, followed by a sentence which uses this target word. \
+            "Each question has a ",Strong("bolded")," target word, \
+            followed by a sentence which uses this target word. \
             Below the sentence are four answer choices.",
         ),
         Ul(
             Li(
-                "Choose the answer choice that best matches the meaning of the target word."
+                "Choose the answer that best matches the meaning of the ",
+                Strong("bolded"),
+                " word.",
             ),
-            Li("Answer the question before continuing."),
-            Li(
-                "There is no time limit.",
-            ),
+            Li("Answer before continuing."),
+            Li("There is no time limit."),
+            Li("You won't be able to return to previous answers."),
         ),
         A(_class="button", href=progress)("Start"),
     )
@@ -199,7 +210,9 @@ def progress_main(auth):
                                 id=answer,
                                 required=True,
                             ),
-                            Label(_for=answer, style="padding-left: 0.5rem")(next_q[answer]),
+                            Label(_for=answer, style="padding-left: 0.5rem")(
+                                next_q[answer]
+                            ),
                         )
                         for answer in "abcd"
                     ],
@@ -244,7 +257,7 @@ async def progress_process(auth, choice: str):
             last_test["day"],
         ),
     )
-    
+
     if is_last_finished(auth) is True:
         return Redirect(test)
     elif is_last_finished(auth) is False:

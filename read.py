@@ -143,7 +143,7 @@ def ease(auth, num: int):
         return Redirect(f"/read/{num}")
 
     main = Main(
-        H1(id="main-heading")(f"Chapter {num}'s Reading Ease"),
+        H1(id="main-heading")(f"Chapter {num}: Reading Ease"),
         A(href=f"/read/?p={ceil(num / 10) - 1}")("< Back"),
         Section(
             Table(

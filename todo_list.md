@@ -1,9 +1,15 @@
+# To-Do List
+
+- Dời hiện từ mined xuống dưới cùng
+    - Vì từ giờ khi bôi đen thì search bằng lemma
+    - Bỏ màu: do chỉ còn từ tới hạn mới có ý nghĩa
+- Đánh dấu học thuộc: Anki's `Suspend`
+- Xoá từ mined
+- Done toggle
+
 # Read
 
-- Badge hiện mức độ: xanh dễ, vàng oke, đỏ khó
-    - Cá nhân hoá lộ trình học: sử dụng NGSLT và SRS để xác định độ khó của bài đọc.
 - Progressive load từ điển Wiktionary: `data-ignore-morph`
-- Done ghi ngày, không dùng 1
 - Done toggle
 - CSV mỗi từ trong nguyên cả cuốn sách
 - Chỉ tập trung từng câu: chia bài đọc ra thành từng câu nhỏ để có thể dễ dàng tập trung. Tách văn bản ra thành từng câu. Người đọc muốn đọc tiếp phải bấm nút để hiện câu tiếp theo.
@@ -66,3 +72,9 @@
 - Gửi email xác nhận
 - Đổi mật khẩu
 - Đổi email
+
+# Test
+
+- Quay trở lại câu trước
+- Xem lại đáp án
+- Trang result, hiện đáp án sai
