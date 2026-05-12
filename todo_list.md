@@ -1,11 +1,12 @@
 # To-Do List
 
-- Dời hiện từ mined xuống dưới cùng
-    - Vì từ giờ khi bôi đen thì search bằng lemma
-    - Bỏ màu: do chỉ còn từ tới hạn mới có ý nghĩa
+- Khi select từ, chuyển sang dạng lemma
+    - Bôi cả từ, không bôi 1 phần từ
+    - Hiện badge: ✅NGSL LV1, ❌NGSL
 - Đánh dấu học thuộc: Anki's `Suspend`
 - Xoá từ mined
 - Done toggle
+- Show toàn bộ entry trong từ điển
 
 # Read
 
@@ -16,7 +17,8 @@
     - Bấm tiếp theo thì thêm câu tiếp theo vào section
     - Load từng câu vào bộ nhớ. Khi người dùng bấm tiếp theo thì pop ở đầu mảng. Hàng đợi.
 - Standard Ebooks: tuyển chọn và giới thiệu cho người đọc các tác phẩm văn học đình đám được viết bằng tiếng Anh. Người đọc có thể chủ động tìm đọc ở ngoài hệ thống để không cần phải phụ thuộc vào kết nối mạng, hoặc có thể đọc và thu thập từ vựng ngay thẳng trong hệ thống.
-- Khi không có JS, popup là một trang riêng?
+- Khi không có JS, popup là một trang riêng
+- Done toggle
 
 # Mining
 
@@ -29,6 +31,11 @@
 - thẻ man, woman, Germany, many. bôi man trước, không bôi toàn bộ woman, Germany, many
 - spaCy: phân tích part of speech của từ bôi đen để lọc ra kết quả Wiktionary Parser
 - Nếu mà viết hoa không có thì tìm viết thường
+- Xoá từ mined
+- Show toàn bộ entry trong từ điển
+- Khi select từ, chuyển sang dạng lemma
+    - Bôi cả từ, không bôi 1 phần từ
+    - Hiện badge: ✅NGSL LV1, ❌NGSL
 
 # SRS
 
@@ -72,9 +79,13 @@
 - Gửi email xác nhận
 - Đổi mật khẩu
 - Đổi email
+- Logout là một trang riêng
 
 # Test
 
 - Quay trở lại câu trước
 - Xem lại đáp án
 - Trang result, hiện đáp án sai
+- Column
+    - Bài làm: 12341243
+    - Đúng sai: 10010101
