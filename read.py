@@ -8,6 +8,7 @@ import json
 from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
 from mistletoe.html_renderer import HTMLRenderer
+import re
 
 
 read_rt: APIRouter = APIRouter("/read")
@@ -125,6 +126,9 @@ def read(auth, p: int = 0, all: int = 0):
 
 @read_rt.get("/{num:int}/ease")
 def ease(auth, num: int):
+    if num not in range(1, 60 + 1):
+        return Redirect(read)
+
     chap = list(db.app.query("SELECT ngsl FROM chapter WHERE number = ? ", (num,)))[0]
 
     try:
@@ -269,9 +273,10 @@ def chapter_main(auth, num: int, word: str = ""):
                     elif c["is_due"]:
                         due_class = "du3"
 
-                    chap["content"] = chap["content"].replace(
-                        item,
+                    chap["content"] = re.sub(
+                        r"\b%s\b" % item,
                         Safe(Span(_class=due_class)(item)),
+                        chap["content"],
                     )
 
     return Main(
@@ -472,18 +477,18 @@ def popup_view(auth, num: int, word: str = ""):
             ),
         )
 
-    if not card["is_new_day"]:
-        return Form(_class="notice modal")(
-            Small(
-                "※ ",
-                Span(_class="n0t-y3t")("Yellow background"),
-                ": the word can't be revealed until tomorrow.",
-                Br(),
-            ),
-            Button(
-                data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
-            )("Close"),
-        )
+    # if not card["is_new_day"]:
+    #     return Form(_class="notice modal")(
+    #         Small(
+    #             "※ ",
+    #             Span(_class="n0t-y3t")("Yellow background"),
+    #             ": the word can't be revealed until tomorrow.",
+    #             Br(),
+    #         ),
+    #         Button(
+    #             data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
+    #         )("Close"),
+    #     )
 
     if not card["is_due"]:
         time_delta = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
