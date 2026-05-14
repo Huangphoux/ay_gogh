@@ -168,11 +168,10 @@ class DatabaseDict:
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS review_log (
                         id INTEGER PRIMARY KEY,
-                        card_id INTEGER NOT NULL,
+                        card_id INTEGER NOT NULL REFERENCES deck(id) ON DELETE CASCADE,
                         rating INTEGER NOT NULL,
                         review_datetime TEXT NOT NULL,
-                        review_duration INTEGER,
-                        FOREIGN KEY (card_id) REFERENCES deck(id)
+                        review_duration INTEGER
                     )
             """)
 

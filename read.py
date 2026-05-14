@@ -559,7 +559,7 @@ def popup_view(auth, num: int, word: str = ""):
             Small(
                 " ※ ",
                 Span(_class="susp3nd")("Cyan background"),
-                ": the word is retired.",
+                ": the word is retired, meaning you won't have to review it anymore.",
             ),
             Label(_for="word")("Word (cannot modify)"),
             Input(
@@ -584,10 +584,6 @@ def popup_view(auth, num: int, word: str = ""):
                 minlength="1",
                 style="resize: none;",
             )(card["back"]),
-            P("You have retired this word. You don't need to review it anymore."),
-            P(
-                'If you want to review this word again, click the "Unretire" button below.'
-            ),
             Button(
                 data_on_click=(post(f"/read/{num}/close", contentType="form"),),
                 _class="outline",
@@ -655,15 +651,35 @@ def popup_view(auth, num: int, word: str = ""):
         ),
         Details(
             Summary("More actions"),
-            Input(
-                data_on_click=post(f"/read/{num}/suspend", contentType="form"),
-                type="submit",
-                formaction=f"/read/{num}/suspend",
-                formmethod="post",
-                value="Retire",
+            Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
+                Input(
+                    data_on_click=post(f"/read/{num}/suspend", contentType="form"),
+                    type="submit",
+                    formaction=f"/read/{num}/suspend",
+                    formmethod="post",
+                    value="Retire",
+                ),
+                Input(
+                    data_on_click=post(f"/read/{num}/delete", contentType="form"),
+                    type="submit",
+                    formaction=f"/read/{num}/delete",
+                    formmethod="post",
+                    value="DELETE (Non-reversible)",
+                ),
             ),
         ),
     )
+
+
+@read_rt.post("/{num:int}/delete")
+async def delete(auth, num: int, word: str, definition: str):
+    if not word and not definition:
+        return Redirect(f"/read/{num}")
+
+    db.get(auth).execute("DELETE FROM deck WHERE front=?", (word,))
+
+    relay.publish(f"read.{auth}.{num}", word)
+    return Redirect(f"/read/{num}?word={word}")
 
 
 @read_rt.post("/{num:int}/suspend")

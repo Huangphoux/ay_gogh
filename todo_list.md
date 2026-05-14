@@ -1,9 +1,7 @@
 # To-Do List
 
 - re.sub() không nên replace cả code block
-- Đánh dấu học thuộc: Anki's `Suspend`
 - Xoá từ mined
-- Done toggle
 - Show toàn bộ entry trong từ điển
 
 # Read

@@ -27,8 +27,6 @@ from starlette_cramjam.middleware import CompressionMiddleware
 
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     debug=False,
-    # devtools=True,
-    datastar="cdn",  # patches is needed for DevTools
     # devtools.py, devtools_css = (_DEVTOOLS_DIR / "devtools.css").read_text(encoding="utf-8")
     # mainly my fault for setting the locale to Japanese, setting the encoding to cp932
     title="Ay Gogh!",
@@ -46,23 +44,22 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
         ),
     ),
     static_path="static",
-    default_hdrs=False,
+    # default_hdrs=False,
     hdrs=(  # keep / in href, if not, /auth/custom.css
-        Meta(charset="utf-8"),
-        Meta(
-            name="viewport",
-            content="width=device-width, initial-scale=1, viewport-fit=cover",
-        ),
+        # Meta(charset="utf-8"),
+        # Meta(
+        #     name="viewport",
+        #     content="width=device-width, initial-scale=1, viewport-fit=cover",
+        # ),
         Link(rel="stylesheet", href="/custom.css"),
         Link(rel="icon", href="https://fav.farm/✅"),  # favicon
         Link(rel="stylesheet", href="https://cdn.simplecss.org/simple.min.css"),
-        Script(
-            type="module",
-            src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0/bundles/datastar.js",
-        ),
     ),
     sess_https_only=False,  # set Secure flag on cookies
     same_site="strict",
+    # .sesskey can be read/write by anyone
+    # chmod 600 .sesskey to only be able to read/write by owner
+    datastar="cdn",
 )
 
 # Add routes to app
