@@ -1,7 +1,5 @@
 # To-Do List
 
-- re.sub() không nên replace cả code block
-- Xoá từ mined
 - Show toàn bộ entry trong từ điển
 
 # Read

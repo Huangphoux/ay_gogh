@@ -235,6 +235,23 @@ class MyRenderer(HTMLRenderer):
         return f"<aside><pre>{code}</pre></aside>"
 
 
+def highlight_words(content: str, word: str, due_class: str) -> str:
+    code_block = False
+
+    for i, line in enumerate(split := (content.splitlines())):
+        if line == "```":
+            code_block = not code_block
+        if code_block:
+            continue
+
+        split[i] = re.sub(
+            r"\b%s\b" % word,
+            Safe(Span(_class=due_class)(word)),
+            line,
+        )
+    return "\n".join(split)
+
+
 def chapter_main(auth, num: int, word: str = ""):
     # execute for INSERT, query for SELECT
     # this one is app
@@ -276,10 +293,8 @@ def chapter_main(auth, num: int, word: str = ""):
                 if c["suspend"]:
                     due_class = "susp3nd"
 
-                chap["content"] = re.sub(
-                    r"\b%s\b" % c["front"],
-                    Safe(Span(_class=due_class)(c["front"])),
-                    chap["content"],
+                chap["content"] = highlight_words(
+                    chap["content"], c["front"], due_class
                 )
 
     return Main(
