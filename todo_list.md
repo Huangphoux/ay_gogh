@@ -1,8 +1,6 @@
 # To-Do List
 
-- Khi select từ, chuyển sang dạng lemma
-    - Highlight cả từ, không highlight 1 phần từ
-    - Hiện badge: ✅NGSL LV1, ❌NGSL
+- re.sub() không nên replace cả code block
 - Đánh dấu học thuộc: Anki's `Suspend`
 - Xoá từ mined
 - Done toggle

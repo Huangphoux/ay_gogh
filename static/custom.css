@@ -50,7 +50,8 @@ legend {
 .n0t-du3,
 .easy,
 .n0t-y3t,
-.medium {
+.medium,
+.susp3nd {
     color: light-dark(var(--text), var(--bg));
 }
 
@@ -67,6 +68,10 @@ legend {
 .n0t-y3t,
 .medium {
     background: gold;
+}
+
+.susp3nd {
+    background: cyan;
 }
 
 @media (scripting: none) {

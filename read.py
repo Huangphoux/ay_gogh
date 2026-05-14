@@ -250,7 +250,7 @@ def chapter_main(auth, num: int, word: str = ""):
             db.get(auth).query(
                 """
                 SELECT
-                    front, back, due, last_review,
+                    front, back, due, last_review, suspend,
                     CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
                            -- datetime now is after due
                     CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) < 1) THEN 0 ELSE 1 END AS is_new_day
@@ -263,21 +263,24 @@ def chapter_main(auth, num: int, word: str = ""):
         cards = None
 
     if cards:
+        # highlight mined words
         for c in cards:
-            if c["front"].lower() in chap["content"].lower():
-                for item in (c["front"], c["front"].title()):
-                    due_class = "n0t-du3"
+            if c["front"] in chap["content"]:
+                due_class = "n0t-du3"
 
-                    if not c["is_new_day"]:
-                        due_class = "n0t-y3t"
-                    elif c["is_due"]:
-                        due_class = "du3"
+                if not c["is_new_day"]:
+                    due_class = "n0t-y3t"
+                elif c["is_due"]:
+                    due_class = "du3"
 
-                    chap["content"] = re.sub(
-                        r"\b%s\b" % item,
-                        Safe(Span(_class=due_class)(item)),
-                        chap["content"],
-                    )
+                if c["suspend"]:
+                    due_class = "susp3nd"
+
+                chap["content"] = re.sub(
+                    r"\b%s\b" % c["front"],
+                    Safe(Span(_class=due_class)(c["front"])),
+                    chap["content"],
+                )
 
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
@@ -309,15 +312,14 @@ def chapter_main(auth, num: int, word: str = ""):
             ),
         ),
         Section(
-            H2("Due words that you may have missed"),
-            P("Deal with these before completing this chapter."),
+            H2("Due words"),
             Ul(
                 data_on_pointerup=(
                     f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
                 )
-            )(*(Li(c["front"]) for c in cards if c["is_due"])),
+            )(*(Li(c["front"]) for c in cards if c["is_due"] and c["suspend"] == 0)),
         )
-        if cards and [1 for c in cards if c["is_due"] == 1]
+        if cards and [1 for c in cards if c["is_due"] == 1 and c["suspend"] == 0]
         else None,
         Section(style="display: grid; place-items: center")(
             Form(
@@ -368,7 +370,21 @@ def open(auth, num: int, word: str):
 
 
 @read_rt.get("/{num:int}/close")
-def close(auth, num: int):
+def get_close(auth, num: int):
+    relay.publish(f"read.{auth}.{num}", "")
+    return Redirect(f"/read/{num}")
+
+
+@read_rt.post("/{num:int}/close")
+def post_close(auth, num: int, word: str, definition: str):
+    if not word and not definition:
+        return Redirect(chapter(auth, num=num))
+
+    db.get(auth).execute(
+        "UPDATE deck SET back=? WHERE front=?",
+        (definition, word),
+    )
+
     relay.publish(f"read.{auth}.{num}", "")
     return Redirect(f"/read/{num}")
 
@@ -412,7 +428,7 @@ def popup_view(auth, num: int, word: str = ""):
             db.get(auth).query(
                 """
                 SELECT
-                    front, back, due, last_review,
+                    front, back, due, last_review, suspend,
                     CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
                            -- datetime now is after due
                     CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) < 1) THEN 0 ELSE 1 END AS is_new_day
@@ -506,6 +522,11 @@ def popup_view(auth, num: int, word: str = ""):
     #         ),
     #         Button(
     #             data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
+    #             _class="outline",
+    #             type="submit",
+    #             formmethod="get",
+    #             formaction=f"/read/{num}/close",
+    #             formnovalidate=True,
     #         )("Close"),
     #     )
 
@@ -525,7 +546,62 @@ def popup_view(auth, num: int, word: str = ""):
             ),  # take only what is before the point
             Button(
                 data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
+                _class="outline",
+                type="submit",
+                formmethod="get",
+                formaction=f"/read/{num}/close",
+                formnovalidate=True,
             )("Close"),
+        )
+
+    if card["suspend"]:
+        return Form(_class="notice modal")(
+            Small(
+                " ※ ",
+                Span(_class="susp3nd")("Cyan background"),
+                ": the word is retired.",
+            ),
+            Label(_for="word")("Word (cannot modify)"),
+            Input(
+                type="text",
+                id="word",
+                name="word",
+                value=card["front"],
+                minlength="1",
+                required=True,
+                placeholder="Write the word you want to collect here.",
+                readonly=True,
+                style="width: 100%;",
+            ),
+            Label(_for="definition")(
+                "Definition (Changeable, save using either buttons)"
+            ),
+            Textarea(
+                id="definition",
+                name="definition",
+                placeholder="Write your own definitions in here.",
+                required=True,
+                minlength="1",
+                style="resize: none;",
+            )(card["back"]),
+            P("You have retired this word. You don't need to review it anymore."),
+            P(
+                'If you want to review this word again, click the "Unretire" button below.'
+            ),
+            Button(
+                data_on_click=(post(f"/read/{num}/close", contentType="form"),),
+                _class="outline",
+                type="submit",
+                formmethod="post",
+                formaction=f"/read/{num}/close",
+            )("Close"),
+            Input(
+                data_on_click=(post(f"/read/{num}/unsuspend", contentType="form"),),
+                type="submit",
+                formaction=f"/read/{num}/unsuspend",
+                formmethod="post",
+                value="Unretire",
+            ),
         )
 
     # default is >= due
@@ -577,7 +653,43 @@ def popup_view(auth, num: int, word: str = ""):
                 ),
             ),
         ),
+        Details(
+            Summary("More actions"),
+            Input(
+                data_on_click=post(f"/read/{num}/suspend", contentType="form"),
+                type="submit",
+                formaction=f"/read/{num}/suspend",
+                formmethod="post",
+                value="Retire",
+            ),
+        ),
     )
+
+
+@read_rt.post("/{num:int}/suspend")
+async def suspend(auth, num: int, word: str, definition: str):
+    if not word and not definition:
+        return Redirect(f"/read/{num}")
+
+    db.get(auth).execute(
+        "UPDATE deck SET back=?, suspend=? WHERE front=?", (definition, 1, word)
+    )
+
+    relay.publish(f"read.{auth}.{num}", word)
+    return Redirect(f"/read/{num}?word={word}")
+
+
+@read_rt.post("/{num:int}/unsuspend")
+async def unsuspend(auth, num: int, word: str, definition: str):
+    if not word and not definition:
+        return Redirect(f"/read/{num}")
+
+    db.get(auth).execute(
+        "UPDATE deck SET back=?, suspend=? WHERE front=?", (definition, 0, word)
+    )
+
+    relay.publish(f"read.{auth}.{num}", word)
+    return Redirect(f"/read/{num}?word={word}")
 
 
 @read_rt.post("/{num:int}/save")
@@ -589,8 +701,8 @@ async def save(auth, num: int, word: str, definition: str):
 
     db.get(auth).execute(
         """
-        INSERT INTO deck (id, front, back, state, step, stability, difficulty, due, last_review)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO deck (id, front, back, state, step, stability, difficulty, due, last_review, suspend)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             card.card_id,
@@ -603,11 +715,11 @@ async def save(auth, num: int, word: str, definition: str):
             # datetime UTC object → str
             card.due.strftime("%Y-%m-%d %H:%M:%S"),  # due
             card.last_review,
+            0,  # suspend
         ),
     )
 
     relay.publish(f"read.{auth}.{num}", word)
-
     return Redirect(f"/read/{num}?word={word}")
 
 
