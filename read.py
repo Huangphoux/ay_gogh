@@ -320,11 +320,22 @@ def chapter_main(auth, num: int, word: str = ""):
         if cards and [1 for c in cards if c["is_due"] == 1]
         else None,
         Section(style="display: grid; place-items: center")(
-            Button(
-                data_on_click=post(f"/read/{num}"),
-            )("Mark Complete")
-            if not done
-            else None,
+            Form(
+                Button(
+                    data_on_click=post(f"/read/{num}/done"),
+                    type="submit",
+                    formmethod="post",
+                    formaction=f"/read/{num}/done",
+                    formnovalidate=True,
+                )("Mark Complete")
+                if not done
+                else Button(
+                    data_on_click=post(f"/read/{num}/undone"),
+                    type="submit",
+                    formmethod="post",
+                    formaction=f"/read/{num}/undone",
+                )("Undo Complete"),
+            ),
             P(_class="notice")("You have marked this chapter as Complete.")
             if done
             else None,
@@ -333,10 +344,18 @@ def chapter_main(auth, num: int, word: str = ""):
     )
 
 
-@read_rt.post("/{num:int}")
-def complete(auth, num: int):
+@read_rt.post("/{num:int}/done")
+def done(auth, num: int):
     db.get(auth).execute("INSERT INTO chapter (number, done) VALUES (?, ?)", (num, 1))
     relay.publish(f"read.{auth}.{num}", "")
+    return Redirect(f"/read/{num}")
+
+
+@read_rt.post("/{num:int}/undone")
+def undone(auth, num: int):
+    db.get(auth).execute("DELETE FROM chapter WHERE number=?", (num,))
+    relay.publish(f"read.{auth}.{num}", "")
+    return Redirect(f"/read/{num}")
 
 
 ### POP UP
