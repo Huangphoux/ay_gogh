@@ -9,7 +9,7 @@ from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
 from mistletoe.html_renderer import HTMLRenderer
 import re
-
+import simplemma
 
 read_rt: APIRouter = APIRouter("/read")
 
@@ -235,8 +235,8 @@ class MyRenderer(HTMLRenderer):
         return f"<aside><pre>{code}</pre></aside>"
 
 
-def highlight_words(content: str, word: str, due_class: str) -> str:
-    code_block = False
+def highlight_word(content: str, word: str, due_class: str) -> str:
+    code_block: bool = False
 
     for i, line in enumerate(split := (content.splitlines())):
         if line == "```":
@@ -244,15 +244,21 @@ def highlight_words(content: str, word: str, due_class: str) -> str:
         if code_block:
             continue
 
-        split[i] = re.sub(
-            r"\b%s\b" % word,
-            Safe(Span(_class=due_class)(word)),
-            line,
-        )
+        tokens = simplemma.simple_tokenizer(line)
+        lemmas = simplemma.text_lemmatizer(line, lang="en")
+
+        for j, lemma in enumerate(lemmas):
+            if word == lemma:
+                split[i] = re.sub(
+                    r"\b%s\b" % tokens[j], Safe(Span(_class=due_class)(tokens[j])), line
+                )
+
     return "\n".join(split)
 
 
 def chapter_main(auth, num: int, word: str = ""):
+    word = simplemma.lemmatize(word, lang="en") if word else ""
+
     # execute for INSERT, query for SELECT
     # this one is app
     chap = list(db.app.query("SELECT * FROM chapter WHERE number = ? ", (num,)))[0]
@@ -280,22 +286,18 @@ def chapter_main(auth, num: int, word: str = ""):
         cards = None
 
     if cards:
-        # highlight mined words
-        for c in cards:
-            if c["front"] in chap["content"]:
-                due_class = "n0t-du3"
+        for c in cards:  # highlight mined words
+            due_class = "n0t-du3"
 
-                if not c["is_new_day"]:
-                    due_class = "n0t-y3t"
-                elif c["is_due"]:
-                    due_class = "du3"
+            if not c["is_new_day"]:
+                due_class = "n0t-y3t"
+            elif c["is_due"]:
+                due_class = "du3"
 
-                if c["suspend"]:
-                    due_class = "susp3nd"
+            if c["suspend"]:
+                due_class = "susp3nd"
 
-                chap["content"] = highlight_words(
-                    chap["content"], c["front"], due_class
-                )
+            chap["content"] = highlight_word(chap["content"], c["front"], due_class)
 
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
@@ -332,9 +334,16 @@ def chapter_main(auth, num: int, word: str = ""):
                 data_on_pointerup=(
                     f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
                 )
-            )(*(Li(c["front"]) for c in cards if c["is_due"] and c["suspend"] == 0)),
+            )(
+                *(
+                    Li(c["front"])
+                    for c in cards
+                    if c["is_due"] and c["is_new_day"] and not c["suspend"]
+                )
+            ),
         )
-        if cards and [1 for c in cards if c["is_due"] == 1 and c["suspend"] == 0]
+        if cards
+        and [1 for c in cards if c["is_due"] and c["is_new_day"] and not c["suspend"]]
         else None,
         Section(style="display: grid; place-items: center")(
             Form(

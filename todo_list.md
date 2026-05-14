@@ -1,5 +1,7 @@
 # To-Do List
 
+- Mark Complete bug
+- Hiện badge: ✅NGSL LV1, ❌NGSL
 - Show toàn bộ entry trong từ điển
 
 # Read
@@ -27,9 +29,6 @@
 - Nếu mà viết hoa không có thì tìm viết thường
 - Xoá từ mined
 - Show toàn bộ entry trong từ điển
-- Khi select từ, chuyển sang dạng lemma
-    - Bôi cả từ, không bôi 1 phần từ
-    - Hiện badge: ✅NGSL LV1, ❌NGSL
 
 # SRS
 
