@@ -2,6 +2,7 @@ from apswutils import Database
 from passlib.context import CryptContext
 import csv
 import frontmatter
+import os
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -10,8 +11,6 @@ class DatabaseDict:
     def __init__(self):
         self._user: dict[str, Database] = {}  # store connections
         # python wouldn't know where to find and reuse connections
-
-        import os
 
         os.makedirs("db", exist_ok=True)
         self.app: Database = Database(f"db/app.db", strict=True)
@@ -22,14 +21,7 @@ class DatabaseDict:
                     name TEXT NOT NULL UNIQUE,
                     pwd TEXT NOT NULL
                 )
-        """)  # NOT NULL, UNIQUE, CHECK
-
-        ### DEBUG
-        self.app.execute(
-            "INSERT OR IGNORE INTO user (name, pwd) VALUES (?, ?)",
-            ("DEBUG", pwd_context.hash("DEBUG_DEBUG_DEBUG")),
-        )
-        ### DEBUG
+        """)
 
         # Tables for storing NGSLT form a, b, c
         for form in "abc":
@@ -105,11 +97,19 @@ class DatabaseDict:
                         ),
                     )
 
+        self.seed_app()  ### DEBUG
+
+    def seed_app(self):
+        self.app.execute(
+            "INSERT OR IGNORE INTO user (name, pwd) VALUES (?, ?)",
+            ("DEBUG", pwd_context.hash("DEBUG_DEBUG_DEBUG")),
+        )
+
     def get(self, name: str = "app") -> Database:
         if name not in self._user:
             self._user[name] = Database(f"db/{name}.db", strict=True)
-
-            self._user[name].execute("""
+            # test
+            self._user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS test (
                         number INTEGER PRIMARY KEY,
                         day TEXT NOT NULL,
@@ -122,35 +122,15 @@ class DatabaseDict:
                         lv5 INTEGER NOT NULL
                     )
             """)
-
-            ### DEBUG
-            self._user[name].execute(
-                """
-                INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
-                VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
-            """,  # Truong Hoang Phuc, (UTC) 2026-05-06 07:57:12
-                ("c", 100, 20, 19, 20, 20, 20),
-            )
-            ### DEBUG
-
-            ### DEBUG
-            # self._user[name].execute(
-            #     """
-            #     INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
-            #     VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
-            # """,  # Le Minh Phat, (UTC) 2026-05-08 01:48:52
-            #     ("c", 100, 18, 18, 20, 17, 16),
-            # )
-            ### DEBUG
-
-            self._user[name].execute("""
+            # chapter
+            self._user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS chapter (
                         number INTEGER PRIMARY KEY,
                         done INTEGER NOT NULL CHECK (done = 1 OR done = 0)
                     )
             """)
-
-            self._user[name].execute("""
+            # deck
+            self._user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS deck (
                         id INTEGER PRIMARY KEY,
                         front TEXT NOT NULL UNIQUE,
@@ -164,7 +144,7 @@ class DatabaseDict:
                         suspend INTEGER NOT NULL CHECK (suspend = 1 OR suspend = 0)
                     )
             """)
-
+            # review_log
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS review_log (
                         id INTEGER PRIMARY KEY,
@@ -174,7 +154,7 @@ class DatabaseDict:
                         review_duration INTEGER
                     )
             """)
-
+            # settings
             self._user[name].execute("""
                     CREATE TABLE IF NOT EXISTS settings (
                         id INTEGER PRIMARY KEY,
@@ -182,12 +162,12 @@ class DatabaseDict:
                         value TEXT NOT NULL
                     )
             """)
-
+            # desired_retention
             self._user[name].execute(
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 ("desired_retention", 0.8),
             )
-
+            # parameters
             self._user[name].execute(
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 (
@@ -198,7 +178,26 @@ class DatabaseDict:
                 ),
             )
 
-        return self._user[name]
+            self.seed_user(name)  ### DEBUG
+
+        return self._user[name] if name else self.app
+
+    def seed_user(self, name: str):
+        # self._user[name].execute(
+        #     """
+        #         INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
+        #         VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
+        #     """,  # Truong Hoang Phuc, (UTC) 2026-05-06 07:57:12
+        #     ("c", 100, 20, 19, 20, 20, 20),
+        # )
+
+        self._user[name].execute(
+            """
+            INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
+            VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
+        """,  # Le Minh Phat, (UTC) 2026-05-08 01:48:52
+            ("c", 100, 18, 18, 20, 17, 16),
+        )
 
     def close(self, name: str = "app"):
         try:

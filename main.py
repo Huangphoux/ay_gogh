@@ -1,4 +1,13 @@
 from starhtml import *
+import os, shutil
+from starlette_cramjam.compression import Compression
+from starlette_cramjam.middleware import CompressionMiddleware
+from test import is_last_finished
+from shared import template, is_signed_in, db
+from auth import auth_rt
+from test import test_rt
+from read import read_rt
+from settings import set_rt
 
 
 def set_name(req, sess):
@@ -14,16 +23,13 @@ auth_bware = Beforeware(
         r"/static/.*",
         r".*\.css",
         "/",
-        "/auth/login",
-        "/auth/login_process",
-        "/auth/signup",
-        "/auth/signup_process",
+        *(
+            f"/auth/{path}"
+            for path in ("login", "login_process", "signup", "signup_process")
+        ),
     ],
 )
 
-
-from starlette_cramjam.compression import Compression
-from starlette_cramjam.middleware import CompressionMiddleware
 
 app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     debug=False,
@@ -46,11 +52,6 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     static_path="static",
     # default_hdrs=False,
     hdrs=(  # keep / in href, if not, /auth/custom.css
-        # Meta(charset="utf-8"),
-        # Meta(
-        #     name="viewport",
-        #     content="width=device-width, initial-scale=1, viewport-fit=cover",
-        # ),
         Link(rel="stylesheet", href="/custom.css"),
         Link(rel="icon", href="https://fav.farm/✅"),  # favicon
         Link(rel="stylesheet", href="https://cdn.simplecss.org/simple.min.css"),
@@ -62,21 +63,11 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     datastar="cdn",
 )
 
-# Add routes to app
-from auth import auth_rt
-from test import test_rt
-from read import read_rt
-from settings import set_rt
 
 auth_rt.to_app(app)
 test_rt.to_app(app)
 read_rt.to_app(app)
 set_rt.to_app(app)
-
-
-from test import is_last_finished
-
-from shared import template, is_signed_in, db
 
 
 @rt
@@ -154,18 +145,17 @@ def index(req, sess):
         try:
             test_done = list(
                 db.get(auth).query(
-                    "SELECT progress, lv1 + lv2 + lv3 + lv4 + lv5 AS result \
-                     FROM test \
-                     WHERE day = (SELECT MAX(day) FROM test)"
+                    """
+                        SELECT progress, lv1 + lv2 + lv3 + lv4 + lv5 AS result 
+                        FROM test 
+                        WHERE day = (SELECT MAX(day) FROM test)
+                    """
                 )
             )[0]
-
         except IndexError:
             test_done = None
 
         chap_done = db.get(auth).item("SELECT SUM(done) FROM chapter")
-        if not chap_done:
-            chap_done = 0
 
         main = Main(
             H1(id="main-heading")(f"{auth}'s profile"),
@@ -201,7 +191,6 @@ if __name__ == "__main__":
     serve(port=1984)
 
     # Clean-up after exiting
-    import os, shutil
 
     os.remove("./.sesskey")
     shutil.rmtree("__pycache__")

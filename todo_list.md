@@ -3,7 +3,9 @@
 - Remove Graceful Degradation
 - Hiện badge: ✅NGSL LV1, ❌NGSL
 - Show toàn bộ entry trong từ điển
-- Refactoring
+
+# Refactor
+- Remove all Form, use Signal instead
 
 # Read
 
