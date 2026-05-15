@@ -1,9 +1,9 @@
 # To-Do List
 
 - Remove Graceful Degradation
-- Select "are", mined "be", chỉ có "are" mới được highlight
 - Hiện badge: ✅NGSL LV1, ❌NGSL
 - Show toàn bộ entry trong từ điển
+- Backend patch Wiktionary
 
 # Read
 

@@ -250,7 +250,9 @@ def highlight_word(content: str, word: str, due_class: str) -> str:
         for j, lemma in enumerate(lemmas):
             if word == lemma:
                 split[i] = re.sub(
-                    r"\b%s\b" % tokens[j], Safe(Span(_class=due_class)(tokens[j])), line
+                    r"\b%s\b" % tokens[j],
+                    Safe(Span(_class=due_class)(tokens[j])),
+                    split[i], # why can't i use `line` here?
                 )
 
     return "\n".join(split)
