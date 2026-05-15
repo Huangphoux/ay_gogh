@@ -3,7 +3,7 @@
 - Remove Graceful Degradation
 - Hiện badge: ✅NGSL LV1, ❌NGSL
 - Show toàn bộ entry trong từ điển
-- Backend patch Wiktionary
+- Refactoring
 
 # Read
 

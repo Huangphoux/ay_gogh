@@ -252,7 +252,7 @@ def highlight_word(content: str, word: str, due_class: str) -> str:
                 split[i] = re.sub(
                     r"\b%s\b" % tokens[j],
                     Safe(Span(_class=due_class)(tokens[j])),
-                    split[i], # why can't i use `line` here?
+                    split[i],  # why can't i use `line` here?
                 )
 
     return "\n".join(split)
@@ -420,29 +420,51 @@ def post_close(auth, num: int, word: str, definition: str):
     return Redirect(f"/read/{num}")
 
 
+def fetch_definition(word: str = ""):
+    if not word:
+        return None
+    
+    word = simplemma.lemmatize(word, lang="en") if word else ""
+
+    try:
+        fetch = json.loads(
+            requests.get(f"https://freedictionaryapi.com/api/v1/entries/en/{word}").text
+        )["entries"][0]
+
+        definition = [
+            s["definition"]
+            for s in fetch["senses"]
+            if "(obsolete)" not in s["definition"]
+        ]
+
+    except IndexError:
+        definition = None
+
+    return definition
+
+
+@read_rt.get("/{num:int}/fetch")
+@sse
+def patch_definition(num: int, word: str = ""):
+    if not word:
+        return None
+
+    markup = Details(data_init=get(f"/read/{num}/fetch"))(
+        Summary("Wiktionary"),
+        Ul(
+            style="max-height: 20vh; overflow: auto",
+            data_on_pointerup=(f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"),
+        )(
+            *(Li(d) for d in fetch_definition(word)),
+        ),
+    )
+
+    yield elements(markup, selector="details", use_view_transition=True)
+
+
 def popup_view(auth, num: int, word: str = ""):
     if not word:
-        return Noscript(
-            Form(
-                action=f"/read/{num}/open",
-                _class="notice modal",
-            )(
-                Label(_for="word")(
-                    "Write the word you want to search in your memory here."
-                ),
-                Input(
-                    type="text",
-                    id="word",
-                    name="word",
-                    value=word,
-                    minlength="1",
-                    required=True,
-                    placeholder="e.g. hawk tuah",
-                    style="width: 100%;",
-                ),
-                Button("Search"),
-            )
-        )
+        return None
 
     if " " in word:
         return Form(_class="notice modal")(
@@ -479,22 +501,6 @@ def popup_view(auth, num: int, word: str = ""):
         card = None
 
     if not card:
-        try:
-            fetch = json.loads(
-                requests.get(
-                    f"https://freedictionaryapi.com/api/v1/entries/en/{word}"
-                ).text
-            )["entries"][0]
-
-            definition = [
-                s["definition"]
-                for s in fetch["senses"]
-                if "(obsolete)" not in s["definition"]
-            ]
-
-        except IndexError:
-            definition = None
-
         return Form(_class="notice modal")(
             Label(_for="word")("Word (cannot modify)"),
             Input(
@@ -517,19 +523,10 @@ def popup_view(auth, num: int, word: str = ""):
                 minlength="1",
                 style="resize: none;",
             ),
-            Details(
-                Summary("Wiktionary"),
-                Ul(
-                    style="max-height: 20vh; overflow: auto",
-                    data_on_pointerup=(
-                        f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
-                    ),
-                )(
-                    *(Li(d) for d in definition),
-                ),
-            )
-            if definition
-            else None,
+            Details(data_init=get(f"/read/{num}/fetch", disabled=True))(
+                Summary("Wiktionary (Searching …)"),
+                P("Searching definitions for you, please wait a moment."),
+            ),
             Div(style="display: flex; gap: 1rem;")(
                 Button(
                     data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
