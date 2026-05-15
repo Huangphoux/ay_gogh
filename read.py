@@ -347,20 +347,23 @@ def chapter_main(auth, num: int, word: str = ""):
         else None,
         Section(style="display: grid; place-items: center")(
             Form(
-                Button(
-                    data_on_click=post(f"/read/{num}/done"),
+                Input(
+                    data_on_click=(post(f"/read/{num}/done"), {"prevent": True}),
                     type="submit",
                     formmethod="post",
                     formaction=f"/read/{num}/done",
+                    value="Mark Complete",
                     formnovalidate=True,
-                )("Mark Complete")
+                )
                 if not done
-                else Button(
-                    data_on_click=post(f"/read/{num}/undone"),
+                else Input(
+                    data_on_click=(post(f"/read/{num}/undone"), {"prevent": True}),
                     type="submit",
                     formmethod="post",
                     formaction=f"/read/{num}/undone",
-                )("Undo Complete"),
+                    value="Undo Complete",
+                    formnovalidate=True,
+                ),
             ),
             P(_class="notice")("You have marked this chapter as Complete.")
             if done
@@ -372,7 +375,9 @@ def chapter_main(auth, num: int, word: str = ""):
 
 @read_rt.post("/{num:int}/done")
 def done(auth, num: int):
-    db.get(auth).execute("INSERT INTO chapter (number, done) VALUES (?, ?)", (num, 1))
+    db.get(auth).execute(
+        "INSERT OR REPLACE INTO chapter (number, done) VALUES (?, ?)", (num, 1)
+    )
     relay.publish(f"read.{auth}.{num}", "")
     return Redirect(f"/read/{num}")
 
@@ -444,6 +449,11 @@ def popup_view(auth, num: int, word: str = ""):
             ),
             Button(
                 data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
+                _class="outline",
+                type="submit",
+                formmethod="get",
+                formaction=f"/read/{num}/close",
+                formnovalidate=True,
             )("Close"),
         )
 

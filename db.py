@@ -27,7 +27,7 @@ class DatabaseDict:
         ### DEBUG
         self.app.execute(
             "INSERT OR IGNORE INTO user (name, pwd) VALUES (?, ?)",
-            ("DEBUG", pwd_context.hash("DEBUG")),
+            ("DEBUG", pwd_context.hash("DEBUG_DEBUG_DEBUG")),
         )
         ### DEBUG
 
