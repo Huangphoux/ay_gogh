@@ -33,6 +33,7 @@ legend {
     width: 100%;
     height: fit-content;
     overflow: auto;
+    z-index: 10000;
 }
 
 .outline {
@@ -74,8 +75,30 @@ legend {
     background: cyan;
 }
 
-@media (scripting: none) {
-    .no-js {
-        display: none !important;
+.aside {
+    display: inline;
+    position: relative;
+    width: 20vw;
+}
+
+.aside:nth-of-type(even) {
+    margin-right: -22vw;
+    float: right;
+}
+
+.aside:nth-of-type(odd) {
+    margin-left: -22vw;
+    float: left;
+}
+
+@media (max-width: 1400px) {
+    .aside,
+    .aside:nth-of-type(even),
+    .aside:nth-of-type(odd) {
+        display: block;
+        width: fit-content;
+        margin: 5% 10% 5% 10%;
+        float: none;
+        margin: auto;
     }
 }

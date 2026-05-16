@@ -232,7 +232,7 @@ async def cqrs(req, auth, num: int):
 class MyRenderer(HTMLRenderer):
     def render_block_code(self, token):  # code block → aside
         code = self.escape_html_text(token.children[0].content)
-        return f"<aside><pre>{code}</pre></aside>"
+        return Safe(Span(_class="aside")(Pre(code)))
 
 
 def highlight_word(content: str, word: str, due_class: str) -> str:
@@ -323,11 +323,9 @@ def chapter_main(auth, num: int, word: str = ""):
         ),
         Section(
             data_on_pointerup=(f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};")
-        )(  # text section
-            P(
-                Safe(
-                    mistletoe.markdown(chap["content"], HTMLRenderer),
-                ),
+        )(
+            Safe(
+                mistletoe.markdown(chap["content"], MyRenderer),  # text section
             ),
         ),
         Section(
@@ -381,14 +379,12 @@ def done(auth, num: int):
         "INSERT OR REPLACE INTO chapter (number, done) VALUES (?, ?)", (num, 1)
     )
     relay.publish(f"read.{auth}.{num}", "")
-    return Redirect(f"/read/{num}")
 
 
 @read_rt.post("/{num:int}/undone")
 def undone(auth, num: int):
     db.get(auth).execute("DELETE FROM chapter WHERE number=?", (num,))
     relay.publish(f"read.{auth}.{num}", "")
-    return Redirect(f"/read/{num}")
 
 
 ### POP UP
@@ -397,13 +393,11 @@ def undone(auth, num: int):
 @read_rt.get("/{num:int}/open")
 def open(auth, num: int, word: str):
     relay.publish(f"read.{auth}.{num}", word)  # pointerup→open()→cqrs()→popup_view()
-    return Redirect(f"/read/{num}?word={word}")
 
 
 @read_rt.get("/{num:int}/close")
 def get_close(auth, num: int):
     relay.publish(f"read.{auth}.{num}", "")
-    return Redirect(f"/read/{num}")
 
 
 @read_rt.post("/{num:int}/close")
@@ -417,13 +411,12 @@ def post_close(auth, num: int, word: str, definition: str):
     )
 
     relay.publish(f"read.{auth}.{num}", "")
-    return Redirect(f"/read/{num}")
 
 
 def fetch_definition(word: str = ""):
     if not word:
         return None
-    
+
     word = simplemma.lemmatize(word, lang="en") if word else ""
 
     try:
@@ -449,14 +442,18 @@ def patch_definition(num: int, word: str = ""):
     if not word:
         return None
 
-    markup = Details(data_init=get(f"/read/{num}/fetch"))(
+    definition = fetch_definition(word)
+
+    markup = Details(
         Summary("Wiktionary"),
         Ul(
             style="max-height: 20vh; overflow: auto",
             data_on_pointerup=(f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"),
         )(
-            *(Li(d) for d in fetch_definition(word)),
-        ),
+            *(Li(d) for d in definition),
+        )
+        if definition
+        else P("Sorry, couldn't find it."),
     )
 
     yield elements(markup, selector="details", use_view_transition=True)
@@ -524,7 +521,7 @@ def popup_view(auth, num: int, word: str = ""):
                 style="resize: none;",
             ),
             Details(data_init=get(f"/read/{num}/fetch", disabled=True))(
-                Summary("Wiktionary (Searching …)"),
+                Summary("Wiktionary"),
                 P("Searching definitions for you, please wait a moment."),
             ),
             Div(style="display: flex; gap: 1rem;")(
@@ -712,7 +709,6 @@ async def delete(auth, num: int, word: str, definition: str):
     db.get(auth).execute("DELETE FROM deck WHERE front=?", (word,))
 
     relay.publish(f"read.{auth}.{num}", word)
-    return Redirect(f"/read/{num}?word={word}")
 
 
 @read_rt.post("/{num:int}/suspend")
@@ -725,7 +721,6 @@ async def suspend(auth, num: int, word: str, definition: str):
     )
 
     relay.publish(f"read.{auth}.{num}", word)
-    return Redirect(f"/read/{num}?word={word}")
 
 
 @read_rt.post("/{num:int}/unsuspend")
@@ -738,7 +733,6 @@ async def unsuspend(auth, num: int, word: str, definition: str):
     )
 
     relay.publish(f"read.{auth}.{num}", word)
-    return Redirect(f"/read/{num}?word={word}")
 
 
 @read_rt.post("/{num:int}/save")
@@ -769,19 +763,16 @@ async def save(auth, num: int, word: str, definition: str):
     )
 
     relay.publish(f"read.{auth}.{num}", word)
-    return Redirect(f"/read/{num}?word={word}")
 
 
 @read_rt.post("/{num:int}/remembered")
 async def remembered(auth, num: int, word: str, definition: str):
     rate_card(auth, num, word, definition, forgot=False)
-    return Redirect(f"/read/{num}?word={word}")
 
 
 @read_rt.post("/{num:int}/forgot")
 async def forgot(auth, num: int, word: str, definition: str):
     rate_card(auth, num, word, definition, forgot=True)
-    return Redirect(f"/read/{num}?word={word}")
 
 
 def rate_card(auth, num: int, word: str, definition: str, forgot: bool = False):

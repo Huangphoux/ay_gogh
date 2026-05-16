@@ -25,7 +25,7 @@ def login(req, sess):
                     maxlength="100",
                     autofocus=True,
                     onfocus="let temp=this.value; this.value=''; this.value=temp",
-                    value="DEBUG"
+                    value="DEBUG",
                 ),
                 Label(B("Password"), _for="name"),
                 Input(
@@ -37,17 +37,13 @@ def login(req, sess):
                     required=True,
                     minlength="8",
                     maxlength="100",
-                    value="DEBUG_DEBUG_DEBUG"
+                    value="DEBUG_DEBUG_DEBUG",
                 ),
                 Br(),
                 Input(
-                    id="show_pwd",
-                    name="show_pwd",
-                    type="checkbox",
-                    data_bind="is_show",
-                    _class="no-js",
+                    id="show_pwd", name="show_pwd", type="checkbox", data_bind="is_show"
                 ),
-                Label("Show Password", _for="show_pwd", _class="no-js"),
+                Label("Show Password", _for="show_pwd"),
             ),
             Button("Log In"),
             Span(f" or "),
@@ -120,17 +116,9 @@ def signup(req, sess):
                 ),
                 Br(),
                 Input(
-                    id="show_pwd",
-                    name="show_pwd",
-                    type="checkbox",
-                    data_bind="is_show",
-                    _class="no-js",
+                    id="show_pwd", name="show_pwd", type="checkbox", data_bind="is_show"
                 ),
-                Label(
-                    "Show Password",
-                    _for="show_pwd",
-                    _class="no-js",
-                ),
+                Label("Show Password", _for="show_pwd"),
             ),
             Button("Sign Up"),
             P(
