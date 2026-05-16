@@ -1,3 +1,4 @@
+import time
 from starhtml import *
 from shared import db, relay, template
 from fsrs import ReviewLog, Optimizer
@@ -11,7 +12,7 @@ def index(auth):
     main = Main(
         H1("Settings", id="main-heading"),
         Ul(
-            Li(A(href=fsrs)("FSRS")),
+            Li(A(href="/settings/fsrs")("FSRS")),
         ),
     )
 
@@ -45,70 +46,55 @@ def fsrs_main(auth, notif: str = ""):
         if s["setting"] == "parameters":
             parameters = [float(p.strip()) for p in s["value"].split(",")]
 
-    return Main(data_init=get(fsrs_cqrs))(
+    return Main(data_init=get("/settings/fsrs/cqrs"))(
         H1("FSRS", id="main-heading"),
         P(
             "FSRS, the Free Spaced Repetition Scheduling algorithm, \
                      is the backbone of the spaced retention aspect of this app."
         ),
         H2("Desired Retention"),
-        Form(
-            P(
-                "From the Anki manual:",
-                Blockquote(
-                    cite="https://docs.ankiweb.net/deck-options.html#desired-retention"
-                )(
-                    "Desired retention controls how likely you are to remember cards \
+        P(
+            "From the Anki manual:",
+            Blockquote(
+                cite="https://docs.ankiweb.net/deck-options.html#desired-retention"
+            )(
+                "Desired retention controls how likely you are to remember cards \
                             when they are scheduled for a review. The default value of 0.90 \
                             will schedule cards so you have a 90% chance of remembering them \
                             when they come up for review again. This should normally translate to \
                             remembering around 90% cards when they are reviewed, and only failing around 10%."
-                ),
-            ),
-            Label(_for="desired_retention")("Desired Retention (70-100)"),
-            Input(
-                id="desired_retention",
-                name="desired_retention",
-                value=int(float(desired_retention) * 100),
-                type="number",
-                max="100",
-                min="70",
-                required="True",
-                placeholder="e.g. 80",
-            ),
-            Button(data_on_click=patch("/settings/fsrs/save", contentType="form"))(
-                "Save"
             ),
         ),
+        Label(_for="desired_retention")("Desired Retention (70-100)"),
+        Input(
+            id="desired_retention",
+            value=int(float(desired_retention) * 100),
+            type="number",
+            max="100",
+            min="70",
+            required="True",
+            placeholder="e.g. 80",
+            data_bind="desired_retention",
+        ),
+        Button(data_on_click=patch("/settings/fsrs/save"))("Save"),
         P(_class="notice")(notif) if "retention" in notif else None,
         H2("Parameters"),
-        Form(
-            P(
-                "From the Anki manual:",
-                Blockquote(
-                    cite="https://docs.ankiweb.net/deck-options.html#fsrs-parameters"
-                )(
-                    "FSRS parameters affect how cards are scheduled. \
-                            Do not change the parameters manually or copy them from someone else. \
-                            The FSRS optimizer uses machine learning to learn your memory patterns and \
-                            find parameters that best fit your review history. To do this, the optimizer \
-                            requires several reviews to fine-tune the parameters. \
-                            There is no need to optimize your parameters frequently: once every month is sufficient."
-                ),
+        P(
+            "From the Anki manual:",
+            Blockquote(
+                cite="https://docs.ankiweb.net/deck-options.html#fsrs-parameters"
+            )(
+                "FSRS parameters affect how cards are scheduled. \
+                Do not change the parameters manually or copy them from someone else. \
+                The FSRS optimizer uses machine learning to learn your memory patterns and \
+                find parameters that best fit your review history. To do this, the optimizer \
+                requires several reviews to fine-tune the parameters. \
+                There is no need to optimize your parameters frequently: once every month is sufficient."
             ),
-            Label(_for="parameters")("Parameters (cannot modify manually)"),
-            Textarea(
-                id="parameters",
-                name="parameters",
-                style="resize: none;",
-            )(parameters),
-            Button(
-                data_on_click=patch(optimize),
-                data_indicator="optimizing",
-                data_attr_disabled="$optimizing",
-            )("Optimize"),
         ),
-        P(_class="notice", data_show="$optimizing")("Optimizing…"),
+        P("Parameters"),
+        P(_class="notice")(parameters),
+        Button(data_on_click=get("/settings/fsrs/optimize"))("Optimize"),
         P(_class="notice")(notif) if "parameter" in notif else None,
     )
 
@@ -125,12 +111,14 @@ def save(auth, desired_retention: int):
 
     relay.publish(
         f"settings.{auth}.fsrs",
-        "Your desired retention value has been updated.",
+        "Your desired retention has been updated.",
     )
 
 
-@set_rt.patch("/fsrs/optimize")
-def optimize(auth):
+@set_rt.get("/fsrs/optimize")
+async def optimize(auth):
+    relay.publish(f"settings.{auth}.fsrs", "Computing optimal parameters …")
+    
     query = list(
         db.get(auth).query(
             "SELECT * FROM review_log",
@@ -152,7 +140,8 @@ def optimize(auth):
     optimizer = Optimizer(review_logs=review_logs)
 
     optimal_parameters = optimizer.compute_optimal_parameters()  # ty:ignore[unresolved-attribute]
-
+    time.sleep(3)
+    
     db.get(auth).execute(
         "UPDATE settings SET value=? WHERE setting=?",
         (", ".join([str(p) for p in optimal_parameters]), "parameters"),
