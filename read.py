@@ -497,7 +497,12 @@ def popup_view(auth, num: int, word: str = ""):
     except IndexError:
         card = None
 
-    if not card:
+    try:  # find the ngsl level of the word (the word has been converted into lemma)
+        lv = db.app.item("SELECT level FROM ngsl WHERE lemma = ?", (word,))
+    except NotFoundError:
+        lv = None
+
+    if not card:  # not in memory, hasn't mined yet
         return Form(_class="notice modal")(
             Label(_for="word")("Word (cannot modify)"),
             Input(
@@ -539,6 +544,9 @@ def popup_view(auth, num: int, word: str = ""):
                     formmethod="post",
                     formaction=f"/read/{num}/save",
                 )("Save"),
+                Div(
+                    style=" display: grid; place-content: center; ",
+                )(f"✅ NGSL Level {lv}" if lv else "❌ Not in NGSL"),
             ),
         )
 
