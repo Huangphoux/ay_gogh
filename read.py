@@ -232,7 +232,7 @@ async def cqrs(req, auth, num: int):
 class MyRenderer(HTMLRenderer):
     def render_block_code(self, token):  # code block → aside
         code = self.escape_html_text(token.children[0].content)
-        return Safe(Span(_class="aside")(Pre(code)))
+        return Safe(Pre(_class="aside")(code))
 
 
 def highlight_word(content: str, word: str, due_class: str) -> str:
@@ -305,10 +305,9 @@ def chapter_main(auth, num: int, word: str = ""):
         data_init=get(url=f"/read/{num}/cqrs"),
         data_on_selectionchange=(
             "$word = document.getSelection().toString().trim()",
-            {
-                "document": True,
-            },
+            {"document": True},
         ),
+        data_signals={"open": False},
     )(
         popup_view(auth, num, word),
         Section(
@@ -444,7 +443,7 @@ def patch_definition(num: int, word: str = ""):
 
     definition = fetch_definition(word)
 
-    markup = Details(
+    markup = Details(open=True)(
         Summary("Wiktionary"),
         Ul(
             style="max-height: 20vh; overflow: auto",
@@ -461,7 +460,10 @@ def patch_definition(num: int, word: str = ""):
 
 def popup_view(auth, num: int, word: str = ""):
     if not word:
-        return None
+        return P(_class="notice")(
+            "Select a word to look up its definitions, \
+            save it in your memory, then review it in the future."
+        )
 
     if " " in word:
         return Form(_class="notice modal")(
@@ -503,8 +505,10 @@ def popup_view(auth, num: int, word: str = ""):
         lv = None
 
     if not card:  # not in memory, hasn't mined yet
+        definition = fetch_definition(word)
+
         return Form(_class="notice modal")(
-            Label(_for="word")("Word (cannot modify)"),
+            Label(_for="word")("Word"),
             Input(
                 type="text",
                 id="word",
@@ -513,8 +517,13 @@ def popup_view(auth, num: int, word: str = ""):
                 minlength="1",
                 required=True,
                 placeholder="Write the word you want to collect in here.",
-                readonly=True,
                 style="width: 100%;",
+                data_on_input=(
+                    js(
+                        f"if (evt.target.value !== \"\" ) {{ $word = evt.target.value; @get('/read/{num}/open') }};"
+                    ),
+                    dict(debounce=300),
+                ),
             ),
             Label(_for="definition")("Definition"),
             Textarea(
@@ -524,25 +533,28 @@ def popup_view(auth, num: int, word: str = ""):
                 required=True,
                 minlength="1",
                 style="resize: none;",
+                data_ignore_moprh=True,
             ),
-            Details(data_init=get(f"/read/{num}/fetch", disabled=True))(
+            Details(data_attr_open="$open", data_on_pointerdown="$open = !$open")(
                 Summary("Wiktionary"),
-                P("Searching definitions for you, please wait a moment."),
+                Ul(
+                    style="max-height: 20vh; overflow: auto",
+                    data_on_pointerup=(
+                        f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
+                    ),
+                )(
+                    *(Li(d) for d in definition),
+                )
+                if definition
+                else P("Sorry, couldn't find this word in the dictionary."),
             ),
             Div(style="display: flex; gap: 1rem;")(
                 Button(
-                    data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
                     _class="outline",
-                    type="submit",
-                    formmethod="get",
-                    formaction=f"/read/{num}/close",
-                    formnovalidate=True,
+                    data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
                 )("Close"),
                 Button(
                     data_on_click=(post(f"/read/{num}/save", contentType="form")),
-                    type="submit",
-                    formmethod="post",
-                    formaction=f"/read/{num}/save",
                 )("Save"),
                 Div(
                     style=" display: grid; place-content: center; ",
@@ -550,23 +562,23 @@ def popup_view(auth, num: int, word: str = ""):
             ),
         )
 
-    # if not card["is_new_day"]:
-    #     return Form(_class="notice modal")(
-    #         Small(
-    #             "※ ",
-    #             Span(_class="n0t-y3t")("Yellow background"),
-    #             ": the word can't be revealed until tomorrow.",
-    #             Br(),
-    #         ),
-    #         Button(
-    #             data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
-    #             _class="outline",
-    #             type="submit",
-    #             formmethod="get",
-    #             formaction=f"/read/{num}/close",
-    #             formnovalidate=True,
-    #         )("Close"),
-    #     )
+    if not card["is_new_day"]:
+        return Form(_class="notice modal")(
+            Small(
+                "※ ",
+                Span(_class="n0t-y3t")("Yellow background"),
+                ": the word can't be revealed until tomorrow.",
+                Br(),
+            ),
+            Button(
+                data_on_click=(get(f"/read/{num}/close"), {"prevent": True}),
+                _class="outline",
+                type="submit",
+                formmethod="get",
+                formaction=f"/read/{num}/close",
+                formnovalidate=True,
+            )("Close"),
+        )
 
     if not card["is_due"]:
         time_delta = datetime.strptime(card["due"], "%Y-%m-%d %H:%M:%S").replace(
@@ -745,8 +757,8 @@ async def unsuspend(auth, num: int, word: str, definition: str):
 
 @read_rt.post("/{num:int}/save")
 async def save(auth, num: int, word: str, definition: str):
-    if not word and not definition:
-        return Redirect(chapter(auth, num=num))
+    if not word or not definition:
+        return Redirect(f"/read/{num}")
 
     card = Card()
 
