@@ -197,7 +197,7 @@ def progress_main(auth):
                             Input(
                                 type="radio",
                                 name="choice",
-                                value=next_q[answer],
+                                value=answer,
                                 id=answer,
                                 required=True,
                             ),
@@ -205,7 +205,7 @@ def progress_main(auth):
                                 next_q[answer]
                             ),
                         )
-                        for answer in "abcd"
+                        for answer in "1234"
                     ],
                 ),
             ),
@@ -228,16 +228,16 @@ async def progress_process(auth, choice: str):
         )
     )[0]
 
-    lvs: dict[str, int] = {f"lv{i}": last_test[f"lv{i}"] for i in "12345"}
+    levels: dict[str, int] = {f"lv{i}": last_test[f"lv{i}"] for i in "12345"}
 
-    lv_num = ceil((progress + 1) / 20)  # lv1 is 1→20, lv2 is 21→30
-    lvs[f"lv{lv_num}"] += 1 if choice == next_q["answer"] else 0
+    level_num = ceil((progress + 1) / 20)  # lv1 is 1→20, lv2 is 21→30
+    levels[f"lv{level_num}"] += 1 if choice == next_q["answer"] else 0
 
     db.get(auth).execute(
         "UPDATE test SET progress=?, lv1=?, lv2=?, lv3=?, lv4=?, lv5=? WHERE day=?",
         (
             progress + 1,
-            *(lvs[f"lv{i}"] for i in "12345"),
+            *(levels[f"lv{i}"] for i in "12345"),
             last_test["day"],
         ),
     )

@@ -30,34 +30,29 @@ class DatabaseDict:
                         number INTEGER PRIMARY KEY,
                         lemma TEXT,
                         question TEXT,
-                        a TEXT,
-                        b TEXT,
-                        c TEXT,
-                        d TEXT,
-                        answer TEXT
+                        \"1\" TEXT, \"2\" TEXT, \"3\" TEXT, \"4\" TEXT,
+                        answer INTEGER
                     )
             """)
 
             with open(f"test/ngslt_{form}.csv", "r") as f:
-                dr = csv.DictReader(f, delimiter="\t")
+                dict_reader = csv.DictReader(f, delimiter="\t")
                 to_db = [
                     (
-                        int(i["number"]),
-                        i["lemma"],
-                        i["question"],
-                        i["a"],
-                        i["b"],
-                        i["c"],
-                        i["d"],
-                        i["answer"],
+                        int(row["number"]),
+                        row["lemma"],
+                        row["question"],
+                        *(row[i] for i in "1234"),
+                        row["answer"],
                     )
-                    for i in dr
+                    for row in dict_reader
                 ]
 
             for row in to_db:
                 self.app.execute(
                     f"""
-                        INSERT OR IGNORE INTO form_{form} (number, lemma, question, a, b, c, d, answer)
+                        INSERT OR IGNORE INTO form_{form}
+                        (number, lemma, question, \"1\", \"2\", \"3\", \"4\", answer)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     row,
