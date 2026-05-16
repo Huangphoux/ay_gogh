@@ -138,7 +138,7 @@ def intro(auth):
 @test_rt.get("/progress")
 def progress_page(auth):
     if is_last_finished(auth):
-        return Redirect(test)
+        return Redirect("/test")
 
     return template("Test, Progress", auth=auth, main=progress_main(auth))
 
@@ -164,7 +164,7 @@ def bold_to_strong(next_q):
 
 def progress_main(auth):
     if not (last_test := get_last_test(auth)):
-        return Redirect(test)
+        return Redirect("/test")
 
     progress = last_test["progress"]
 
@@ -217,7 +217,7 @@ def progress_main(auth):
 @test_rt.post("/progress_process")
 async def progress_process(auth, choice: str):
     if not choice:
-        return Redirect(test)
+        return Redirect("/test")
 
     last_test = get_last_test(auth)
     progress = last_test["progress"]
@@ -231,7 +231,7 @@ async def progress_process(auth, choice: str):
     levels: dict[str, int] = {f"lv{i}": last_test[f"lv{i}"] for i in "12345"}
 
     level_num = ceil((progress + 1) / 20)  # lv1 is 1→20, lv2 is 21→30
-    levels[f"lv{level_num}"] += 1 if choice == next_q["answer"] else 0
+    levels[f"lv{level_num}"] += 1 if int(choice) == int(next_q["answer"]) else 0
 
     db.get(auth).execute(
         "UPDATE test SET progress=?, lv1=?, lv2=?, lv3=?, lv4=?, lv5=? WHERE day=?",
@@ -243,6 +243,6 @@ async def progress_process(auth, choice: str):
     )
 
     if is_last_finished(auth) is True:
-        return Redirect(test)
+        return Redirect("/test")
     elif is_last_finished(auth) is False:
         relay.publish(f"test.{auth}.progress", "")

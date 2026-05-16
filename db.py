@@ -3,6 +3,7 @@ from passlib.context import CryptContext
 import csv
 import frontmatter
 import os
+from math import ceil
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -14,7 +15,7 @@ class DatabaseDict:
 
         os.makedirs("db", exist_ok=True)
         self.app: Database = Database(f"db/app.db", strict=True)
-
+        # Tables for storing user login infos
         self.app.execute("""
                 CREATE TABLE IF NOT EXISTS user (
                     id INTEGER PRIMARY KEY,
@@ -28,9 +29,12 @@ class DatabaseDict:
             self.app.execute(f"""
                     CREATE TABLE IF NOT EXISTS form_{form} (
                         number INTEGER PRIMARY KEY,
-                        lemma TEXT,
-                        question TEXT,
-                        \"1\" TEXT, \"2\" TEXT, \"3\" TEXT, \"4\" TEXT,
+                        lemma TEXT UNIQUE,
+                        question TEXT UNIQUE,
+                        \"1\" TEXT UNIQUE,
+                        \"2\" TEXT UNIQUE,
+                        \"3\" TEXT UNIQUE,
+                        \"4\" TEXT UNIQUE,
                         answer INTEGER
                     )
             """)
@@ -58,39 +62,63 @@ class DatabaseDict:
                     row,
                 )
 
-            # Table for storing chapters
-            self.app.execute(f"""
-                    CREATE TABLE IF NOT EXISTS chapter (
+        # Table for storing chapters
+        self.app.execute(f"""
+                CREATE TABLE IF NOT EXISTS chapter (
+                    number INTEGER PRIMARY KEY,
+                    number_word TEXT UNIQUE,
+                    cardinal TEXT UNIQUE,
+                    cardinal_word TEXT UNIQUE,
+                    title TEXT UNIQUE,
+                    content TEXT UNIQUE,
+                    ngsl REAL
+                )
+        """)
+
+        for i in range(1, 60 + 1):
+            with open(f"read/chapter/{i}.md", "r") as f:
+                meta, content = frontmatter.parse(f.read())
+
+                self.app.execute(
+                    f"""
+                        INSERT OR IGNORE INTO chapter
+                        (number, number_word, cardinal, cardinal_word, title, content, ngsl)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        meta["number"],
+                        meta["number_word"],
+                        meta["cardinal_number"],
+                        meta["cardinal_word"],
+                        meta["title"],
+                        content,
+                        meta["ngsl"],
+                    ),
+                )
+                
+        # Table for storing ngsl word level
+        self.app.execute(
+            f"""
+                    CREATE TABLE IF NOT EXISTS ngsl (
                         number INTEGER PRIMARY KEY,
-                        number_word TEXT,
-                        cardinal TEXT,
-                        cardinal_word TEXT,
-                        title TEXT,
-                        content TEXT,
-                        ngsl REAL
+                        lemma TEXT UNIQUE,
+                        level INTEGER
                     )
-            """)
+            """
+        )
 
-            for i in range(1, 60 + 1):
-                with open(f"read/chapter/{i}.md", "r") as f:
-                    meta, content = frontmatter.parse(f.read())
-
-                    self.app.execute(
-                        f"""
-                            INSERT OR IGNORE INTO chapter
-                            (number, number_word, cardinal, cardinal_word, title, content, ngsl)
-                            VALUES (?, ?, ?, ?, ?, ?, ?)
-                        """,
-                        (
-                            meta["number"],
-                            meta["number_word"],
-                            meta["cardinal_number"],
-                            meta["cardinal_word"],
-                            meta["title"],
-                            content,
-                            meta["ngsl"],
-                        ),
-                    )
+        with open(f"read/ngsl/NGSL_1.2_stats.csv", "r") as f:
+            dict_reader = csv.DictReader(f, delimiter=",")
+            for row in dict_reader:
+                self.app.execute(
+                    f"""
+                        INSERT OR IGNORE INTO ngsl (lemma, level) VALUES (?, ?)
+                    """,
+                    (
+                        row["Lemma"],
+                        ceil(int(row["SFI Rank"]) / 562),
+                    ),
+                )
 
         self.seed_app()  ### DEBUG
 
