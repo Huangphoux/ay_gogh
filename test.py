@@ -3,7 +3,7 @@ from shared import db, relay, template
 from math import ceil
 from random import choice
 
-test_rt: APIRouter = APIRouter("/test")
+rt: APIRouter = APIRouter("/test")
 
 
 def get_last_test(auth):
@@ -23,15 +23,15 @@ def get_last_test(auth):
     return last_test
 
 
-@test_rt.get("/")
+@rt.get("/")
 def test(auth):
     header = ["number", "form", "progress", "lv1", "lv2", "lv3", "lv4", "lv5"]
 
     tests = list(db.get(auth).query("SELECT * FROM test"))
 
     last_test = get_last_test(auth)
-    result = last_test["result"]
-    progress = last_test["progress"]
+    result = last_test["result"] if last_test else None
+    progress = last_test["progress"] if last_test else None
 
     main = Main(
         H1("Test", id="main-heading"),
@@ -65,8 +65,8 @@ def test(auth):
                 ),
             ),
             P(
-                style=f"{'color: red;' if result < 80 else ''} font-weight: bold; font-size: 2rem",
-            )(f"Overall, you know {result}% of NGSL words."),
+                style=f"{'color: red;' if result and result < 80 else ''} font-weight: bold; font-size: 2rem",
+            )(f"Overall, you know {result}% of NGSL words.") ,
         )
         if last_test and progress == 100
         else P(_class="notice")(
@@ -89,7 +89,7 @@ def is_last_finished(auth):
     return last_test["progress"] == 100 if last_test else None
 
 
-@test_rt.get("/intro")
+@rt.get("/intro")
 def intro(auth):
     last_test = get_last_test(auth)
 
@@ -133,7 +133,7 @@ def intro(auth):
     return template("Test, Intro", main, auth)
 
 
-@test_rt.get("/progress")
+@rt.get("/progress")
 def progress_page(auth):
     if is_last_finished(auth):
         return Redirect("/test")
@@ -141,7 +141,7 @@ def progress_page(auth):
     return template("Test, Progress", auth=auth, main=progress_main(auth))
 
 
-@test_rt.get("/cqrs")
+@rt.get("/cqrs")
 @sse
 async def cqrs(req, auth):
     async for _ in relay.subscribe(f"test.{auth}.progress"):
@@ -212,7 +212,7 @@ def progress_main(auth):
     )
 
 
-@test_rt.post("/progress_process")
+@rt.post("/progress_process")
 def progress_process(auth, choice: int):
     if choice not in (1, 2, 3, 4):
         return Redirect("/test")

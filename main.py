@@ -1,13 +1,15 @@
+import settings
+import read
+import test
+import auth
+import popup
 from starhtml import *
 import os, shutil
 from starlette_cramjam.compression import Compression
 from starlette_cramjam.middleware import CompressionMiddleware
 from test import is_last_finished
 from shared import template, is_signed_in, db
-from auth import auth_rt
-from test import test_rt, get_last_test
-from read import read_rt
-from settings import set_rt
+from test import get_last_test
 
 
 def set_name(req, sess):
@@ -64,11 +66,11 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     inline_icons=True,
 )
 
-
-auth_rt.to_app(app)
-test_rt.to_app(app)
-read_rt.to_app(app)
-set_rt.to_app(app)
+auth.rt.to_app(app)
+test.rt.to_app(app)
+read.rt.to_app(app)
+popup.rt.to_app(app)
+settings.rt.to_app(app)
 
 
 def hero_page():
@@ -196,7 +198,7 @@ def index(req, sess):
 
 
 if __name__ == "__main__":
-    print("Make sure you remove all DEBUGs before running in production.")
+    print("Remove all DEBUGs before running in production.")
     serve(port=1984)
 
     # Clean-up after exiting

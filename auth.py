@@ -4,10 +4,10 @@ from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
-auth_rt: APIRouter = APIRouter("/auth")
+rt: APIRouter = APIRouter("/auth")
 
 
-@auth_rt.get("/login")
+@rt.get("/login")
 def login(req, sess):
     if is_signed_in(req, sess):
         return Redirect("/")
@@ -58,7 +58,7 @@ def login(req, sess):
     return template("Log In", main, sess.get("auth", None))
 
 
-@auth_rt.post("/login")
+@rt.post("/login")
 def login_process(sess, name: str, pwd: str):
     if len(name) > 100 or (len(pwd) > 100 or len(pwd) < 8):
         return Redirect("/auth/login")
@@ -76,7 +76,7 @@ def login_process(sess, name: str, pwd: str):
     return Redirect("/")
 
 
-@auth_rt.delete("/login")
+@rt.delete("/login")
 def logout(sess):
     db.close(sess["auth"])
 
@@ -85,7 +85,7 @@ def logout(sess):
     return Redirect("/")
 
 
-@auth_rt.get("/signup")
+@rt.get("/signup")
 def signup(req, sess):
     if is_signed_in(req, sess):
         return Redirect("/")
@@ -133,7 +133,7 @@ def signup(req, sess):
     return template("Sign Up", main, sess.get("auth", None))
 
 
-@auth_rt.post("/signup")
+@rt.post("/signup")
 def signup_process(sess, name: str, pwd: str):
     if len(name) > 100 or (len(pwd) > 100 or len(pwd) < 8):
         return Redirect("/auth/signup")

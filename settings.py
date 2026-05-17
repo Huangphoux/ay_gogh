@@ -3,10 +3,10 @@ from shared import db, relay, template
 from fsrs import ReviewLog, Optimizer
 from datetime import datetime, timezone
 
-set_rt: APIRouter = APIRouter("/settings")
+rt: APIRouter = APIRouter("/settings")
 
 
-@set_rt.get("/")
+@rt.get("/")
 def index(auth):
     main = Main(
         H1("Settings", id="main-heading"),
@@ -18,12 +18,12 @@ def index(auth):
     return template("Settings", main, auth)
 
 
-@set_rt.get("/fsrs")
+@rt.get("/fsrs")
 def fsrs(auth):
     return template("Settings, FSRS", fsrs_main(auth), auth)
 
 
-@set_rt.get("/fsrs/cqrs")
+@rt.get("/fsrs/cqrs")
 @sse
 async def fsrs_cqrs(req, auth):
     async for _, data in relay.subscribe(f"settings.{auth}.fsrs"):
@@ -94,7 +94,7 @@ def fsrs_main(auth, notif: str = ""):
         P("Parameters"),
         P(_class="notice")(parameters),
         Button(
-            data_on_click=get("/settings/fsrs/optimize"),
+            data_on_pointerdown=get("/settings/fsrs/optimize"),
             data_indicator="optimizing",
             data_attr_disabled="$optimizing",
         )("Optimize"),
@@ -107,7 +107,7 @@ def fsrs_main(auth, notif: str = ""):
     )
 
 
-@set_rt.patch("/fsrs/save")
+@rt.patch("/fsrs/save")
 def save(auth, desired_retention: int):
     if desired_retention not in range(70, 100):
         return Redirect("/settings/fsrs")
@@ -120,7 +120,7 @@ def save(auth, desired_retention: int):
     relay.publish(f"settings.{auth}.fsrs", "Your desired retention has been updated.")
 
 
-@set_rt.get("/fsrs/optimize")
+@rt.get("/fsrs/optimize")
 async def optimize(auth):
     query = list(
         db.get(auth).query(

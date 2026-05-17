@@ -61,5 +61,6 @@ def template(title: str, main, auth=None):
         ),
     )
 
+
 # Starlette validates if the arg is in the request
 # If not or invalid, fail before reaching the function

@@ -164,7 +164,7 @@ class DatabaseDict:
                         difficulty REAL,
                         due TEXT NOT NULL, -- new cards due upon creation
                         last_review TEXT,
-                        suspend INTEGER NOT NULL CHECK (suspend = 1 OR suspend = 0)
+                        retire INTEGER NOT NULL CHECK (retire = 1 OR retire = 0)
                     )
             """)
             # review_log
