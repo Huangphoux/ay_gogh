@@ -38,11 +38,11 @@ def template(title: str, main, auth=None):
         )("Log Out"),
         P(
             A(href="https://github.com/Huangphoux/ay_gogh/")("Ay Gogh!"),
-            " is created by the ❤️ of  ",
+            " is created ",
             A(href="https://github.com/Huangphoux/")("huangphoux"),
-            ". Copyright © Ay Gogh! 2026.",
+            " and all of his ❤️. Copyright © Ay Gogh! 2026.",
         ),
-        P(_class="no-js")(
+        P(
             "Powered by ",
             A(href="https://data-star.dev/")("Datastar"),
             " 🚀 and ",

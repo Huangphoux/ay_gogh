@@ -1,6 +1,5 @@
-import time
 from starhtml import *
-from shared import db, relay, template
+from shared import db, relay, template, validate
 from fsrs import ReviewLog, Optimizer
 from datetime import datetime, timezone
 
@@ -76,7 +75,7 @@ def fsrs_main(auth, notif: str = ""):
             placeholder="e.g. 80",
             data_bind="desired_retention",
         ),
-        Button(data_on_click=patch("/settings/fsrs/save"))("Save"),
+        Button(data_on_pointerdown=patch("/settings/fsrs/save"))("Save"),
         P(_class="notice")(notif) if "retention" in notif else None,
         H2("Parameters"),
         P(
@@ -94,31 +93,34 @@ def fsrs_main(auth, notif: str = ""):
         ),
         P("Parameters"),
         P(_class="notice")(parameters),
-        Button(data_on_click=get("/settings/fsrs/optimize"))("Optimize"),
-        P(_class="notice")(notif) if "parameter" in notif else None,
+        Button(
+            data_on_click=get("/settings/fsrs/optimize"),
+            data_indicator="optimizing",
+            data_attr_disabled="$optimizing",
+        )("Optimize"),
+        P(_class="notice", data_show="$optimizing", style="display: none")(
+            "Computing optimal parameters for you. This won't be long, please standby."
+        ),
+        P(_class="notice", data_show="!$optimizing")(notif)
+        if "parameter" in notif
+        else None,
     )
 
 
 @set_rt.patch("/fsrs/save")
 def save(auth, desired_retention: int):
-    if not desired_retention:
-        return Redirect(fsrs)
+    validate("/settings/fsrs", 2, str(desired_retention))
 
     db.get(auth).execute(
         "UPDATE settings SET value=? WHERE setting=?",
         (desired_retention / 100, "desired_retention"),
     )
 
-    relay.publish(
-        f"settings.{auth}.fsrs",
-        "Your desired retention has been updated.",
-    )
+    relay.publish(f"settings.{auth}.fsrs", "Your desired retention has been updated.")
 
 
 @set_rt.get("/fsrs/optimize")
 async def optimize(auth):
-    relay.publish(f"settings.{auth}.fsrs", "Computing optimal parameters …")
-    
     query = list(
         db.get(auth).query(
             "SELECT * FROM review_log",
@@ -137,11 +139,8 @@ async def optimize(auth):
         for q in query
     ]
 
-    optimizer = Optimizer(review_logs=review_logs)
+    optimal_parameters = Optimizer(review_logs=review_logs).compute_optimal_parameters()  # ty:ignore[unresolved-attribute]
 
-    optimal_parameters = optimizer.compute_optimal_parameters()  # ty:ignore[unresolved-attribute]
-    time.sleep(3)
-    
     db.get(auth).execute(
         "UPDATE settings SET value=? WHERE setting=?",
         (", ".join([str(p) for p in optimal_parameters]), "parameters"),

@@ -61,6 +61,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     # .sesskey can be read/write by anyone
     # chmod 600 .sesskey to only be able to read/write by owner
     datastar="cdn",
+    inline_icons=True,
 )
 
 

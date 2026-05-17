@@ -17,7 +17,6 @@
 - Standard Ebooks: tuyển chọn và giới thiệu cho người đọc các tác phẩm văn học đình đám được viết bằng tiếng Anh. Người đọc có thể chủ động tìm đọc ở ngoài hệ thống để không cần phải phụ thuộc vào kết nối mạng, hoặc có thể đọc và thu thập từ vựng ngay thẳng trong hệ thống.
 - Khi không có JS, popup là một trang riêng
 - Width slider: [Pipulate](https://pipulate.com/)
-- CSS hover khi hover vào chú thích
 
 # Mining
 

@@ -91,7 +91,7 @@ def signup(req, sess):
 
     main = Main(
         H1("Sign Up", id="main-heading"),
-        Form(method="post", action="/signup")(
+        Form(method="post", action="/auth/signup")(
             Fieldset(
                 Label(B("Username *"), _for="name"),
                 Input(
