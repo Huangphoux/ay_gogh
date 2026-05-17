@@ -53,7 +53,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     # default_hdrs=False,
     hdrs=(  # keep / in href, if not, /auth/custom.css
         Link(rel="stylesheet", href="/custom.css"),
-        Link(rel="icon", href="https://fav.farm/✅"),  # favicon
+        Link(rel="icon", href="https://fav.farm/📖"),  # favicon
         Link(rel="stylesheet", href="https://cdn.simplecss.org/simple.min.css"),
     ),
     sess_https_only=False,  # set Secure flag on cookies

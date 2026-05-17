@@ -307,7 +307,6 @@ def chapter_main(auth, num: int, word: str = ""):
             "$word = document.getSelection().toString().trim()",
             {"document": True},
         ),
-        data_signals={"open": False},
     )(
         popup_view(auth, num, word),
         Section(
@@ -535,7 +534,7 @@ def popup_view(auth, num: int, word: str = ""):
                 style="resize: none;",
                 data_ignore_moprh=True,
             ),
-            Details(data_attr_open="$open", data_on_pointerdown="$open = !$open")(
+            Details(open=True)(
                 Summary("Wiktionary"),
                 Ul(
                     style="max-height: 20vh; overflow: auto",
