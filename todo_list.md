@@ -1,7 +1,6 @@
 # To-Do List
 
 - Remove Graceful Degradation
-- Hiện badge: ✅NGSL LV1, ❌NGSL
 - Show toàn bộ entry trong từ điển
 
 # Refactor
@@ -17,7 +16,8 @@
     - Load từng câu vào bộ nhớ. Khi người dùng bấm tiếp theo thì pop ở đầu mảng. Hàng đợi.
 - Standard Ebooks: tuyển chọn và giới thiệu cho người đọc các tác phẩm văn học đình đám được viết bằng tiếng Anh. Người đọc có thể chủ động tìm đọc ở ngoài hệ thống để không cần phải phụ thuộc vào kết nối mạng, hoặc có thể đọc và thu thập từ vựng ngay thẳng trong hệ thống.
 - Khi không có JS, popup là một trang riêng
-- Done toggle
+- Width slider: [Pipulate](https://pipulate.com/)
+- CSS hover khi hover vào chú thích
 
 # Mining
 
@@ -27,18 +27,14 @@
 - Giọng đọc:
     - [Speech Synthesis](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API#speech_synthesis)
 - Cân nhắc [Free Dictionary API](https://dictionaryapi.dev/)
-- thẻ man, woman, Germany, many. bôi man trước, không bôi toàn bộ woman, Germany, many
 - spaCy: phân tích part of speech của từ bôi đen để lọc ra kết quả Wiktionary Parser
-- Nếu mà viết hoa không có thì tìm viết thường
-- Xoá từ mined
 - Show toàn bộ entry trong từ điển
+- CSS calc top của inset để popup giữa màn hình
 
 # SRS
 
-- Change word trong popup, wiktionary đổi theo, nhớ debounce
 - spaCy: yêu cầu phải tách mỗi câu một dòng trước
 - Kiểm tra độ dài khi gửi đến server
-- Đánh dấu học thuộc: Anki's `Suspend`
 
 # Auth
 

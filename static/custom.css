@@ -1,3 +1,12 @@
+@view-transition {
+    navigation: auto;
+}
+
+* {
+    /* Preventing layout shift from scrollbar appearance */
+    scrollbar-gutter: stable;
+}
+
 .skip-link {
     position: absolute;
     top: -4.5rem; /*  off screen */
@@ -12,28 +21,10 @@
     border: var(--accent) 0.25rem solid;
 }
 
-@view-transition {
-    navigation: auto;
-}
-
 legend {
     background-color: var(--accent);
     color: var(--bg);
     padding: 3px 6px;
-}
-
-* {
-    /* Preventing layout shift from scrollbar appearance */
-    scrollbar-gutter: stable;
-}
-
-.modal {
-    position: sticky;
-    inset: 0;
-    width: 100%;
-    height: fit-content;
-    overflow: auto;
-    z-index: 10000;
 }
 
 .outline {
@@ -75,10 +66,29 @@ legend {
     background: cyan;
 }
 
+.modal {
+    position: sticky;
+    inset: 0;
+    width: 100%;
+    height: fit-content;
+    overflow: auto;
+    z-index: 10000;
+}
+
 .aside {
     display: inline;
     position: relative;
     width: 20vw;
+}
+
+.modal,
+.aside {
+    transition: filter 200ms;
+}
+.modal:hover,
+.aside:hover {
+    z-index: 1;
+    filter: drop-shadow(10px 10px var(--accent));
 }
 
 .aside:nth-of-type(even) {
@@ -100,5 +110,11 @@ legend {
         margin: 5% 10% 5% 10%;
         float: none;
         margin: auto;
+        transition: none;
+    }
+
+    .aside:hover {
+        filter: none;
+        z-index: initial;
     }
 }
