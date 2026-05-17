@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, relay, template
+from shared import db, relay, template, validate
 from math import ceil
 from random import choice
 
@@ -38,7 +38,7 @@ def test(auth):
         A(_class="button", href="/test/intro")(
             "Continue last test" if last_test and progress != 100 else "Take a test",
         ),
-        Figure(style="max-height: 50vh; overflow: auto")(
+        Figure(style="max-height: 20vh; overflow: auto")(
             Table(
                 Thead(Tr(Th(h.title()) for h in header)),
                 Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),
@@ -47,7 +47,7 @@ def test(auth):
         if tests
         else None,
         Section(
-            H2("Your result"),
+            H2("How to interpret your result"),
             P(
                 Span(style="color:red; font-weight: bold")("Red-highlighted"),
                 ": score < 80%. Target your study around those levels.",
@@ -65,16 +65,12 @@ def test(auth):
                 ),
             ),
             P(
-                style="color:red; font-weight: bold; font-size: 2rem"
-                if result and result < 80
-                else None,
-            )(f"You know {result}% of NGSL words.")
-            if result
-            else None,
+                style=f"{'color: red;' if result < 80 else ''} font-weight: bold; font-size: 2rem",
+            )(f"Overall, you know {result}% of NGSL words."),
         )
         if last_test and progress == 100
         else P(_class="notice")(
-            "An analysis of your test score will be shown here after you finish."
+            "Analysis of your test result will be shown here after you finish."
         ),
     )
 
@@ -88,7 +84,9 @@ def is_last_finished(auth):
     None: Last test doesn't exist.
     """
 
-    return get_last_test(auth)["progress"] == 100
+    last_test = get_last_test(auth)
+
+    return last_test["progress"] == 100 if last_test else None
 
 
 @test_rt.get("/intro")
@@ -215,9 +213,8 @@ def progress_main(auth):
 
 
 @test_rt.post("/progress_process")
-async def progress_process(auth, choice: str):
-    if not choice:
-        return Redirect("/test")
+async def progress_process(auth, choice: int):
+    validate("/test", 1, str(choice))
 
     last_test = get_last_test(auth)
     progress = last_test["progress"]
@@ -231,6 +228,7 @@ async def progress_process(auth, choice: str):
     levels: dict[str, int] = {f"lv{i}": last_test[f"lv{i}"] for i in "12345"}
 
     level_num = ceil((progress + 1) / 20)  # lv1 is 1→20, lv2 is 21→30
+    
     levels[f"lv{level_num}"] += 1 if int(choice) == int(next_q["answer"]) else 0
 
     db.get(auth).execute(

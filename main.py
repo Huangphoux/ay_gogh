@@ -5,7 +5,7 @@ from starlette_cramjam.middleware import CompressionMiddleware
 from test import is_last_finished
 from shared import template, is_signed_in, db
 from auth import auth_rt
-from test import test_rt
+from test import test_rt, get_last_test
 from read import read_rt
 from settings import set_rt
 
@@ -154,27 +154,16 @@ def hero_page():
 
 
 def profile_page(auth):
-    try:
-        test_done = list(
-            db.get(auth).query(
-                """
-                        SELECT progress, lv1 + lv2 + lv3 + lv4 + lv5 AS result 
-                        FROM test 
-                        WHERE day = (SELECT MAX(day) FROM test)
-                    """
-            )
-        )[0]
-    except IndexError:
-        test_done = None
+    last_test = get_last_test(auth)
 
-    chap_done = db.get(auth).item("SELECT SUM(done) FROM chapter")
+    sum_done = db.get(auth).item("SELECT SUM(done) FROM chapter")
 
     test = Section(
         H2(
             A(href="/test/")(
                 "Test",
-                f" ({(test_done['result'] / 100):.0%})"
-                if test_done and test_done["progress"] == 100
+                f" ({(last_test['result'] / 100):.0%})"
+                if last_test and last_test["progress"] == 100
                 else None,
             )
         ),
@@ -186,10 +175,8 @@ def profile_page(auth):
     )
 
     read = Section(
-        H2(
-            A(href="/read/")(f"Read", f" ({chap_done / 60:.0%})" if chap_done else None)
-        ),
-        P(f"Progress: {chap_done} out of 60 chapters."),
+        H2(A(href="/read/")(f"Read", f" ({sum_done / 60:.0%})" if sum_done else None)),
+        P(f"Progress: {sum_done} out of 60 chapters."),
     )
 
     return Main(
@@ -209,6 +196,7 @@ def index(req, sess):
 
 
 if __name__ == "__main__":
+    print("Make sure you remove all DEBUGs before running in production.")
     serve(port=1984)
 
     # Clean-up after exiting
