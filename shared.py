@@ -61,10 +61,5 @@ def template(title: str, main, auth=None):
         ),
     )
 
-
-def validate(redirect: str, max_length: int, *args: str) -> Redirect:
-    for arg in args:
-        if not arg or len(arg) > max_length:
-            return Redirect(redirect)
-
-    return Redirect("/")
+# Starlette validates if the arg is in the request
+# If not or invalid, fail before reaching the function

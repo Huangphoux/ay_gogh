@@ -1,3 +1,4 @@
+from test import get_last_test
 from apswutils.db import NotFoundError
 from starhtml import *
 from shared import db, relay, template
@@ -16,7 +17,6 @@ read_rt: APIRouter = APIRouter("/read")
 
 def get_ease(score: int, ngsl: float):
     ease = score * ngsl
-    # return ease
 
     if ease > 90:
         return "easy"
@@ -30,44 +30,33 @@ def get_ease(score: int, ngsl: float):
 
 @read_rt.get("/")
 def read(auth, p: int = 0, all: int = 0):
-    if p < 0 or p > 5 or all not in (0, 1):
-        return Redirect(read)
+    if p not in (0, 1, 2, 3, 4, 5) or all not in (0, 1):
+        return Redirect("/read")
 
-    chap = list(
-        db.app.query("SELECT number, title, ngsl FROM chapter")
-        if all
-        else db.app.query(
+    if all:
+        chap = list(db.app.query("SELECT number, title, ngsl FROM chapter"))
+    else:
+        chap = db.app.query(
             "SELECT number, title, ngsl FROM chapter LIMIT 10 OFFSET ?", (p * 10,)
         )
-    )
 
     user_chap = list(db.get(auth).query("SELECT number, done FROM chapter"))
 
     if user_chap:
-        for uc in user_chap:
-            for c in chap:
-                if uc["number"] == c["number"]:
-                    c["done"] = 1
+        completed_numbers = {uc["number"] for uc in user_chap}
+        for c in chap:
+            if c["number"] in completed_numbers:
+                c["done"] = 1
 
-    try:
-        last_test = list(
-            db.get(auth).query(
-                "SELECT * FROM test WHERE day = (SELECT MAX(day) FROM test)"
-            )
-        )[0]
-    except IndexError:
-        last_test = None
+    last_test = get_last_test(auth)
 
-    score = (
-        sum(last_test[f"lv{x}"] for x in range(1, 5 + 1))
-        if last_test and last_test["progress"] == 100
-        else None
-    )
+    result = last_test["result"] if last_test else None
 
     main = Main(
         H1(id="main-heading")(
             f"Read, {p * 10 + 1} to {(p + 1) * 10}" if not all else "Read All",
         ),
+        # pagination
         Div(style="display: flex; gap: 1rem; align-items: center; height: 1.5rem")(
             A(href=f"/read/?p={p - 1}")("Previous")
             if p > 0
@@ -80,9 +69,7 @@ def read(auth, p: int = 0, all: int = 0):
                 )(i)
                 for i in range(0, 6)
             ),
-            A(
-                href=f"/read/?p={p + 1}",
-            )("Next")
+            A(href=f"/read/?p={p + 1}")("Next")
             if p < 5
             else Span(style="color: var(--border)")("Next"),
         )
@@ -102,11 +89,11 @@ def read(auth, p: int = 0, all: int = 0):
                         else f"Chapter {c['number']}: {c['title']}"
                     ),
                     A(style="display: grid;  place-items: center;")(
-                        _class=(ease := get_ease(score, c["ngsl"])),
+                        _class=(ease := get_ease(result, c["ngsl"])),
                         href=f"/read/{c['number']}/ease",
-                        title=f"You know {score * c['ngsl']:.2f}% of the words in chapter {c['number']}.",
+                        title=f"You know {result * c['ngsl']:.2f}% of the words in chapter {c['number']}.",
                     )(ease.title())
-                    if score and not ("done" in c and c["done"] == 1)
+                    if result and not ("done" in c and c["done"] == 1)
                     else None,
                 )
                 for c in chap
@@ -125,9 +112,9 @@ def read(auth, p: int = 0, all: int = 0):
 
 
 @read_rt.get("/{num:int}/ease")
-def ease(auth, num: int):
+async def ease(auth, num: int):
     if num not in range(1, 60 + 1):
-        return Redirect(read)
+        return Redirect("/read")
 
     chap = list(db.app.query("SELECT ngsl FROM chapter WHERE number = ? ", (num,)))[0]
 

@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, is_signed_in, template, validate
+from shared import db, is_signed_in, template
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
@@ -60,7 +60,8 @@ def login(req, sess):
 
 @auth_rt.post("/login")
 def login_process(sess, name: str, pwd: str):
-    validate("/auth/login", 100, name, pwd)
+    if len(name) > 100 or (len(pwd) > 100 or len(pwd) < 8):
+        return Redirect("/auth/login")
 
     rows = list(db.app.query("SELECT name, pwd FROM user WHERE name=?", (name,)))
 
@@ -134,7 +135,8 @@ def signup(req, sess):
 
 @auth_rt.post("/signup")
 def signup_process(sess, name: str, pwd: str):
-    validate("/auth/login", 100, name, pwd)
+    if len(name) > 100 or (len(pwd) > 100 or len(pwd) < 8):
+        return Redirect("/auth/signup")
 
     if list(  # DB has that account
         db.app.query("SELECT 1 FROM user WHERE name=?", (name,))

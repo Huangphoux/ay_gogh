@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, relay, template, validate
+from shared import db, relay, template
 from math import ceil
 from random import choice
 
@@ -213,9 +213,10 @@ def progress_main(auth):
 
 
 @test_rt.post("/progress_process")
-async def progress_process(auth, choice: int):
-    validate("/test", 1, str(choice))
-
+def progress_process(auth, choice: int):
+    if choice not in (1, 2, 3, 4):
+        return Redirect("/test")
+    
     last_test = get_last_test(auth)
     progress = last_test["progress"]
 
@@ -228,7 +229,7 @@ async def progress_process(auth, choice: int):
     levels: dict[str, int] = {f"lv{i}": last_test[f"lv{i}"] for i in "12345"}
 
     level_num = ceil((progress + 1) / 20)  # lv1 is 1→20, lv2 is 21→30
-    
+
     levels[f"lv{level_num}"] += 1 if int(choice) == int(next_q["answer"]) else 0
 
     db.get(auth).execute(

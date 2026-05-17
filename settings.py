@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, relay, template, validate
+from shared import db, relay, template
 from fsrs import ReviewLog, Optimizer
 from datetime import datetime, timezone
 
@@ -109,7 +109,8 @@ def fsrs_main(auth, notif: str = ""):
 
 @set_rt.patch("/fsrs/save")
 def save(auth, desired_retention: int):
-    validate("/settings/fsrs", 2, str(desired_retention))
+    if desired_retention not in range(70, 100):
+        return Redirect("/settings/fsrs")
 
     db.get(auth).execute(
         "UPDATE settings SET value=? WHERE setting=?",
