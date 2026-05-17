@@ -23,31 +23,48 @@ def template(title: str, main, auth=None):
             A("Settings", href="/settings/"),
         )
 
+    header = Header(
+        nav,
+        H1("Ay Gogh!"),
+        Noscript(P("JavaScript is needed to ensure the best experience.")),
+    )
+
+    footer = Footer(
+        auth
+        and Button(
+            data_on_pointerdown=js("confirm('Are you SURE you want to sign out?')").if_(
+                delete("/auth/login"), ""
+            )
+        )("Log Out"),
+        P(
+            A(href="https://github.com/Huangphoux/ay_gogh/")("Ay Gogh!"),
+            " is created by the ❤️ of  ",
+            A(href="https://github.com/Huangphoux/")("huangphoux"),
+            ". Copyright © Ay Gogh! 2026.",
+        ),
+        P(_class="no-js")(
+            "Powered by ",
+            A(href="https://data-star.dev/")("Datastar"),
+            " 🚀 and ",
+            A(href="https://starhtml.com/")("StarHTML"),
+            " ⭐",
+        ),
+    )
+
     return (
         Title(f"{title}: Ay Gogh!"),
         Body(
             A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
-            Header(
-                nav,
-                H1("Ay Gogh!"),
-                Noscript(P("JavaScript is needed to ensure the best experience.")),
-            ),
+            header,
             main,
-            Footer(
-                auth and Form(action="/auth/logout", method="post")(Button("Log Out")),
-                P(
-                    A(href="https://github.com/Huangphoux/ay_gogh/")("Ay Gogh!"),
-                    " is created by the ❤️ of  ",
-                    A(href="https://github.com/Huangphoux/")("huangphoux"),
-                    ". Copyright © Ay Gogh! 2026.",
-                ),
-                P(_class="no-js")(
-                    "Proudly powered by ",
-                    A(href="https://data-star.dev/")("Datastar"),
-                    " 🚀 and ",
-                    A(href="https://starhtml.com/")("StarHTML"),
-                    " ⭐",
-                ),
-            ),
+            footer,
         ),
     )
+
+
+def validate(redirect: str, max_length: int, *args: str) -> Redirect:
+    for arg in args:
+        if not arg or len(arg) > max_length:
+            return Redirect(redirect)
+
+    return Redirect("/")

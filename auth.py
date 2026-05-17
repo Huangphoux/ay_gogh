@@ -1,5 +1,5 @@
 from starhtml import *
-from shared import db, is_signed_in, template
+from shared import db, is_signed_in, template, validate
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
@@ -12,9 +12,9 @@ def login(req, sess):
     if is_signed_in(req, sess):
         return Redirect("/")
 
-    main = Main(
+    main = Main(show_pwd := Signal("show_pwd", False))(
         H1("Log In", id="main-heading"),
-        Form(action=login_process, method="post")(
+        Form(method="post", action="/auth/login")(
             Fieldset(
                 Label(B("Username"), _for="name"),
                 Input(
@@ -24,12 +24,12 @@ def login(req, sess):
                     required=True,
                     maxlength="100",
                     autofocus=True,
-                    onfocus="let temp=this.value; this.value=''; this.value=temp",
                     value="DEBUG",
+                    autocomplete="on",
                 ),
                 Label(B("Password"), _for="name"),
                 Input(
-                    data_attr_type="$is_show ? 'text' : 'password'",
+                    data_attr_type=show_pwd.if_("text", "password"),
                     type="password",
                     id="pwd",
                     name="pwd",
@@ -38,16 +38,20 @@ def login(req, sess):
                     minlength="8",
                     maxlength="100",
                     value="DEBUG_DEBUG_DEBUG",
+                    autocomplete="on",
                 ),
                 Br(),
                 Input(
-                    id="show_pwd", name="show_pwd", type="checkbox", data_bind="is_show"
+                    id="show_pwd",
+                    name="show_pwd",
+                    type="checkbox",
+                    data_bind=show_pwd,
                 ),
                 Label("Show Password", _for="show_pwd"),
             ),
-            Button("Log In"),
+            Button(type="submit")("Log In"),
             Span(f" or "),
-            A("Sign Up", href=signup),
+            A("Sign Up", href="/auth/signup"),
         ),
     )
 
@@ -55,28 +59,24 @@ def login(req, sess):
 
 
 @auth_rt.post("/login")
-def login_process(name: str, pwd: str, sess):
-    if not name or not pwd:
-        return Redirect(login)
+def login_process(sess, name: str, pwd: str):
+    validate("/auth/login", 100, name, pwd)
 
-    global db
     rows = list(db.app.query("SELECT name, pwd FROM user WHERE name=?", (name,)))
 
-    if not rows:
-        return Redirect(login)
+    if not rows:  # no user in DB
+        return Redirect("/auth/login")
 
-    u = rows[0]
+    u = rows[0]  # there should only be one account that match
     if not pwd_context.verify(pwd, u["pwd"]):
-        return Redirect(login)
+        return Redirect("/auth/login")
 
     sess["auth"] = u["name"]
     return Redirect("/")
 
 
-# @auth_rt.delete("/logout")
-@auth_rt.post("/logout")
+@auth_rt.delete("/login")
 def logout(sess):
-    global db
     db.close(sess["auth"])
 
     del sess["auth"]
@@ -91,7 +91,7 @@ def signup(req, sess):
 
     main = Main(
         H1("Sign Up", id="main-heading"),
-        Form(action=signup_process, method="post")(
+        Form(method="post", action="/signup")(
             Fieldset(
                 Label(B("Username *"), _for="name"),
                 Input(
@@ -120,10 +120,10 @@ def signup(req, sess):
                 ),
                 Label("Show Password", _for="show_pwd"),
             ),
-            Button("Sign Up"),
+            Button(type="submit")("Sign Up"),
             P(
                 "Maybe you want to ",
-                A("Log In", href=login),
+                A("Log In", href="/auth/login"),
                 " instead?",
             ),
         ),
@@ -133,19 +133,16 @@ def signup(req, sess):
 
 
 @auth_rt.post("/signup")
-def signup_process(name: str, pwd: str, sess):
-    if not name or not pwd:
-        return Redirect(login)
+def signup_process(sess, name: str, pwd: str):
+    validate("/auth/login", 100, name, pwd)
 
-    global db
-    rows = list(db.app.query("SELECT 1 FROM user WHERE name=?", (name,)))
-
-    if rows:  # there's already someone with that name
-        return Redirect(signup)
+    if list(  # DB has that account
+        db.app.query("SELECT 1 FROM user WHERE name=?", (name,))
+    ):
+        return Redirect("/auth/signup")
 
     db.app.execute(
-        "INSERT INTO user (name, pwd) VALUES (?, ?)",
-        (name, pwd_context.hash(pwd)),
+        "INSERT INTO user (name, pwd) VALUES (?, ?)", (name, pwd_context.hash(pwd))
     )
 
     sess["auth"] = name
