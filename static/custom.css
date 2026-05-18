@@ -118,3 +118,7 @@ legend {
         z-index: initial;
     }
 }
+
+button {
+    cursor: pointer;
+}

@@ -181,7 +181,7 @@ async def ease(auth, num: int):
 @rt.get("/{num:int}")
 def chapter(auth, num: int, word: str = ""):
     if num not in range(1, 60 + 1):
-        return Redirect(read)
+        return Redirect("/read")
 
     return template(
         f"Read, Chapter {num}/60", auth=auth, main=chapter_main(auth, num, word)

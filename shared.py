@@ -37,17 +37,21 @@ def template(title: str, main, auth=None):
             )
         )("Log Out"),
         P(
-            A(href="https://github.com/Huangphoux/ay_gogh/")("Ay Gogh!"),
-            " is created ",
+            "© 2026 ",
             A(href="https://github.com/Huangphoux/")("huangphoux"),
-            " and all of his ❤️. Copyright © Ay Gogh! 2026.",
+            ". Licensed under ",
+            A(href="https://osaasy.dev/")("O'Saasy License."),
         ),
         P(
-            "Powered by ",
+            "Developed with ❤️ using ",
+            A(href="https://www.python.org/")("Python"),
+            ", ",
+            A(href="https://sqlite.org/index.html")("SQLite"),
+            ", ",
             A(href="https://data-star.dev/")("Datastar"),
-            " 🚀 and ",
+            ", and ",
             A(href="https://starhtml.com/")("StarHTML"),
-            " ⭐",
+            ".",
         ),
     )
 

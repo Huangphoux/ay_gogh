@@ -1,10 +1,9 @@
 # To-Do List
 
-- Remove Graceful Degradation
 - Show toàn bộ entry trong từ điển
-
-# Refactor
-- Remove all Form, use Signal instead
+- Card Browser, đặt tên là Memory
+    - Rút db.execute ra từ retire và delete? Nah, có chút xíu vậy mà cũng rút ra chi, mệt vl
+    - Rút popup
 
 # Read
 
@@ -41,7 +40,8 @@
 
 # Setting
 
-- Tối ưu thông số: Background Task
+- Tối ưu thông số
+    - Chỉ một optimizer được chạy trong cả hệ thống
 
 # Code
 

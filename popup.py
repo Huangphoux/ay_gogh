@@ -147,17 +147,8 @@ def retired_view(num: int, front: str, back: str):
             Span(_class="r3t1r3")("Magenta background"),
             ": the word is retired, meaning you won't have to review it anymore.",
         ),
-        Label(_for="front")("Word (cannot modify)"),
-        Input(
-            type="text",
-            id="front",
-            name="front",
-            value=front,
-            required=True,
-            placeholder="Write the word you want to collect here.",
-            readonly=True,
-            style="width: 100%;",
-        ),
+        P(_class="notice")(f"Word: {front}"),
+        Input(type="hidden", id="front", name="front", value=front),
         Label(_for="back")("Definition (Changeable, save using either buttons)"),
         Textarea(
             id="back",
@@ -202,17 +193,18 @@ This action is NOT reversible. Are you sure about this decision?"
                 minlength="1",
                 style="resize: none;",
             )(back),
-            Div(style="display: flex; gap: 1rem;")(
+            Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
                 Button(
                     data_on_pointerdown=patch(
                         f"/read/{num}/forgot", contentType="form"
                     ),
-                )("I forgot!"),
+                )("I forgot! 👎"),
                 Button(
+                    _class="outline",
                     data_on_pointerdown=patch(
                         f"/read/{num}/remembered", contentType="form"
-                    )
-                )("I remembered!"),
+                    ),
+                )("I remembered! 👍"),
             ),
         ),
         Details(name="due")(
@@ -220,14 +212,16 @@ This action is NOT reversible. Are you sure about this decision?"
             Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
                 Button(
                     data_on_pointerdown=patch(f"/read/{num}/retire", contentType="form")
-                )("Retire"),
+                )("Retire 💤"),
                 Button(
+                    _class="outline",
                     data_on_pointerdown=js(f"confirm('{delete_msg}')").if_(
                         (delete(f"/read/{num}/delete", contentType="form")), ""
                     ),
-                )("Delete"),
+                )("⚠️ DELETE ⚠️"),
             ),
         ),
+        Button(data_on_pointerdown=get(f"/read/{num}/close"))("Close"),
     )
 
 
