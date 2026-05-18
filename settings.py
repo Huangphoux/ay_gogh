@@ -75,7 +75,7 @@ def fsrs_main(auth, notif: str = ""):
             placeholder="e.g. 80",
             data_bind="desired_retention",
         ),
-        Button(data_on_pointerdown=patch("/settings/fsrs/save"))("Save"),
+        Button(data_on_click=patch("/settings/fsrs/save"))("Save"),
         P(_class="notice")(notif) if "retention" in notif else None,
         H2("Parameters"),
         P(
@@ -94,7 +94,7 @@ def fsrs_main(auth, notif: str = ""):
         P("Parameters"),
         P(_class="notice")(parameters),
         Button(
-            data_on_pointerdown=get("/settings/fsrs/optimize"),
+            data_on_click=get("/settings/fsrs/optimize"),
             data_indicator="optimizing",
             data_attr_disabled="$optimizing",
         )("Optimize"),

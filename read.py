@@ -184,7 +184,7 @@ def chapter(auth, num: int, word: str = ""):
         return Redirect("/read")
 
     return template(
-        f"Read, Chapter {num}/60", auth=auth, main=chapter_main(auth, num, word)
+        f"Read, Chapter {num}", auth=auth, main=chapter_main(auth, num, word)
     )
 
 
@@ -314,10 +314,10 @@ def chapter_main(auth, num: int, word: str = ""):
         and [1 for c in cards if c["is_due"] and c["is_new_day"] and not c["retire"]]
         else None,
         Section(style="display: grid; place-items: center")(
-            Button(data_on_pointerdown=patch(f"/read/{num}"))("Mark Complete")
+            Button(data_on_click=patch(f"/read/{num}"))("Mark Complete")
             if not done
             else (
-                Button(data_on_pointerdown=delete(f"/read/{num}"))("Undo Complete"),
+                Button(data_on_click=delete(f"/read/{num}"))("Undo Complete"),
                 P(_class="notice")("You have marked this chapter as Complete."),
                 A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
             )

@@ -97,12 +97,11 @@ def wiktionary_view(word: str, num: int):
             else P("Sorry, couldn't find this word in the dictionary."),
         ),
         Div(style="display: flex; gap: 1rem;")(
-            Button(_class="outline", data_on_pointerdown=get(f"/read/{num}/close"))(
-                "Close"
-            ),
-            Button(data_on_pointerdown=post(f"/read/{num}/save", contentType="form"))(
-                "Save"
-            ),
+            Button(
+                _class="outline",
+                data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)),
+            )("Close"),
+            Button(data_on_click=post(f"/read/{num}/save", contentType="form"))("Save"),
             Div(
                 style=" display: grid; place-content: center; ",
             )(f"✅ NGSL Level {lv}" if lv else "❌ Not in NGSL"),
@@ -118,7 +117,7 @@ def not_new_day_view(num: int):
             ": the word can't be revealed until tomorrow.",
             Br(),
         ),
-        Button(data_on_pointerdown=get(f"/read/{num}/close"))("Close"),
+        Button(data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)))("Close"),
     )
 
 
@@ -136,7 +135,7 @@ def not_due_view(num: int, due: str):
         P(
             f"Next review is in {str(time_delta).split('.')[0]}."
         ),  # take only what is before the point
-        Button(data_on_pointerdown=get(f"/read/{num}/close"))("Close"),
+        Button(data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)))("Close"),
     )
 
 
@@ -160,11 +159,11 @@ def retired_view(num: int, front: str, back: str):
         Div(style="display: flex; gap: 1rem;")(
             Button(
                 _class="outline",
-                data_on_pointerdown=patch(f"/read/{num}/close", contentType="form"),
+                data_on_click=patch(f"/read/{num}/close", contentType="form"),
             )("Close"),
-            Button(
-                data_on_pointerdown=delete(f"/read/{num}/retire", contentType="form")
-            )("Unretire"),
+            Button(data_on_click=delete(f"/read/{num}/retire", contentType="form"))(
+                "Unretire"
+            ),
         ),
     )
 
@@ -195,24 +194,20 @@ This action is NOT reversible. Are you sure about this decision?"
             )(back),
             Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
                 Button(
-                    data_on_pointerdown=patch(
-                        f"/read/{num}/forgot", contentType="form"
-                    ),
+                    data_on_click=patch(f"/read/{num}/forgot", contentType="form"),
                 )("I forgot! 👎"),
                 Button(
                     _class="outline",
-                    data_on_pointerdown=patch(
-                        f"/read/{num}/remembered", contentType="form"
-                    ),
+                    data_on_click=patch(f"/read/{num}/remembered", contentType="form"),
                 )("I remembered! 👍"),
             ),
         ),
         Details(name="due")(
             Summary("More actions"),
             Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
-                Button(
-                    data_on_pointerdown=patch(f"/read/{num}/retire", contentType="form")
-                )("Retire 💤"),
+                Button(data_on_click=patch(f"/read/{num}/retire", contentType="form"))(
+                    "Retire 💤"
+                ),
                 Button(
                     _class="outline",
                     data_on_pointerdown=js(f"confirm('{delete_msg}')").if_(
@@ -221,7 +216,7 @@ This action is NOT reversible. Are you sure about this decision?"
                 )("⚠️ DELETE ⚠️"),
             ),
         ),
-        Button(data_on_pointerdown=get(f"/read/{num}/close"))("Close"),
+        Button(data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)))("Close"),
     )
 
 
@@ -237,7 +232,9 @@ def popup_view(auth, num: int, word: str = ""):
             P(
                 "You cannot collect a phrase that has a space in it, only a single word."
             ),
-            Button(data_on_pointerdown=get(f"/read/{num}/close"))("Close"),
+            Button(data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)))(
+                "Close"
+            ),
         )
 
     try:
@@ -275,7 +272,7 @@ def popup_view(auth, num: int, word: str = ""):
 
 
 @rt.delete("/{num:int}/delete")
-async def delete_word(auth, num: int, front: str, back: str):
+async def delete_word(auth, num: int, front: str):
     db.get(auth).execute("DELETE FROM deck WHERE front=?", (front,))
 
     relay.publish(f"read.{auth}.{num}", front)
