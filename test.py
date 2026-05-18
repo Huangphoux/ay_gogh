@@ -50,7 +50,7 @@ def test(auth):
             H2("How to interpret your result"),
             P(
                 Span(style="color:red; font-weight: bold")("Red-highlighted"),
-                ": score < 80%. Target your study around those levels.",
+                ": score < 80%. You should learn more words in this level.",
             ),
             Ul(
                 *(

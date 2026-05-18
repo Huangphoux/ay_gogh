@@ -40,7 +40,7 @@ def read(auth, p: int = 0, all: int = 0):
     user_chap = list(db.get(auth).query("SELECT number, done FROM chapter"))
 
     if user_chap:
-        completed_numbers = {uc["number"] for uc in user_chap}
+        completed_numbers = {uc["number"] for uc in user_chap} # LLM comes up with this
         for c in chap:
             if c["number"] in completed_numbers:
                 c["done"] = 1

@@ -6,6 +6,7 @@ import json
 from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
 import simplemma
+from humanize import precisedelta
 
 rt: APIRouter = APIRouter("/read")  # so you can have identical APIRouter
 
@@ -49,6 +50,25 @@ def fetch_definition(word: str = ""):
     return definition
 
 
+def popup_form(num: int, content):
+    form = Form(
+        _class="notice modal",
+        data_on_keydown=(
+            f"evt.key === 'Escape' && @get('/read/{num}/close')",
+            dict(window=True),
+        ),
+    )(content)
+
+    return form
+
+
+def close_btn(num: int, is_outlined: bool = False):
+    return Button(
+        _class="outline" if is_outlined else None,
+        data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)),
+    )("Close")
+
+
 def wiktionary_view(word: str, num: int):
     try:
         lv = db.app.item("SELECT level FROM ngsl WHERE lemma = ?", (word,))
@@ -57,7 +77,7 @@ def wiktionary_view(word: str, num: int):
 
     definition = fetch_definition(word)
 
-    return Form(_class="notice modal")(
+    front_part = (
         Label(_for="front")("Word"),
         Input(
             type="text",
@@ -69,11 +89,15 @@ def wiktionary_view(word: str, num: int):
             style="width: 100%;",
             data_on_input=(
                 js(
-                    f"if (evt.target.value !== \"\" ) {{ $word = evt.target.value; @get('/read/{num}/open') }};"
+                    f"if (evt.target.value !== \"\" )\
+                    {{ $word = evt.target.value; @get('/read/{num}/open') }};"
                 ),
-                dict(debounce=500),
+                dict(debounce=300),
             ),
         ),
+    )
+
+    back_part = (
         Label(_for="back")("Definition"),
         Textarea(
             id="back",
@@ -83,42 +107,40 @@ def wiktionary_view(word: str, num: int):
             style="resize: none;",
             data_ignore_moprh=True,
         ),
-        Details(open=True)(
-            Summary("Wiktionary"),
-            Ul(
-                style="max-height: 20vh; overflow: auto",
-                data_on_pointerup=(
-                    f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
-                ),
-            )(
-                *(Li(d) for d in definition),
-            )
-            if definition
-            else P("Sorry, couldn't find this word in the dictionary."),
-        ),
-        Div(style="display: flex; gap: 1rem;")(
-            Button(
-                _class="outline",
-                data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)),
-            )("Close"),
-            Button(data_on_click=post(f"/read/{num}/save", contentType="form"))("Save"),
-            Div(
-                style=" display: grid; place-content: center; ",
-            )(f"✅ NGSL Level {lv}" if lv else "❌ Not in NGSL"),
-        ),
     )
+
+    wiktionary_part = Details(open=True)(
+        Summary(f"Wiktionary, {f'✅ NGSL Level {lv}' if lv else '❌ Not in NGSL'}"),
+        Ul(
+            style="max-height: 20vh; overflow: auto",
+            data_on_pointerup=(f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"),
+        )(
+            *(Li(d) for d in definition),
+        )
+        if definition
+        else P("Sorry, couldn't find the word in the dictionary."),
+    )
+
+    buttons = Div(style="display: flex; gap: 1rem;")(
+        close_btn(num, is_outlined=True),
+        Button(data_on_click=post(f"/read/{num}/save", contentType="form"))("Save"),
+    )
+
+    content = (*front_part, *back_part, wiktionary_part, buttons)
+    return popup_form(num, content)
 
 
 def not_new_day_view(num: int):
-    return Form(_class="notice modal")(
+    content = (
         P(
             "※ ",
             Span(_class="n0t-y3t")("Yellow background"),
             ": the word can't be revealed until tomorrow.",
-            Br(),
         ),
-        Button(data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)))("Close"),
+        close_btn(num),
     )
+
+    return popup_form(num, content)
 
 
 def not_due_view(num: int, due: str):
@@ -126,28 +148,32 @@ def not_due_view(num: int, due: str):
         tzinfo=timezone.utc
     ) - datetime.now(timezone.utc)
 
-    return Form(_class="notice modal")(
+    content = (
         Small(
             "※ ",
             Span(_class="n0t-du3")("Green background"),
             ": the word is not due for a review yet.",
         ),
-        P(
-            f"Next review is in {str(time_delta).split('.')[0]}."
-        ),  # take only what is before the point
-        Button(data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)))("Close"),
+        P(f"Next review is in {precisedelta(time_delta)}."),
+        close_btn(num),
     )
+
+    return popup_form(num, content)
 
 
 def retired_view(num: int, front: str, back: str):
-    return Form(_class="notice modal")(
-        Small(
-            " ※ ",
-            Span(_class="r3t1r3")("Magenta background"),
-            ": the word is retired, meaning you won't have to review it anymore.",
-        ),
+    small = Small(
+        " ※ ",
+        Span(_class="r3t1r3")("Magenta background"),
+        ": the word is retired, meaning you won't have to review it anymore.",
+    )
+
+    front_part = (
         P(_class="notice")(f"Word: {front}"),
         Input(type="hidden", id="front", name="front", value=front),
+    )
+
+    back_part = (
         Label(_for="back")("Definition (Changeable, save using either buttons)"),
         Textarea(
             id="back",
@@ -156,68 +182,75 @@ def retired_view(num: int, front: str, back: str):
             required=True,
             style="resize: none;",
         )(back),
-        Div(style="display: flex; gap: 1rem;")(
-            Button(
-                _class="outline",
-                data_on_click=patch(f"/read/{num}/close", contentType="form"),
-            )("Close"),
-            Button(data_on_click=delete(f"/read/{num}/retire", contentType="form"))(
-                "Unretire"
-            ),
+    )
+
+    buttons = Div(style="display: flex; gap: 1rem;")(
+        Button( # also save `back`, unlike other close buttons
+            _class="outline",
+            data_on_click=patch(f"/read/{num}/close", contentType="form"),
+        )("Close"),
+        Button(data_on_click=delete(f"/read/{num}/retire", contentType="form"))(
+            "Unretire"
         ),
     )
+
+    content = (small, *front_part, *back_part, buttons)
+    return popup_form(num, content)
 
 
 def due_view(num: int, front: str, back: str):
-
     delete_msg = "You are about to delete this word off your memory. \
 This action is NOT reversible. Are you sure about this decision?"
 
-    return Form(_class="notice modal")(
-        Small(
-            "※ ",
-            Span(_class="du3")("Red background"),
-            ": the word is due for a review.",
-        ),
+    small = Small(
+        "※ ",
+        Span(_class="du3")("Red background"),
+        ": the word is due for a review.",
+    )
+    front_part = (
         P(_class="notice")(f"Word: {front}"),
         Input(type="hidden", id="front", name="front", value=front),
-        Details(name="due")(
-            Summary("Try to recall before reveal"),
-            Label(_for="back")("Definition (Changeable, save using either buttons)"),
-            Textarea(
-                id="back",
-                name="back",
-                placeholder="Write your own definitions in here.",
-                required=True,
-                minlength="1",
-                style="resize: none;",
-            )(back),
-            Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
-                Button(
-                    data_on_click=patch(f"/read/{num}/forgot", contentType="form"),
-                )("I forgot! 👎"),
-                Button(
-                    _class="outline",
-                    data_on_click=patch(f"/read/{num}/remembered", contentType="form"),
-                )("I remembered! 👍"),
-            ),
-        ),
-        Details(name="due")(
-            Summary("More actions"),
-            Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
-                Button(data_on_click=patch(f"/read/{num}/retire", contentType="form"))(
-                    "Retire 💤"
-                ),
-                Button(
-                    _class="outline",
-                    data_on_pointerdown=js(f"confirm('{delete_msg}')").if_(
-                        (delete(f"/read/{num}/delete", contentType="form")), ""
-                    ),
-                )("⚠️ DELETE ⚠️"),
-            ),
-        ),
-        Button(data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)))("Close"),
     )
+
+    rate_part = Details(name="due")(
+        Summary("Try to recall before reveal"),
+        Label(_for="back")("Definition (Changeable, save using either buttons)"),
+        Textarea(
+            id="back",
+            name="back",
+            placeholder="Write your own definitions in here.",
+            required=True,
+            minlength="1",
+            style="resize: none;",
+        )(back),
+        Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
+            Button(
+                data_on_click=patch(f"/read/{num}/forgot", contentType="form"),
+            )("I forgot!"),
+            Button(
+                _class="outline",
+                data_on_click=patch(f"/read/{num}/remembered", contentType="form"),
+            )("I remembered!"),
+        ),
+    )
+
+    more_part = Details(name="due")(
+        Summary("More actions"),
+        Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
+            Button(data_on_click=patch(f"/read/{num}/retire", contentType="form"))(
+                "Retire"
+            ),
+            Button(
+                _class="outline",
+                data_on_pointerdown=js(f"confirm('{delete_msg}')").if_(
+                    (delete(f"/read/{num}/delete", contentType="form")), ""
+                ),
+            )("Delete"),
+        ),
+    )
+
+    content = (small, *front_part, rate_part, more_part, close_btn(num))
+    return popup_form(num, content)
 
 
 def popup_view(auth, num: int, word: str = ""):
