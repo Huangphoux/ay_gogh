@@ -110,12 +110,6 @@ legend {
         margin: 5% 10% 5% 10%;
         float: none;
         margin: auto;
-        transition: none;
-    }
-
-    .aside:hover {
-        filter: none;
-        z-index: initial;
     }
 }
 
