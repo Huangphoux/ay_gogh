@@ -1,8 +1,3 @@
-The "Everything Shop" project has been successfully implemented with the following key results:
-
-1. *Functional Web Application*: A fully deployable e-commerce site where users can register, login, browse products, and simulate purchases.
-2. *Complete MVC Flow*: The codebase demonstrates a clear flow of data from the database (Postgres) through the backend controllers (Express) to the frontend UI (React).
-3. *Database Integration*: Successful integration of Prisma ORM with PostgreSQL.
-4. *Containerized Environment*: A working `docker-compose` setup that orchestrates the app, database, and auxiliary services like Mailhog (for email testing) and MinIO (for file storage simulation).
-
-The project fulfills the requirements of the course by demonstrating a working knowledge of full-stack software development principles.
+- Về sản phẩm: Hoàn thiện trang web hoạt động trơn tru dù sử dụng mạng 3G, giao diện dễ nhìn, đáp ứng mọi kích cỡ màn hình, thân thiện và dễ sử dụng.
+- Về chức năng: tính năng tra từ vựng hoạt động chính xác, phản hồi nhanh (dưới 2 giây), mang lại giá trị thực tế cho người dùng; tính năng tối ưu thông số phản hồi nhanh (dưới 5 giây).
+- Về trải nghiệm: Đạt mức độ hài lòng cao từ người dùng thử nghiệm, giúp họ làm quen được với việc tiếp xúc nội dung tiếng Anh số lượng nhiều.
