@@ -199,7 +199,7 @@ def index(req, sess):
 
 if __name__ == "__main__":
     print("Remove all DEBUGs before running in production.")
-    serve(port=1984)
+    serve(port=1984)  # remember to add `server_header=False` to uvicorn.run
 
     # Clean-up after exiting
 
