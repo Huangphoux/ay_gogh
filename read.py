@@ -303,7 +303,7 @@ def chapter_main(auth, num: int, word: str = ""):
     )
 
     if due_cards:
-        before_compete = Section(
+        before_complete = Section(
             H2("Due words"),
             Ul(
                 data_on_pointerup=(
