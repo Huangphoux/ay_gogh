@@ -110,7 +110,7 @@ def wiktionary_view(word: str, num: int):
     )
 
     wiktionary_part = Details(open=True)(
-        Summary(f"Wiktionary, {f'✅ NGSL Level {lv}' if lv else '❌ Not in NGSL'}"),
+        Summary(f"Dictionary"),
         Ul(
             style="max-height: 20vh; overflow: auto",
             data_on_pointerup=(f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"),
@@ -121,9 +121,13 @@ def wiktionary_view(word: str, num: int):
         else P("Sorry, couldn't find the word in the dictionary."),
     )
 
+
     buttons = Div(style="display: flex; gap: 1rem;")(
         close_btn(num, is_outlined=True),
         Button(data_on_click=post(f"/read/{num}/save", contentType="form"))("Save"),
+        Span(style="display: grid; place-items: center;")(
+            f"✅ NGSL Level {lv}" if lv else f"❌ Not in NGSL" 
+        ),
     )
 
     content = (*front_part, *back_part, wiktionary_part, buttons)
@@ -185,7 +189,7 @@ def retired_view(num: int, front: str, back: str):
     )
 
     buttons = Div(style="display: flex; gap: 1rem;")(
-        Button( # also save `back`, unlike other close buttons
+        Button(  # also save `back`, unlike other close buttons
             _class="outline",
             data_on_click=patch(f"/read/{num}/close", contentType="form"),
         )("Close"),
@@ -260,10 +264,10 @@ def popup_view(auth, num: int, word: str = ""):
             save it in your memory, then review it in the future."
         )
 
-    if " " in word:
+    if not word.isalpha():
         return Form(_class="notice modal")(
             P(
-                "You cannot collect a phrase that has a space in it, only a single word."
+                "You have not selected a single word. Select a single word to look up its definitions."
             ),
             Button(data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)))(
                 "Close"
@@ -271,7 +275,7 @@ def popup_view(auth, num: int, word: str = ""):
         )
 
     try:
-        card = list(
+        card = list(  # this one find the word's card
             db.get(auth).query(
                 """
                 SELECT

@@ -248,7 +248,7 @@ def chapter_main(auth, num: int, word: str = ""):
         done = 0
 
     try:
-        cards = list(
+        cards = list(  # this one find all cards
             db.get(auth).query(
                 """
     SELECT
@@ -265,10 +265,6 @@ def chapter_main(auth, num: int, word: str = ""):
         cards = None
 
     if cards:
-        due_cards = [
-            c for c in cards if c["is_due"] and c["is_new_day"] and not c["retire"]
-        ]
-
         for c in cards:  # highlight mined words
             due_class = "n0t-du3"
 
@@ -302,8 +298,14 @@ def chapter_main(auth, num: int, word: str = ""):
         ),
     )
 
-    if due_cards:
-        before_complete = Section(
+    due_cards = (
+        [c for c in cards if c["is_due"] and c["is_new_day"] and not c["retire"]]
+        if cards
+        else None
+    )
+
+    before_complete = (
+        Section(
             H2("Due words"),
             Ul(
                 data_on_pointerup=(
@@ -311,14 +313,17 @@ def chapter_main(auth, num: int, word: str = ""):
                 )
             )(*(Li(c["front"]) for c in due_cards)),
         )
-    else:
-        before_complete = None
+        if due_cards
+        else None
+    )
 
     mark_complete = Section(style="display: grid; place-items: center")(
         Button(data_on_click=patch(f"/read/{num}"))("Mark Complete")
         if not done
         else (
-            Button(data_on_click=delete(f"/read/{num}"))("Undo Complete"),
+            Button(data_on_click=delete(f"/read/{num}"), _class="outline")(
+                "Undo Complete"
+            ),
             P(_class="notice")("You have marked this chapter as Complete."),
             A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
         )

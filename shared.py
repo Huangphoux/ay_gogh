@@ -50,7 +50,7 @@ def template(title: str, main, auth=None):
             A(href="https://sqlite.org/index.html")("SQLite"),
             ", ",
             A(href="https://data-star.dev/")("Datastar"),
-            ", and ",
+            ", ",
             A(href="https://simplecss.org/")("Simple.css"),
             ", and ",
             A(href="https://starhtml.com/")("StarHTML"),
