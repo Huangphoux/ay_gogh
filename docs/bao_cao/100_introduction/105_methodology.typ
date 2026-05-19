@@ -1,21 +1,3 @@
-The project followed a modified Waterfall methodology, adapted for a small team with a fixed deadline. The development lifecycle was divided into distinct phases:
-
-1. *Analysis Phase*:
-  - Requirement Gathering: Listing core features (Login, Product, Cart).
-  - Use Case Modeling: Identifying actors (Admin, User) and their interactions.
-2. *Design Phase*:
-  - *Database Schema*: Designing the Entity-Relationship Diagram (ERD) for Postgres, defining tables for `User`, `Product`, `Order`, `OrderItem`.
-  - *API Contract*: Defining RESTful endpoints (e.g., `GET /api/products`, `POST /api/cart`).
-  - *Wireframing*: Creating basic UI layouts for the React frontend.
-3. *Implementation Phase*:
-  - *Backend First*: Built the Express server, Prisma models, and core logic. Tested via Postman.
-  - *Frontend Integration*: Built React components to consume the API.
-  - *Containerization*: Added Dockerfiles to ensure the app runs identically on all developer machines.
-4. *Testing Phase*:
-  - *Unit Testing*: Basic tests for utility functions.
-  - *Manual Acceptance Testing*: Verifying the end-to-end user flow (Register -> Shop -> Checkout).
-
-*Tools & Environment:*
-- *IDE*: Visual Studio Code.
-- *VCS*: Git (Branching strategy: Gitflow Workflow).
-- *Project Management*: Basic Kanban board for tracking progress.
+- *Nghiên cứu lý thuyết*: Tìm hiểu về các phương pháp học tập ngôn ngữ hiệu quả.
+- *Phân tích ứng dụng tương tự*: Khảo sát các hệ thống hỗ trợ học tập ngôn ngữ trên thị trường (Anki, Renshuu, Doulingo, …  ) để học hỏi ưu điểm và khắc phục nhược điểm.
+- *Khảo sát người dùng*: Tìm hiểu nhu cầu thực tế, thói quen học tập và mong muốn của người dùng về một trang web hỗ trợ học tiếng Anh.
