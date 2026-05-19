@@ -40,10 +40,10 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     title="Ay Gogh!",
     htmlkw={"lang": "en"},
     before=(auth_bware,),
-    # exception_handlers={
-    #     code: lambda req, exc: Redirect("/")
-    #     for code in range(400, 500 + 1)  # DEBUG
-    # },
+    exception_handlers={
+        num: lambda req, exc: Redirect("/")
+        for num in range(400, 600)  # DEBUG
+    },
     middleware=(
         Middleware(
             CompressionMiddleware,
