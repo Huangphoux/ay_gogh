@@ -50,10 +50,10 @@
 #include "100_introduction/104_user_scope_and_audience.typ"
 
 === Phạm vi môi trường
-=== Phạm vi chức năng
-#include "100_introduction/103_research_scope_and_limitations.typ"
+#include "100_introduction/103_environment_scope.typ"
 
-== User Scope and Audience
+=== Phạm vi chức năng
+#include "100_introduction/106_feature_scope.typ"
 
 == Phương pháp thực hiện
 #include "100_introduction/105_methodology.typ"
