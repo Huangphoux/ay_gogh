@@ -37,7 +37,7 @@
 
 = GIỚI THIỆU ĐỀ TÀI
 
-_Chương này trình bày về lý do chọn đề tài xây dựng trang web hỗ trợ đọc và ghi nhớ từ vựng tiếng Anh bằng AI nhằm cải thiện sự thiếu hụt về kĩ năng đọc của các bạn học sinh sinh viên hiện nay; xác định mục tiêu phát triển một trang web thân thiện, sử dụng thuật toàn AI để lên lịch học tập từ vựng một cách thông minh; giới hạn phạm vi trên nền tảng trang web; sử dụng công nghệ Python, SQLite, StarHTML, Simple.css, và Datastar; áp dụng các phương pháp học tập ngôn ngữ hiệu quả; hướng đến kết quả là một sản phẩm hỗ trợ hiệu quả, bảo mật và có trải nghiệm người dùng tốt._
+#include "100_introduction/100_introduction.typ"
 
 == Lí do chọn đề tài
 #include "100_introduction/101_necessity_of_topic.typ"
@@ -47,12 +47,13 @@ _Chương này trình bày về lý do chọn đề tài xây dựng trang web h
 
 == Phạm vi đề tài
 === Đối tượng người dùng
+#include "100_introduction/104_user_scope_and_audience.typ"
+
 === Phạm vi môi trường
 === Phạm vi chức năng
 #include "100_introduction/103_research_scope_and_limitations.typ"
 
 == User Scope and Audience
-#include "100_introduction/104_user_scope_and_audience.typ"
 
 == Phương pháp thực hiện
 #include "100_introduction/105_methodology.typ"
