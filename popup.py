@@ -13,21 +13,24 @@ from read import chapter_main
 rt: APIRouter = APIRouter("/read")  # so you can have identical APIRouter
 
 
+def morph(auth, num: int, word: str = ""):
+    relay.emit_element(chapter_main(auth, num, word), "main")
+
+
 @rt.get("/{num:int}/open")
 def open(auth, num: int, word: str):
-    relay.emit_element(chapter_main(auth, num, word), "main")
+    morph(auth, num, word)
 
 
 @rt.get("/{num:int}/close")
 def close(auth, num: int):
-    relay.emit_element(chapter_main(auth, num), "main")
+    morph(auth, num)
 
 
 @rt.patch("/{num:int}/close")
 def close_save(auth, num: int, front: str, back: str):
     db.get(auth).execute("UPDATE deck SET back=? WHERE front=?", (back, front))
-
-    relay.emit_element(chapter_main(auth, num), "main")
+    morph(auth, num)
 
 
 def fetch_definition(word: str = ""):
@@ -312,8 +315,7 @@ def popup_view(auth, num: int, word: str = ""):
 @rt.delete("/{num:int}/delete")
 async def delete_word(auth, num: int, front: str):
     db.get(auth).execute("DELETE FROM deck WHERE front=?", (front,))
-
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    morph(auth, num, front)
 
 
 @rt.patch("/{num:int}/retire")
@@ -321,8 +323,7 @@ async def retire(auth, num: int, front: str, back: str):
     db.get(auth).execute(
         "UPDATE deck SET back=?, retire=? WHERE front=?", (back, 1, front)
     )
-
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    morph(auth, num, front)
 
 
 @rt.delete("/{num:int}/retire")
@@ -330,8 +331,7 @@ async def unretire(auth, num: int, front: str, back: str):
     db.get(auth).execute(
         "UPDATE deck SET back=?, retire=? WHERE front=?", (back, 0, front)
     )
-
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    morph(auth, num, front)
 
 
 @rt.post("/{num:int}/save")
@@ -357,8 +357,7 @@ async def save(auth, num: int, front: str, back: str):
             0,  # retire
         ),
     )
-
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    morph(auth, num, front)
 
 
 @rt.patch("/{num:int}/remembered")
@@ -450,5 +449,4 @@ def rate_card(auth, num: int, front: str, back: str, forgot: bool = False):
             review_log.review_duration,
         ),
     )
-
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    morph(auth, num, front)

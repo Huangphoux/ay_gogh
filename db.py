@@ -24,7 +24,14 @@ class DatabaseDict:
                 )
         """)
 
-        # Tables for storing NGSLT form a, b, c
+        self.insert_forms()
+        self.insert_chapters()
+        self.insert_ngsl_words()
+
+        self.seed_app()  ### DEBUG
+
+    def insert_forms(self):  # Tables for storing NGSLT form a, b, c
+
         for form in "abc":
             self.app.execute(f"""
                     CREATE TABLE IF NOT EXISTS form_{form} (
@@ -62,7 +69,7 @@ class DatabaseDict:
                     row,
                 )
 
-        # Table for storing chapters
+    def insert_chapters(self):  # Table for storing chapters
         self.app.execute(f"""
                 CREATE TABLE IF NOT EXISTS chapter (
                     number INTEGER PRIMARY KEY,
@@ -95,8 +102,8 @@ class DatabaseDict:
                         meta["ngsl"],
                     ),
                 )
-                
-        # Table for storing ngsl word level
+
+    def insert_ngsl_words(self):  # Table for storing ngsl word level
         self.app.execute(
             f"""
                     CREATE TABLE IF NOT EXISTS ngsl (
@@ -119,8 +126,6 @@ class DatabaseDict:
                         ceil(int(row["SFI Rank"]) / 562),
                     ),
                 )
-
-        self.seed_app()  ### DEBUG
 
     def seed_app(self):
         self.app.execute(

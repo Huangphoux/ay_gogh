@@ -30,6 +30,8 @@ async def fsrs_cqrs(req, auth):
     async for item in relay.stream():
         yield item
 
+def morph(auth):
+    relay.emit_element(fsrs_main(auth), "main")
 
 def fsrs_main(auth, notif: str = ""):
     settings = list(
@@ -116,7 +118,7 @@ def save(auth, desired_retention: int):
         (desired_retention / 100, "desired_retention"),
     )
 
-    relay.emit_element(fsrs_main(auth), "main")
+    morph(auth)
 
 
 @rt.get("/fsrs/optimize")
@@ -146,4 +148,4 @@ async def optimize(auth):
         (", ".join([str(p) for p in optimal_parameters]), "parameters"),
     )
 
-    relay.emit_element(fsrs_main(auth), "main")
+    morph(auth)

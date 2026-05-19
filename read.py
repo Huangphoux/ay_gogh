@@ -202,10 +202,8 @@ async def cqrs(req, auth, num: int):
         yield item
 
 
-class MyRenderer(HTMLRenderer):
-    def render_block_code(self, token):  # code block → aside
-        code = self.escape_html_text(token.children[0].content)
-        return Safe(Pre(_class="aside")(code))
+def morph(auth, num: int):
+    relay.emit_element(chapter_main(auth, num), "main")
 
 
 def highlight_word(content: str, word: str, due_class: str) -> str:
@@ -229,6 +227,12 @@ def highlight_word(content: str, word: str, due_class: str) -> str:
                 )
 
     return "\n".join(split)
+
+
+class MyRenderer(HTMLRenderer):
+    def render_block_code(self, token):  # code block → aside
+        code = self.escape_html_text(token.children[0].content)
+        return Safe(Pre(_class="aside")(code))
 
 
 def chapter_main(auth, num: int, word: str = ""):
@@ -348,10 +352,10 @@ def done(auth, num: int):
     db.get(auth).execute(
         "INSERT OR REPLACE INTO chapter (number, done) VALUES (?, ?)", (num, 1)
     )
-    relay.emit_element(chapter_main(auth, num), "main")
+    morph(auth, num)
 
 
 @rt.delete("/{num:int}")
 def undone(auth, num: int):
     db.get(auth).execute("DELETE FROM chapter WHERE number=?", (num,))
-    relay.emit_element(chapter_main(auth, num), "main")
+    morph(auth, num)

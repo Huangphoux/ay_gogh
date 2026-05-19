@@ -5,6 +5,7 @@
     - Rút db.execute ra từ retire và delete? Nah, có chút xíu vậy mà cũng rút ra chi, mệt vl
     - Rút popup
 - Xài .env
+- `db.py` thêm chapter và form_abc nhiều hơn 1 lần
 
 # Read
 
