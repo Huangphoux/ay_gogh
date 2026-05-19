@@ -36,12 +36,12 @@ class DatabaseDict:
             self.app.execute(f"""
                     CREATE TABLE IF NOT EXISTS form_{form} (
                         number INTEGER PRIMARY KEY,
-                        lemma TEXT UNIQUE,
-                        question TEXT UNIQUE,
-                        \"1\" TEXT UNIQUE,
-                        \"2\" TEXT UNIQUE,
-                        \"3\" TEXT UNIQUE,
-                        \"4\" TEXT UNIQUE,
+                        lemma TEXT,
+                        question TEXT,
+                        \"1\" TEXT,
+                        \"2\" TEXT,
+                        \"3\" TEXT,
+                        \"4\" TEXT,
                         answer INTEGER
                     )
             """)
@@ -73,11 +73,11 @@ class DatabaseDict:
         self.app.execute(f"""
                 CREATE TABLE IF NOT EXISTS chapter (
                     number INTEGER PRIMARY KEY,
-                    number_word TEXT UNIQUE,
-                    cardinal TEXT UNIQUE,
-                    cardinal_word TEXT UNIQUE,
-                    title TEXT UNIQUE,
-                    content TEXT UNIQUE,
+                    number_word TEXT,
+                    cardinal TEXT,
+                    cardinal_word TEXT,
+                    title TEXT,
+                    content TEXT,
                     ngsl REAL
                 )
         """)
@@ -192,12 +192,12 @@ class DatabaseDict:
             """)
             # desired_retention
             self._user[name].execute(
-                "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
+                "INSERT INTO settings (setting, value) VALUES (?, ?)",
                 ("desired_retention", 0.8),
             )
             # parameters
             self._user[name].execute(
-                "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
+                "INSERT INTO settings (setting, value) VALUES (?, ?)",
                 (
                     "parameters",  # defaults from https://github.com/open-spaced-repetition/py-fsrs#usage
                     "0.212, 1.2931, 2.3065, 8.2956, 6.4133, 0.8334, 3.0194, \

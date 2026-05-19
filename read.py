@@ -350,7 +350,7 @@ def chapter_main(auth, num: int, word: str = ""):
 @rt.patch("/{num:int}")
 def done(auth, num: int):
     db.get(auth).execute(
-        "INSERT OR REPLACE INTO chapter (number, done) VALUES (?, ?)", (num, 1)
+        "INSERT INTO chapter (number, done) VALUES (?, ?)", (num, 1)
     )
     morph(auth, num)
 
