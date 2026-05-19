@@ -1,6 +1,5 @@
 #set text(font: "Times New Roman", size: 13pt)
 
-
 // only first level headings on a new page
 #show heading.where(level: 1): it => {
   pagebreak(weak: true)
@@ -38,16 +37,7 @@
 
 = GIỚI THIỆU ĐỀ TÀI
 
-
-// #heading(level: 1, outlined: false)[Problem Statement]
-// #include "000_front_matter/005_problem_statement.typ"
-
-// #heading(level: 1, outlined: false)[System Objectives]
-// #include "000_front_matter/006_system_objectives_summary.typ"
-
-// #heading(level: 1, outlined: false)[Proposed Solution]
-// #include "000_front_matter/007_proposed_solution.typ"
-
+_Chương này trình bày về lý do chọn đề tài xây dựng trang web hỗ trợ đọc và ghi nhớ từ vựng tiếng Anh bằng AI nhằm cải thiện sự thiếu hụt về kĩ năng đọc của các bạn học sinh sinh viên hiện nay; xác định mục tiêu phát triển một trang web thân thiện, sử dụng thuật toàn AI để lên lịch học tập từ vựng một cách thông minh; giới hạn phạm vi trên nền tảng trang web; sử dụng công nghệ Python, SQLite, StarHTML, Simple.css, và Datastar; áp dụng các phương pháp học tập ngôn ngữ hiệu quả; hướng đến kết quả là một sản phẩm hỗ trợ hiệu quả, bảo mật và có trải nghiệm người dùng tốt._
 
 == Lí do chọn đề tài
 #include "100_introduction/101_necessity_of_topic.typ"
