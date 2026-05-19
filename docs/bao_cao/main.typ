@@ -15,15 +15,29 @@
 #show heading: set block(above: 1.4em, below: 1em)
 #set text(font: "Times New Roman", size: 13pt)
 
-// = Declaration of Authorship
-// #include "000_front_matter/002_declaration_of_authorship.typ"
-
 #align(center, [#heading(level: 1, outlined: false)[LỜI CẢM ƠN]])
 #include "000_front_matter/003_acknowledgments.typ"
 
-#show outline.entry.where(
-  level: 1,
-): set block(above: 1.2em)
+#outline(title: "Table of Contents")
+
+#outline(
+  title: "List of Figures",
+  target: figure.where(kind: image),
+)
+
+#align(center, [#heading(level: 1, outlined: true)[TÓM TẮT ĐỒ ÁN]])
+#include "000_front_matter/004_abstract.typ"
+
+
+#set page(numbering: "1")
+#counter(page).update(1)
+
+#set heading(numbering: "1.")
+
+#show heading.where(level: 1): it => block("Chương " + counter(heading).display("1. ") + it.body)
+
+= GIỚI THIỆU ĐỀ TÀI
+
 
 // #heading(level: 1, outlined: false)[Problem Statement]
 // #include "000_front_matter/005_problem_statement.typ"
@@ -34,51 +48,32 @@
 // #heading(level: 1, outlined: false)[Proposed Solution]
 // #include "000_front_matter/007_proposed_solution.typ"
 
-// #heading(level: 1, outlined: false)[Technologies Used]
-// #include "000_front_matter/008_technologies_used.typ"
 
-// #heading(level: 1, outlined: false)[Achieved Results]
-// #include "000_front_matter/009_achieved_results.typ"
-
-
-#outline(title: "Table of Contents")
-
-#outline(
-  title: "List of Figures",
-  target: figure.where(kind: image),
-)
-
-#align(center, [#heading(level: 1, outlined: false)[TÓM TẮT ĐỒ ÁN]])
-#include "000_front_matter/004_abstract.typ"
-
-
-#set page(numbering: "1")
-#counter(page).update(1)
-
-#set heading(numbering: "1.")
-
-= INTRODUCTION
-
-== Necessity of the Topic
+== Lí do chọn đề tài
 #include "100_introduction/101_necessity_of_topic.typ"
 
-== System Objectives
+== Mục tiêu đề tài
 #include "100_introduction/102_system_objectives.typ"
 
-== Research Scope and Limitations
+== Phạm vi đề tài
+=== Đối tượng người dùng
+=== Phạm vi môi trường
+=== Phạm vi chức năng
 #include "100_introduction/103_research_scope_and_limitations.typ"
 
 == User Scope and Audience
 #include "100_introduction/104_user_scope_and_audience.typ"
 
-== Methodology
+== Phương pháp thực hiện
 #include "100_introduction/105_methodology.typ"
 
-== Report Structure
-#include "100_introduction/106_report_structure.typ"
+== Công nghệ sử dụng
+#include "000_front_matter/008_technologies_used.typ"
 
+== Kết quả mong đợi
+#include "000_front_matter/009_achieved_results.typ"
 
-= THEORETICAL BASIS AND TECHNOLOGY
+= Kiến thức nền tảng
 
 == Theoretical Basis
 #include "200_theoretical_basis_and_technology/201_theoretical_basis.typ"
