@@ -1,7 +1,8 @@
 from starhtml import *
-from shared import db, relay, template
+from shared import db, template
 from fsrs import ReviewLog, Optimizer
 from datetime import datetime, timezone
+from relay_instance import relay
 
 rt: APIRouter = APIRouter("/settings")
 
@@ -26,10 +27,8 @@ def fsrs(auth):
 @rt.get("/fsrs/cqrs")
 @sse
 async def fsrs_cqrs(req, auth):
-    async for _, data in relay.subscribe(f"settings.{auth}.fsrs"):
-        yield elements(
-            fsrs_main(auth, notif=data), selector="main", use_view_transition=True
-        )
+    async for item in relay.stream():
+        yield item
 
 
 def fsrs_main(auth, notif: str = ""):
@@ -117,7 +116,7 @@ def save(auth, desired_retention: int):
         (desired_retention / 100, "desired_retention"),
     )
 
-    relay.publish(f"settings.{auth}.fsrs", "Your desired retention has been updated.")
+    relay.emit_element(fsrs_main(auth), "main")
 
 
 @rt.get("/fsrs/optimize")
@@ -147,4 +146,4 @@ async def optimize(auth):
         (", ".join([str(p) for p in optimal_parameters]), "parameters"),
     )
 
-    relay.publish(f"settings.{auth}.fsrs", "Your parameters have been optimized.")
+    relay.emit_element(fsrs_main(auth), "main")
