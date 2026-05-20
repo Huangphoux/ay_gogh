@@ -1,8 +1,4 @@
-import settings
-import read
-import test
-import auth
-import popup
+from load_env import is_debug
 from starhtml import *
 import os, shutil
 from starlette_cramjam.compression import Compression
@@ -11,6 +7,12 @@ from test import is_last_finished
 from shared import template, is_signed_in, db
 from test import get_last_test
 from relay_instance import relay
+
+import settings
+import read
+import test
+import auth
+import popup
 
 
 def set_name(req, sess):
@@ -41,10 +43,9 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     title="Ay Gogh!",
     htmlkw={"lang": "en"},
     before=(auth_bware,),
-    exception_handlers={
-        num: lambda req, exc: Redirect("/")
-        for num in range(400, 600)  # DEBUG
-    },
+    exception_handlers={num: lambda req, exc: Redirect("/") for num in range(400, 600)}
+    if is_debug
+    else {},
     middleware=(
         Middleware(
             CompressionMiddleware,
@@ -201,11 +202,15 @@ def index(req, sess):
 
 
 if __name__ == "__main__":
-    print("Remove all DEBUGs before running in production.")
-
+    print(
+        "You are currently in DEBUG mode.\n\
+The `db` folder will be DELETED after stopping the server.\n\
+You have been warned."
+    ) if is_debug else None
+    
     serve(port=1984)
     # remember to add `server_header=False` to uvicorn.run
-    # log_level="trace"too
+    # log_level="error" too
 
     # Clean-up after exiting
 
@@ -213,4 +218,4 @@ if __name__ == "__main__":
     shutil.rmtree("__pycache__")
 
     db.close_all()
-    shutil.rmtree("db")  # DEBUG
+    shutil.rmtree("db") if is_debug else None

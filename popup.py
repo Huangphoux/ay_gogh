@@ -9,6 +9,7 @@ import simplemma
 from humanize import precisedelta
 from relay_instance import relay
 from read import chapter_main
+from load_env import is_debug
 
 rt: APIRouter = APIRouter("/read")  # so you can have identical APIRouter
 
@@ -300,8 +301,8 @@ def popup_view(auth, num: int, word: str = ""):
     if not card:  # not in memory, hasn't mined yet
         return wiktionary_view(word, num)
 
-    # if not card["is_new_day"]: # DEBUG, don't delete, just comment it out
-    #     return not_new_day_view(num) # DEBUG, don't delete, just comment it out
+    if not is_debug and not card["is_new_day"]:
+        return not_new_day_view(num)
 
     if not card["is_due"]:
         return not_due_view(num, card["due"])

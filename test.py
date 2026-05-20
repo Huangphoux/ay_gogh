@@ -1,3 +1,4 @@
+from load_env import is_debug
 from starhtml import *
 from shared import db, template
 from math import ceil
@@ -102,7 +103,7 @@ def intro(auth):
                 INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
                 VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (choice("abc"), 0, 0, 0, 0, 0, 0),
+            (choice("abc"), 0 if not is_debug else 95, 0, 0, 0, 0, 0),
         )
 
     if progress and progress < 100:

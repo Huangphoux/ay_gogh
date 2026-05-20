@@ -1,6 +1,7 @@
 from starhtml import *
 from shared import db, is_signed_in, template
 from passlib.context import CryptContext
+from load_env import is_debug
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -24,7 +25,7 @@ def login(req, sess):
                     required=True,
                     maxlength="100",
                     autofocus=True,
-                    value="DEBUG",
+                    value="DEBUG" if is_debug else None,
                     autocomplete="on",
                 ),
                 Label(B("Password"), _for="name"),
@@ -37,7 +38,7 @@ def login(req, sess):
                     required=True,
                     minlength="8",
                     maxlength="100",
-                    value="DEBUG_DEBUG_DEBUG",
+                    value="DEBUG_DEBUG_DEBUG" if is_debug else None,
                     autocomplete="on",
                 ),
                 Br(),

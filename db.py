@@ -4,6 +4,7 @@ import csv
 import frontmatter
 import os
 from math import ceil
+from load_env import is_debug
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -28,7 +29,7 @@ class DatabaseDict:
         self.insert_chapters()
         self.insert_ngsl_words()
 
-        self.seed_app()  ### DEBUG
+        self.seed_app() if is_debug else None
 
     def insert_forms(self):  # Tables for storing NGSLT form a, b, c
 
@@ -206,7 +207,7 @@ class DatabaseDict:
                 ),
             )
 
-            # self.seed_user(name)  ### DEBUG
+            self.seed_user(name) if is_debug else None
 
         return self._user[name] if name else self.app
 
