@@ -1,5 +1,4 @@
-Theo kết quả khảo sát sinh viên tốt nghiệp về khóa học 3 năm gần đây của trường đại học Công nghệ Thông tin, phần lớn nguyên nhân sinh viên của trường tốt nghiệp trễ hạn là do thiếu chứng chỉ ngoại ngữ trước khi tốt nghiệp, trên trung bình chiếm khoảng 59% nguyên nhân trễ hạn.
-// https://dbcl.uit.edu.vn/vi/loai-bai-viet/khao-sat-sinh-vien-tot-nghiep-ve-khoa-hoc
+Theo kết quả khảo sát sinh viên tốt nghiệp về khóa học 3 năm gần đây của trường đại học Công nghệ Thông tin, phần lớn nguyên nhân sinh viên của trường tốt nghiệp trễ hạn là do thiếu chứng chỉ ngoại ngữ trước khi tốt nghiệp, trên trung bình chiếm khoảng 59% nguyên nhân trễ hạn @khao_sat_sv_tot_nghiep.
 
 Có thể thấy rõ, dù đã trải qua 12 năm học tiếng Anh theo chương trình giáo dục bắt buộc, và 4 năm trên trường đại học để "lấy lại gốc", các bạn sinh viên vẫn còn chật vật với việc học tiếng Anh rất nhiều. Một vài nguyên nhân gây cản trở việc cải thiện năng lực tiếng Anh của sinh viên mà tác giả đã tận mắt chứng kiến như sau:
 - Không thể đầu tư *thời gian* cho việc học tiếng Anh.
