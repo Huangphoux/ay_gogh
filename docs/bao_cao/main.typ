@@ -30,8 +30,7 @@
   )
 }
 
-
-#align(center, outline(title: "MỤC LỤC"))
+#align(center, outline(title: "MỤC LỤC", indent: 2em))
 
 #align(center, outline(
   title: "DANH MỤC HÌNH",
@@ -52,6 +51,8 @@
 
 #set heading(numbering: "1.")
 
+// Thêm chữ Chương vào đề mục
+// không áp dụng vào mục lục
 #show heading.where(level: 1): it => block("Chương " + counter(heading).display("1. ") + it.body)
 
 #set list(marker: [-], indent: 1em)
