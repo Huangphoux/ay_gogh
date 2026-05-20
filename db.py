@@ -193,12 +193,12 @@ class DatabaseDict:
             """)
             # desired_retention
             self._user[name].execute(
-                "INSERT INTO settings (setting, value) VALUES (?, ?)",
+                "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 ("desired_retention", 0.8),
             )
             # parameters
             self._user[name].execute(
-                "INSERT INTO settings (setting, value) VALUES (?, ?)",
+                "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 (
                     "parameters",  # defaults from https://github.com/open-spaced-repetition/py-fsrs#usage
                     "0.212, 1.2931, 2.3065, 8.2956, 6.4133, 0.8334, 3.0194, \
