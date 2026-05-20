@@ -57,7 +57,7 @@
 
 // Thêm chữ Chương vào đề mục
 // không áp dụng vào mục lục
-#show heading.where(level: 1): it => block("Chương " + counter(heading).display("1. ") + it.body)
+#show heading.where(level: 1): it => align(center, ("Chương " + counter(heading).display("1. ") + it.body))
 
 #set list(marker: [-], indent: 1em)
 
@@ -93,6 +93,7 @@
 == Kết quả mong đợi
 #include "000_front_matter/009_achieved_results.typ"
 
+#pagebreak()
 = KIẾN THỨC NỀN TẢNG
 
 == Theoretical Basis
