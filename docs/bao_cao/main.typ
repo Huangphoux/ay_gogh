@@ -10,7 +10,7 @@
   align(center, if count > 0 and count < 6 {
     // Thêm chữ Chương vào Heading 1 trên trang riêng
     ("Chương " + counter(heading).display("1. ") + it.body)
-  } else { it })
+  } else { it.body })
 }
 
 #set list(marker: [-], indent: 1em)
