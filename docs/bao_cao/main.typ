@@ -24,7 +24,9 @@
   link(
     it.element.location(),
     it.indented(
-      [Chương #it.prefix()],
+      if it.element.body.text in ("TÓM TẮT ĐỒ ÁN", "TÀI LIỆU THAM KHẢO") {
+        it.prefix()
+      } else { [Chương #it.prefix()] },
       it.inner(),
     ),
   )
@@ -42,7 +44,7 @@
   target: figure.where(kind: table),
 ))
 
-#align(center, [#heading(level: 1, outlined: true)[TÓM TẮT ĐỒ ÁN]])
+#align(center, [#heading(level: 1)[TÓM TẮT ĐỒ ÁN]])
 #include "000_front_matter/004_abstract.typ"
 
 
