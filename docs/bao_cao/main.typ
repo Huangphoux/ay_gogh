@@ -44,12 +44,14 @@
   target: figure.where(kind: table),
 ))
 
-#align(center, [#heading(level: 1)[TÓM TẮT ĐỒ ÁN]])
-#include "000_front_matter/004_abstract.typ"
-
+#set page(numbering: "1")
 
 #set page(numbering: "1")
 #counter(page).update(1)
+
+#align(center, [#heading(level: 1)[TÓM TẮT ĐỒ ÁN]])
+#include "000_front_matter/004_abstract.typ"
+
 
 #set heading(numbering: "1.")
 
@@ -60,6 +62,7 @@
 #set list(marker: [-], indent: 1em)
 
 
+#pagebreak()
 
 = GIỚI THIỆU ĐỀ TÀI
 
