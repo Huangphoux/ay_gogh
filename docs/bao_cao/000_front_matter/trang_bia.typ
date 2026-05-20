@@ -7,7 +7,12 @@
     #smallcaps[KHOA CÔNG NGHỆ PHẦN MỀM]
   ]
 
-  #v(1.5fr)
+  #v(1fr)
+
+  #image("../assets/logo-uit.png", width: 50%)
+
+
+  #v(1fr)
 
   #text(size: 25pt, weight: "bold")[
     ĐỒ ÁN 1 \
@@ -17,21 +22,20 @@
   #v(1fr)
 
   #text(size: 16pt, weight: "bold")[
-    GV HƯỚNG DẪN:\
-    Trần Thị Hồng Yến
+    GIẢNG VIÊN HƯỚNG DẪN: ThS. Trần Thị Hồng Yến
   ]
 
   #v(0.5fr)
 
   #text(size: 16pt, weight: "bold")[
-    SV THỰC HIỆN: \
-    23521224 Trương Hoàng Phúc
+    SINH VIÊN THỰC HIỆN: \
+    Trương Hoàng Phúc — 23521224 
   ]
 
 
   #v(1fr)
 
   #text(size: 14pt, weight: "bold")[
-    TP. HỒ CHÍ MINH, 2026
+    TP. HỒ CHÍ MINH, NĂM 2026
   ]
 ]
