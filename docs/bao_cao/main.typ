@@ -2,6 +2,7 @@
 // leading: giữa các dòng; spacing: giữa các đoạn văn
 #set par(leading: 21pt, spacing: 1.5em, first-line-indent: 0pt, justify: true)
 #set text(font: "Times New Roman", size: 13pt, lang: "vi")
+#set list(marker: [-], indent: 1em)
 #show heading: set block(above: 1.4em, below: 1em)
 
 #show heading.where(level: 1): it => {
@@ -12,14 +13,6 @@
     ("Chương " + counter(heading).display("1. ") + it.body)
   } else { it.body })
 }
-
-#set list(marker: [-], indent: 1em)
-
-
-#include "000_mo_dau/trang_bia.typ"
-
-#heading(outlined: false, "LỜI CẢM ƠN")
-#include "000_mo_dau/loi_cam_on.typ"
 
 // thêm chữ Chapter cho Heading 1
 #show outline.entry.where(level: 1): it => {
@@ -34,6 +27,11 @@
     ),
   ))
 }
+
+#include "000_mo_dau/trang_bia.typ"
+
+#heading(outlined: false, "LỜI CẢM ƠN")
+#include "000_mo_dau/loi_cam_on.typ"
 
 #align(center, outline(title: "MỤC LỤC", indent: 2em))
 #align(center, outline(title: "DANH MỤC HÌNH", target: figure.where(kind: image)))
