@@ -1,3 +1,0 @@
-- Về sản phẩm: Hoàn thiện trang web hoạt động trơn tru dù sử dụng mạng 3G, giao diện dễ nhìn, đáp ứng mọi kích cỡ màn hình, thân thiện và dễ sử dụng.
-- Về chức năng: tính năng tra từ vựng hoạt động chính xác, phản hồi nhanh (dưới 2 giây), mang lại giá trị thực tế cho người dùng; tính năng tối ưu thông số phản hồi nhanh (dưới 5 giây).
-- Về trải nghiệm: Đạt mức độ hài lòng cao từ người dùng thử nghiệm, giúp họ làm quen được với việc tiếp xúc nội dung tiếng Anh số lượng nhiều.

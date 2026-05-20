@@ -1,5 +1,0 @@
-- *Ngôn ngữ lập trình*: Python
-- *Thư viện Back-End*: StarHTML
-- *Thư viện Front-End*: Datastar, Simple.css
-- *Cơ sở dữ liệu*: SQLite
-- *Công cụ phát triển*: Visual Studio Code

@@ -1,8 +1,0 @@
-- Tạo một hệ thống giới thiệu đại chúng phương pháp học Immersion: chủ động tiếp cận và tập trung tiếp xúc các nội dung tiếng Anh trong thời gian dài.
-- Người học có thể tuỳ ý làm bài kiểm tra đầu vào để xác định vốn từ vựng căn bản của bản thân đã đạt đến mức độ nào.
-- Những cải tiến so với các hệ thống hiện hành:
-  - Đọc số lượng nhiều: người học dành ít nhất 15 phút mỗi ngày để tập trung cho việc đọc văn bản tiếng Anh.
-  - Từ điển cá nhân: người học tích góp những từ bản thân muốn ghi nhớ.
-  - Lặp lại ngắt quãng: sử dụng thuật toán thông minh để lên lịch ôn tập từ vựng mỗi ngày một cách tối ưu nhất.
-  - Chủ động gợi nhớ: trong quá trình đọc, đến một câu chứa từ cần phải ôn vào ngày đấy, người học sẽ phải trả lời trước khi chuyển qua câu tiếp theo. Tính năng này giúp làm giảm thời gian phải chuyển qua chuyển lại hai màn hình đọc và ôn từ vựng.
-  - Cá nhân hoá lộ trình học: sử dụng kết quả bài kiểm tra để xác định độ khó của bài đọc so với kiến thức của người học.

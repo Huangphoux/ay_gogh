@@ -50,7 +50,7 @@
 #counter(page).update(1)
 
 #align(center, [#heading(level: 1)[TÓM TẮT ĐỒ ÁN]])
-#include "000_front_matter/004_abstract.typ"
+#include "000_front_matter/tom_tat_do_an.typ"
 
 
 #set heading(numbering: "1.")
@@ -66,32 +66,32 @@
 
 = GIỚI THIỆU ĐỀ TÀI
 
-#include "100_introduction/100_introduction.typ"
+#include "100_gioi_thieu_de_tai/tom_tat_chuong.typ"
 
 == Lí do chọn đề tài
-#include "100_introduction/101_necessity_of_topic.typ"
+#include "100_gioi_thieu_de_tai/li_do_chon_de_tai.typ"
 
 == Mục tiêu đề tài
-#include "100_introduction/102_system_objectives.typ"
+#include "100_gioi_thieu_de_tai/muc_tieu_de_tai.typ"
 
 == Phạm vi đề tài
 === Đối tượng người dùng
-#include "100_introduction/104_user_scope_and_audience.typ"
+#include "100_gioi_thieu_de_tai/pham_vi_nguoi_dung.typ"
 
 === Phạm vi môi trường
-#include "100_introduction/103_environment_scope.typ"
+#include "100_gioi_thieu_de_tai/pham_vi_moi_truong.typ"
 
 === Phạm vi chức năng
-#include "100_introduction/106_feature_scope.typ"
+#include "100_gioi_thieu_de_tai/pham_vi_chuc_nang.typ"
 
 == Phương pháp thực hiện
-#include "100_introduction/105_methodology.typ"
+#include "100_gioi_thieu_de_tai/phuong_phap_thuc_hien.typ"
 
 == Công nghệ sử dụng
-#include "000_front_matter/008_technologies_used.typ"
+#include "100_gioi_thieu_de_tai/cong_nghe_su_dung.typ"
 
 == Kết quả mong đợi
-#include "000_front_matter/009_achieved_results.typ"
+#include "100_gioi_thieu_de_tai/ket_qua_mong_doi.typ"
 
 #pagebreak()
 = KIẾN THỨC NỀN TẢNG

@@ -1,3 +1,0 @@
-- *Nghiên cứu lý thuyết*: Tìm hiểu về các phương pháp học tập ngôn ngữ hiệu quả.
-- *Phân tích ứng dụng tương tự*: Khảo sát các hệ thống hỗ trợ học tập ngôn ngữ trên thị trường (Anki, Renshuu, Doulingo, …  ) để học hỏi ưu điểm và khắc phục nhược điểm.
-- *Khảo sát người dùng*: Tìm hiểu nhu cầu thực tế, thói quen học tập và mong muốn của người dùng về một trang web hỗ trợ học tiếng Anh.

@@ -1,1 +1,0 @@
-*Người dùng cá nhân*: Trang web hướng đến mọi người dùng đang quan tâm đến việc cải thiện kĩ năng đọc tiếng Anh. Người dùng có thể. Người dùng có thể kiểm tra vốn từ vựng căn bản, đọc các bài đọc với độ khó tăng dần, thu thập và ôn tập từ vựng tuỳ ý muốn bất cứ lúc nào. Tất cả dữ liệu được bảo mật, mang lại sự riêng tư và thoải mái cho người sử dụng.
