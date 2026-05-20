@@ -1,4 +1,7 @@
-#set text(font: "Times New Roman", size: 13pt)
+#set page(margin: (top: 3cm, bottom: 3.5cm, left: 3.5cm, right: 2cm))
+#set par(leading: 21pt, spacing: 1.5em, first-line-indent: 0pt, justify: true)
+// leading: giữa các dòng; spacing: giữa các đoạn văn
+#show heading: set block(above: 1.4em, below: 1em)
 
 // only first level headings on a new page
 #show heading.where(level: 1): it => {
@@ -6,23 +9,39 @@
   it
 }
 
-#include "000_front_matter/001_cover_page.typ"
+#set text(font: "Times New Roman", size: 13pt, lang: "vi")
 
-#set page(margin: (top: 3cm, bottom: 3.5cm, left: 3.5cm, right: 2cm))
-#set par(leading: 21pt, spacing: 1.5em, first-line-indent: 0pt, justify: true)
-// leading: giữa các dòng; spacing: giữa các đoạn văn
-#show heading: set block(above: 1.4em, below: 1em)
-#set text(font: "Times New Roman", size: 13pt)
+#include "000_front_matter/trang_bia.typ"
 
 #align(center, [#heading(level: 1, outlined: false)[LỜI CẢM ƠN]])
-#include "000_front_matter/003_acknowledgments.typ"
+#include "000_front_matter/loi_cam_on.typ"
 
-#outline(title: "Table of Contents")
+// Heading 1 thì nên in đậm chữ
+#show outline.entry.where(level: 1): set text(weight: "bold")
 
-#outline(
-  title: "List of Figures",
+// thêm chữ Chapter cho Heading 1
+#show outline.entry.where(level: 1): it => {
+  link(
+    it.element.location(),
+    it.indented(
+      [Chương #it.prefix()],
+      it.inner(),
+    ),
+  )
+}
+
+
+#align(center, outline(title: "MỤC LỤC"))
+
+#align(center, outline(
+  title: "DANH MỤC HÌNH",
   target: figure.where(kind: image),
-)
+))
+
+#align(center, outline(
+  title: "DANH MỤC BẢNG",
+  target: figure.where(kind: table),
+))
 
 #align(center, [#heading(level: 1, outlined: true)[TÓM TẮT ĐỒ ÁN]])
 #include "000_front_matter/004_abstract.typ"
@@ -34,6 +53,10 @@
 #set heading(numbering: "1.")
 
 #show heading.where(level: 1): it => block("Chương " + counter(heading).display("1. ") + it.body)
+
+#set list(marker: [-], indent: 1em)
+
+
 
 = GIỚI THIỆU ĐỀ TÀI
 
@@ -64,7 +87,7 @@
 == Kết quả mong đợi
 #include "000_front_matter/009_achieved_results.typ"
 
-= Kiến thức nền tảng
+= KIẾN THỨC NỀN TẢNG
 
 == Theoretical Basis
 #include "200_theoretical_basis_and_technology/201_theoretical_basis.typ"
@@ -149,10 +172,5 @@
 // == Future Development
 // #include "700_conclusion_and_future_development/703_future_development.typ"
 
-// = REFERENCES
-// #include "800_references_appendix/801_references.typ"
-
-// // = APPENDIX
-// // #include "800_references_appendix/802_appendix.typ"
-
-#bibliography("bib.bib")
+#align(center, [#heading(level: 1, numbering: none)[TÀI LIỆU THAM KHẢO]])
+#bibliography(title: none, "bib.bib")
