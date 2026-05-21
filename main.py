@@ -50,7 +50,6 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
         Middleware(
             CompressionMiddleware,
             compression=[Compression.br, Compression.zstd, Compression.gzip],
-            compression_level=10,
         ),
     ),
     static_path="static",
@@ -60,7 +59,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
         Link(rel="icon", href="https://fav.farm/📖"),  # favicon
         Link(rel="stylesheet", href="https://cdn.simplecss.org/simple.min.css"),
     ),
-    sess_https_only=False,  # set Secure flag on cookies
+    sess_https_only=not is_debug,  # set Secure flag on cookies
     same_site="strict",
     # .sesskey can be read/write by anyone
     # chmod 600 .sesskey to only be able to read/write by owner

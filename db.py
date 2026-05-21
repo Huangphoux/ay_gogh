@@ -4,7 +4,7 @@ import csv
 import frontmatter
 import os
 from math import ceil
-from load_env import is_debug
+from load_env import is_debug, whose_test
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
@@ -212,13 +212,13 @@ class DatabaseDict:
         return self._user[name] if name else self.app
 
     def seed_user(self, name: str):
-        # self._user[name].execute(
-        #     """
-        #         INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
-        #         VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
-        #     """,  # Truong Hoang Phuc, (UTC) 2026-05-06 07:57:12
-        #     ("c", 100, 20, 19, 20, 20, 20),
-        # )
+        self._user[name].execute(
+            """
+                INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
+                VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
+            """,  # Truong Hoang Phuc, (UTC) 2026-05-06 07:57:12
+            ("c", 100, 20, 19, 20, 20, 20),
+        ) if whose_test == "Phuc" else None
 
         self._user[name].execute(
             """
@@ -226,7 +226,7 @@ class DatabaseDict:
             VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
         """,  # Le Minh Phat, (UTC) 2026-05-08 01:48:52
             ("c", 100, 18, 18, 20, 17, 16),
-        )
+        ) if whose_test == "Phat" else None
 
     def close(self, name: str = "app"):
         try:
