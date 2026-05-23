@@ -9,7 +9,7 @@
 
   #v(1fr)
 
-  #image("../assets/logo-uit.png", width: 50%)
+  #image("logo-uit.png", width: 50%)
 
 
   #v(1fr)

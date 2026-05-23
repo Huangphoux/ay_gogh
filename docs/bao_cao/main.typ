@@ -14,18 +14,32 @@
   } else { it.body })
 }
 
+#let h1 = (
+  [TÓM TẮT ĐỒ ÁN],
+  [GIỚI THIỆU ĐỀ TÀI],
+  [KIẾN THỨC NỀN TẢNG],
+  [PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG],
+  [XÂY DỰNG ỨNG DỤNG],
+  [KẾT LUẬN],
+  [TÀI LIỆU THAM KHẢO],
+)
+
 // thêm chữ Chapter cho Heading 1
 #show outline.entry.where(level: 1): it => {
-  text(weight: "bold", link(
-    // in đậm heading 1 trong mục lục
-    it.element.location(),
-    it.indented(
-      if it.element.body.text not in ("TÓM TẮT ĐỒ ÁN", "TÀI LIỆU THAM KHẢO") {
-        "Chương " + it.prefix()
-      },
-      it.inner(),
+  text(
+    weight: if it.element.body
+      in h1 { "bold" } else { "regular" },
+    link(
+      // in đậm heading 1 trong mục lục
+      it.element.location(),
+      it.indented(
+        if it.element.body in h1 and it.element.body not in ([TÓM TẮT ĐỒ ÁN], [TÀI LIỆU THAM KHẢO]) {
+          "Chương " + it.prefix()
+        },
+        it.inner(),
+      ),
     ),
-  ))
+  )
 }
 
 #include "000_mo_dau/trang_bia.typ"
@@ -76,7 +90,10 @@
 
 = KIẾN THỨC NỀN TẢNG
 
+#include "200_kien_thuc_nen_tang/tom_tat_chuong.typ"
 
+== Python
+#include "200_kien_thuc_nen_tang/python.typ"
 
 = PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
 
