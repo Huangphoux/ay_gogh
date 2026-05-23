@@ -24,18 +24,19 @@
   [TÀI LIỆU THAM KHẢO],
 )
 
+#let irregular = ([TÓM TẮT ĐỒ ÁN], [TÀI LIỆU THAM KHẢO])
+
 // thêm chữ Chapter cho Heading 1
 #show outline.entry.where(level: 1): it => {
   text(
-    weight: if it.element.body
-      in h1 { "bold" } else { "regular" },
+    weight: if it.element.body in h1 { "bold" } else { "regular" },
     link(
       // in đậm heading 1 trong mục lục
       it.element.location(),
       it.indented(
-        if it.element.body in h1 and it.element.body not in ([TÓM TẮT ĐỒ ÁN], [TÀI LIỆU THAM KHẢO]) {
+        if it.element.body in h1 and it.element.body not in irregular {
           "Chương " + it.prefix()
-        },
+        } else if it.element.body in h1 and it.element.body in irregular {} else { it.prefix() + ":" },
         it.inner(),
       ),
     ),
