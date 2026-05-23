@@ -31,11 +31,13 @@ def read(auth, p: int = 0, all: int = 0):
         return Redirect("/read")
 
     if all:
-        chap = list(db.app.query("SELECT number, title, ngsl FROM chapter"))
+        chap = db.app.query("SELECT number, title, ngsl FROM chapter")
     else:
         chap = db.app.query(
             "SELECT number, title, ngsl FROM chapter LIMIT 10 OFFSET ?", (p * 10,)
         )
+
+    chap = list(chap)
 
     user_chap = list(db.get(auth).query("SELECT number, done FROM chapter"))
 
