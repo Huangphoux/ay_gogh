@@ -290,9 +290,7 @@ def chapter_main(auth, num: int, word: str = ""):
         "SELECT value FROM settings WHERE setting = 'show_mark'"
     )
 
-    cardinal = Section(
-        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
-    )(
+    cardinal = Section(_class="cardinal")(
         P(f"Chapter {chap['number_word']} ({num})"),
         Button(data_on_click="$show_toggles = !$show_toggles")("Toggles"),
         P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
@@ -302,23 +300,33 @@ def chapter_main(auth, num: int, word: str = ""):
             style="list-style-type: none; width: 100%",
             data_signals=dict(show_mark=int(show_mark), show_aside=int(show_aside)),
         )(
-            Li(data_on_change=patch(f"/read/{num}/save_toggles"))(
+            Li(
+                style="display: flex;",
+                data_on_change=patch(f"/read/{num}/save_toggles"),
+            )(
                 Input(
                     type="checkbox",
                     id="show_mark",
                     name="show_mark",
                     data_bind="show_mark",
                 ),
-                Label(_for="show_mark")("Show marked words"),
+                Label(_for="show_mark", style=" flex-shrink: 0; padding-left: 0.5rem")(
+                    "Show marked words"
+                ),
             ),
-            Li(data_on_change=patch(f"/read/{num}/save_toggles"))(
+            Li(
+                style="display: flex;",
+                data_on_change=patch(f"/read/{num}/save_toggles"),
+            )(
                 Input(
                     type="checkbox",
                     id="show_aside",
                     name="show_aside",
                     data_bind="show_aside",
                 ),
-                Label(_for="show_aside")("Show explanations"),
+                Label(_for="show_aside", style=" flex-shrink: 0; padding-left: 0.5rem")(
+                    "Show explanations"
+                ),
             ),
         ),
     )
