@@ -217,16 +217,20 @@ def highlight_word(content: str, word: str, due_class: str) -> str:
 
         tokens = simplemma.simple_tokenizer(line)
         lemmas = simplemma.text_lemmatizer(line, lang="en")
-        highlighted = [] # pass if already highlighted
+        highlighted = []  # pass if already highlighted
 
         for j, lemma in enumerate(lemmas):
-            if word == lemma:
+            if word == lemma and lemma not in highlighted:
                 split[i] = re.sub(
                     r"\b%s\b" % tokens[j],
-                    Safe(Span(_class=due_class)(tokens[j])),
+                    Safe(
+                        Span(data_attr_class=f"$show_highlighted && '{due_class}'")(
+                            tokens[j]
+                        )
+                    ),
                     split[i],  # why can't i use `line` here?
                 )
-                
+
                 highlighted.append(lemma)
 
     return "\n".join(split)
@@ -235,7 +239,7 @@ def highlight_word(content: str, word: str, due_class: str) -> str:
 class MyRenderer(HTMLRenderer):
     def render_block_code(self, token):  # code block → aside
         code = self.escape_html_text(token.children[0].content)
-        return Safe(Pre(_class="aside")(code))
+        return Safe(Pre(_class="aside", data_show="$show_aside")(code))
 
 
 def chapter_main(auth, num: int, word: str = ""):
@@ -286,6 +290,24 @@ def chapter_main(auth, num: int, word: str = ""):
     )(
         P(f"Chapter {chap['number_word']} ({num})"),
         P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
+        Div(
+            Input(
+                type="checkbox",
+                id="show_highlighted",
+                name="show_highlighted",
+                checked=True,
+                data_bind="show_highlighted",
+            ),
+            Label(_for="show_highlighted")("Show highlighted words"),
+            Input(
+                type="checkbox",
+                id="show_aside",
+                name="show_aside",
+                checked=True,
+                data_bind="show_aside",
+            ),
+            Label(_for="show_aside")("Show aside"),
+        ),
     )
 
     h1 = H1(id="main-heading", style="display:grid; place-items: center")(
@@ -352,9 +374,7 @@ def chapter_main(auth, num: int, word: str = ""):
 
 @rt.patch("/{num:int}")
 def done(auth, num: int):
-    db.get(auth).execute(
-        "INSERT INTO chapter (number, done) VALUES (?, ?)", (num, 1)
-    )
+    db.get(auth).execute("INSERT INTO chapter (number, done) VALUES (?, ?)", (num, 1))
     morph(auth, num)
 
 

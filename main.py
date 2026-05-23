@@ -44,7 +44,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     htmlkw={"lang": "en"},
     before=(auth_bware,),
     exception_handlers={num: lambda req, exc: Redirect("/") for num in range(400, 600)}
-    if is_debug
+    if not is_debug
     else {},
     middleware=(
         Middleware(
