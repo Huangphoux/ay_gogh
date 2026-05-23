@@ -41,7 +41,7 @@ def template(title: str, main, auth=None):
         ),
         P(
             A(href="https://github.com/Huangphoux/ay_gogh")("Ay Gogh!"),
-            " was developed with ❤️ using ",
+            " is developed with ❤️ using ",
             A(href="https://www.python.org/")("Python"),
             ", ",
             A(href="https://sqlite.org/index.html")("SQLite"),

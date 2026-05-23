@@ -39,13 +39,11 @@ def read(auth, p: int = 0, all: int = 0):
 
     chap = list(chap)
 
-    user_chap = list(db.get(auth).query("SELECT number, done FROM chapter"))
+    chap_done = list(db.get(auth).query("SELECT number, done FROM chapter"))
 
-    if user_chap:
-        completed_numbers = {uc["number"] for uc in user_chap}  # LLM comes up with this
-        for c in chap:
-            if c["number"] in completed_numbers:
-                c["done"] = 1
+    completed_numbers = {uc["number"] for uc in chap_done}  # LLM comes up with this
+    for c in chap:
+        c["done"] = c["number"] in completed_numbers
 
     last_test = get_last_test(auth)
     result = last_test["result"] if last_test else None
@@ -87,15 +85,10 @@ def read(auth, p: int = 0, all: int = 0):
         *(
             Li(style="display: flex; justify-content: space-between;")(
                 # Chapter {number}: {title}
-                A(
-                    href=f"/read/{c['number']}",
-                    style="color: var(--border)"
-                    if "done" in c and c["done"] == 1
-                    else None,
-                )(
+                A(href=f"/read/{c['number']}")(f"Chapter {c['number']}: {c['title']}")
+                if not c["done"]
+                else A(href=f"/read/{c['number']}", style="color: var(--border)")(
                     "(DONE)"
-                    if "done" in c and c["done"] == 1
-                    else f"Chapter {c['number']}: {c['title']}"
                 ),
                 # Reading ease difficulty: Easy, Medium, Hard
                 A(style="display: grid;  place-items: center;")(
@@ -103,10 +96,7 @@ def read(auth, p: int = 0, all: int = 0):
                     href=f"/read/{c['number']}/ease",
                     title=f"You know {result * c['ngsl']:.2f}% of the words in chapter {c['number']}.",
                 )(ease.title())
-                if result
-                and progress == 100
-                # only show if the chapter is not done
-                and not ("done" in c and c["done"] == 1)
+                if result and progress == 100 and not c["done"]
                 else None,
             )
             for c in chap
@@ -408,7 +398,9 @@ def save_toggles(auth, num: int, show_aside: int, show_mark: int):
 
 @rt.patch("/{num:int}")
 def done(auth, num: int):
-    db.get(auth).execute("INSERT INTO chapter (number, done) VALUES (?, ?)", (num, 1))
+    db.get(auth).execute(
+        "INSERT INTO chapter (number, done) VALUES (?, CURRENT_TIMESTAMP)", (num,)
+    )
     morph(auth, num)
 
 

@@ -1,3 +1,5 @@
+from math import ceil
+from apswutils.db import NotFoundError
 from load_env import is_debug
 from starhtml import *
 import os, shutil
@@ -161,7 +163,7 @@ def hero_page():
 def profile_page(auth):
     last_test = get_last_test(auth)
 
-    sum_done = db.get(auth).item("SELECT SUM(done) FROM chapter")
+    sum_done = db.get(auth).item("SELECT COUNT(done) FROM chapter")
 
     test = Section(
         H2(
@@ -179,8 +181,21 @@ def profile_page(auth):
         else None,
     )
 
+    try:
+        chap_done_latest = db.get(auth).item(
+            "SELECT number FROM chapter WHERE done=(SELECT MAX(done) FROM chapter)"
+        )
+    except NotFoundError:
+        chap_done_latest = None
+
     read = Section(
-        H2(A(href="/read/")(f"Read", f" ({sum_done / 60:.0%})" if sum_done else None)),
+        H2(
+            A(
+                href="/read/"
+                if not chap_done_latest
+                else f"/read/?p={ceil(chap_done_latest / 10) - 1}"
+            )(f"Read", f" ({sum_done / 60:.0%})" if sum_done else None)
+        ),
         P(f"Progress: {sum_done} out of 60 chapters."),
     )
 
@@ -206,7 +221,7 @@ if __name__ == "__main__":
 The `db` folder will be DELETED after stopping the server.\n\
 You have been warned."
     ) if is_debug else None
-    
+
     serve(port=1984)
     # remember to add `server_header=False` to uvicorn.run
     # log_level="error" too

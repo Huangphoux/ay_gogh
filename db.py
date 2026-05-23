@@ -155,7 +155,7 @@ class DatabaseDict:
             self._user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS chapter (
                         number INTEGER PRIMARY KEY,
-                        done INTEGER NOT NULL CHECK (done = 1 OR done = 0)
+                        done TEXT NOT NULL
                     )
             """)
             # deck
