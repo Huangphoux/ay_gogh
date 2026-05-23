@@ -217,6 +217,7 @@ def highlight_word(content: str, word: str, due_class: str) -> str:
 
         tokens = simplemma.simple_tokenizer(line)
         lemmas = simplemma.text_lemmatizer(line, lang="en")
+        highlighted = [] # pass if already highlighted
 
         for j, lemma in enumerate(lemmas):
             if word == lemma:
@@ -225,6 +226,8 @@ def highlight_word(content: str, word: str, due_class: str) -> str:
                     Safe(Span(_class=due_class)(tokens[j])),
                     split[i],  # why can't i use `line` here?
                 )
+                
+                highlighted.append(lemma)
 
     return "\n".join(split)
 
