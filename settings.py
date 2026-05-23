@@ -26,7 +26,7 @@ def fsrs(auth):
 
 @rt.get("/fsrs/cqrs")
 @sse
-async def fsrs_cqrs(req, auth):
+async def fsrs_cqrs():
     async for item in relay.stream():
         yield item
 
@@ -36,11 +36,7 @@ def morph(auth, notif: str):
 
 
 def fsrs_main(auth, notif: str = ""):
-    settings = list(
-        db.get(auth).query(
-            "SELECT setting, value FROM settings",
-        ),
-    )
+    settings = list(db.get(auth).query("SELECT setting, value FROM settings"))
 
     for s in settings:
         if s["setting"] == "desired_retention":

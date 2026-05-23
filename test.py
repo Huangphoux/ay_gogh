@@ -145,7 +145,7 @@ def progress_page(auth):
 
 @rt.get("/cqrs")
 @sse
-async def cqrs(req, auth):
+async def cqrs():
     async for item in relay.stream():
         yield item
 

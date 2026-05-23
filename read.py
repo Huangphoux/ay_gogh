@@ -197,7 +197,7 @@ def chapter(auth, num: int, word: str = ""):
 
 @rt.get("/{num:int}/cqrs")
 @sse
-async def cqrs(req, auth, num: int):
+async def cqrs():
     async for item in relay.stream():
         yield item
 
@@ -206,7 +206,7 @@ def morph(auth, num: int):
     relay.emit_element(chapter_main(auth, num), "main")
 
 
-def highlight_word(content: str, word: str, due_class: str) -> str:
+def mark_word(content: str, word: str, due_class: str) -> str:
     code_block: bool = False
 
     for i, line in enumerate(split := (content.splitlines())):
@@ -217,21 +217,19 @@ def highlight_word(content: str, word: str, due_class: str) -> str:
 
         tokens = simplemma.simple_tokenizer(line)
         lemmas = simplemma.text_lemmatizer(line, lang="en")
-        highlighted = []  # pass if already highlighted
+        marked = []  # pass if already marked
 
         for j, lemma in enumerate(lemmas):
-            if word == lemma and lemma not in highlighted:
+            if word == lemma and lemma not in marked:
                 split[i] = re.sub(
                     r"\b%s\b" % tokens[j],
                     Safe(
-                        Span(data_attr_class=f"$show_highlighted && '{due_class}'")(
-                            tokens[j]
-                        )
+                        Span(data_attr_class=f"$show_mark && '{due_class}'")(tokens[j])
                     ),
                     split[i],  # why can't i use `line` here?
                 )
 
-                highlighted.append(lemma)
+                marked.append(lemma)
 
     return "\n".join(split)
 
@@ -272,7 +270,7 @@ def chapter_main(auth, num: int, word: str = ""):
         cards = None
 
     if cards:
-        for c in cards:  # highlight mined words
+        for c in cards:  # mark mined words
             due_class = "n0t-du3"
 
             if not c["is_new_day"]:
@@ -283,30 +281,45 @@ def chapter_main(auth, num: int, word: str = ""):
             if c["retire"]:
                 due_class = "r3t1r3"
 
-            chap["content"] = highlight_word(chap["content"], c["front"], due_class)
+            chap["content"] = mark_word(chap["content"], c["front"], due_class)
+
+    show_aside = db.get(auth).item(
+        "SELECT value FROM settings WHERE setting = 'show_aside'"
+    )
+    show_mark = db.get(auth).item(
+        "SELECT value FROM settings WHERE setting = 'show_mark'"
+    )
 
     cardinal = Section(
         style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
     )(
         P(f"Chapter {chap['number_word']} ({num})"),
+        Button(data_on_click="$show_toggles = !$show_toggles")("Toggles"),
         P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
-        Div(
-            Input(
-                type="checkbox",
-                id="show_highlighted",
-                name="show_highlighted",
-                checked=True,
-                data_bind="show_highlighted",
+        Ul(
+            _class="notice",
+            data_show="$show_toggles",
+            style="list-style-type: none; width: 100%",
+            data_signals=dict(show_mark=int(show_mark), show_aside=int(show_aside)),
+        )(
+            Li(data_on_change=patch(f"/read/{num}/save_toggles"))(
+                Input(
+                    type="checkbox",
+                    id="show_mark",
+                    name="show_mark",
+                    data_bind="show_mark",
+                ),
+                Label(_for="show_mark")("Show marked words"),
             ),
-            Label(_for="show_highlighted")("Show highlighted words"),
-            Input(
-                type="checkbox",
-                id="show_aside",
-                name="show_aside",
-                checked=True,
-                data_bind="show_aside",
+            Li(data_on_change=patch(f"/read/{num}/save_toggles"))(
+                Input(
+                    type="checkbox",
+                    id="show_aside",
+                    name="show_aside",
+                    data_bind="show_aside",
+                ),
+                Label(_for="show_aside")("Show explanations"),
             ),
-            Label(_for="show_aside")("Show aside"),
         ),
     )
 
@@ -370,6 +383,17 @@ def chapter_main(auth, num: int, word: str = ""):
         before_complete,
         mark_complete,
     )
+
+
+@rt.patch("/{num:int}/save_toggles")
+def save_toggles(auth, num: int, show_aside: int, show_mark: int):
+    db.get(auth).execute(
+        "UPDATE settings SET value=? WHERE setting=?", (show_aside, "show_aside")
+    )
+    db.get(auth).execute(
+        "UPDATE settings SET value=? WHERE setting=?", (show_mark, "show_mark")
+    )
+    morph(auth, num)
 
 
 @rt.patch("/{num:int}")
