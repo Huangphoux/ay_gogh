@@ -5,9 +5,11 @@
 * {
     /* Preventing layout shift from scrollbar appearance */
     scrollbar-gutter: stable;
+    transition: filter 200ms;
 }
 
-button, label {
+button,
+label {
     cursor: pointer;
 }
 
@@ -77,6 +79,12 @@ legend {
     height: fit-content;
     overflow: auto;
     z-index: 10000;
+    isolation: isolate;
+    filter: brightness(80%);
+}
+
+body:has(.modal:hover) .modal {
+    filter: none;
 }
 
 .aside {
@@ -85,13 +93,7 @@ legend {
     width: 20vw;
 }
 
-.modal,
-.aside {
-    transition: filter 200ms;
-}
-.modal:hover,
 .aside:hover {
-    z-index: 1;
     filter: drop-shadow(10px 10px var(--accent));
 }
 
