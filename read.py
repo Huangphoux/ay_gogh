@@ -193,14 +193,10 @@ def chapter(auth, num: int, word: str = ""):
 async def cqrs(req, auth, num: int):
     async for _, data in relay.subscribe(f"read.{auth}.{num}"):
         yield elements(
-            chapter_main(auth, num, word=data),
+            chapter_main(auth, num, word=data["word"], bypass=data["bypass"]),
             selector="main",
             use_view_transition=True,
         )
-
-
-def morph(auth, num: int):
-    relay.emit_element(chapter_main(auth, num), "main")
 
 
 def mark_word(content: str, word: str, due_class: str) -> str:
@@ -389,15 +385,18 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
     )
 
 
+def publish(auth, num: int, word: str = "", bypass: int = 0):
+    # pointerup→open()→cqrs()→popup_view()
+    relay.publish(f"read.{auth}.{num}", dict(word=word, bypass=bypass))
+
+
 @rt.patch("/{num:int}/save_toggles")
 def save_toggles(auth, num: int, show_aside: int, show_mark: int):
     db.get(auth).execute(
-        "UPDATE settings SET value=? WHERE setting=?", (show_aside, "show_aside")
+        "UPDATE settings SET value=? WHERE setting=?",
+        [(show_aside, "show_aside"), (show_mark, "show_mark")],
     )
-    db.get(auth).execute(
-        "UPDATE settings SET value=? WHERE setting=?", (show_mark, "show_mark")
-    )
-    morph(auth, num)
+    publish(auth, num)
 
 
 @rt.patch("/{num:int}")
@@ -405,10 +404,10 @@ def done(auth, num: int):
     db.get(auth).execute(
         "INSERT INTO chapter (number, done) VALUES (?, CURRENT_TIMESTAMP)", (num,)
     )
-    relay.publish(f"read.{auth}.{num}", "")
+    publish(auth, num)
 
 
 @rt.delete("/{num:int}")
 def undone(auth, num: int):
     db.get(auth).execute("DELETE FROM chapter WHERE number=?", (num,))
-    relay.publish(f"read.{auth}.{num}", "")
+    publish(auth, num)

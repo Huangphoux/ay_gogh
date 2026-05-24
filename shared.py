@@ -4,7 +4,7 @@ from relay import Relay
 
 
 db = DatabaseDict()
-relay: Relay[str] = Relay()
+relay: Relay[dict] = Relay()
 
 
 def is_signed_in(req, sess):

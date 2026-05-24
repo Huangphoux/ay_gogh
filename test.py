@@ -245,4 +245,4 @@ def progress_process(auth, choice: int):
     if is_last_finished(auth) is True:
         return Redirect("/test")
     elif is_last_finished(auth) is False:
-        relay.publish(f"test.{auth}.progress", "")
+        relay.publish(f"test.{auth}.progress", {})

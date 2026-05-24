@@ -11,25 +11,25 @@ from humanize import precisedelta
 rt: APIRouter = APIRouter("/read")  # so you can have identical APIRouter
 
 
-def morph(auth, num: int, word: str = "", bypass: int = 0):
-    relay.emit_element(chapter_main(auth, num, word, bypass), "main")
+def publish(auth, num: int, word: str = "", bypass: int = 0):
+    # pointerup→open()→cqrs()→popup_view()
+    relay.publish(f"read.{auth}.{num}", dict(word=word, bypass=bypass))
 
 
 @rt.get("/{num:int}/open")
-def open(auth, num: int, word: str):
-    relay.emit_element(chapter_main(auth, num, word), "main")
+def open(auth, num: int, word: str = "", bypass: int = 0):
+    publish(auth, num, word, bypass)
 
 
 @rt.get("/{num:int}/close")
 def close(auth, num: int):
-    relay.emit_element(chapter_main(auth, num), "main")
+    publish(auth, num)
 
 
 @rt.patch("/{num:int}/close")
 def close_save(auth, num: int, front: str, back: str):
     db.get(auth).execute("UPDATE deck SET back=? WHERE front=?", (back, front))
-
-    relay.emit_element(chapter_main(auth, num), "main")
+    publish(auth, num)
 
 
 def fetch_definition(word: str = ""):
@@ -138,12 +138,13 @@ def wiktionary_view(word: str, num: int):
         else P("Sorry, couldn't find the word in the dictionary."),
     )
 
-
     buttons = Div(style="display: flex; gap: 1rem;")(
         close_btn(num, is_outlined=True),
         Button(data_on_click=post(f"/read/{num}/save", contentType="form"))("Save"),
         Span(style="display: grid; place-items: center;")(
-            f"✅ NGSL Level {lv}" if lv else f"❌ Not in NGSL"
+            f"✅ NGSL {f' Level {lv}' if lv > 0 else ''}"
+            if lv is not None
+            else f"❌ Not in NGSL"
         ),
     )
 
@@ -153,10 +154,10 @@ def wiktionary_view(word: str, num: int):
 
 def not_new_day_view(num: int, word: str):
     content = (
-        P(
+        Small(
             "※ ",
             Span(_class="n0t-y3t")("Yellow background"),
-            ": the word can't be revealed until tomorrow.",
+            ": the word can't be reviewed until tomorrow.",
         ),
         Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
             close_btn(num),
@@ -192,11 +193,11 @@ def retired_view(num: int, front: str, back: str):
     small = Small(
         " ※ ",
         Span(_class="r3t1r3")("Magenta background"),
-        ": the word is retired, meaning you won't have to review it anymore.",
+        ": you don't have to review it anymore.",
     )
 
     front_part = (
-        P(_class="notice")(f"Word: {front}"),
+        H2(f"Word: {front}"),
         Input(type="hidden", id="front", name="front", value=front),
     )
 
@@ -225,22 +226,27 @@ def retired_view(num: int, front: str, back: str):
     return popup_form(num, content)
 
 
-def due_view(num: int, front: str, back: str):
+def due_view(num: int, front: str, back: str, bypass: int):
     delete_msg = "You are about to delete this word off your memory. \
 This action is NOT reversible. Are you sure about this decision?"
 
-    small = Small(
-        "※ ",
-        Span(_class="du3")("Red background"),
-        ": the word is due for a review.",
+    small = (
+        Small(
+            "※ ",
+            Span(_class="du3")("Red background"),
+            ": the word is due for a review.",
+        )
+        if not bypass
+        else None
     )
+
     front_part = (
-        P(_class="notice")(f"Word: {front}"),
+        H2(f"Word: {front}"),
         Input(type="hidden", id="front", name="front", value=front),
     )
 
     rate_part = Details(name="due")(
-        Summary("Try to recall before reveal"),
+        Summary("Recall before click this"),
         Label(_for="back")("Definition (Changeable, save using either buttons)"),
         Textarea(
             id="back",
@@ -327,14 +333,13 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0):
     if not bypass and not card["is_due"]:
         return not_due_view(num, word, card["due"])
 
-    return due_view(num, card["front"], card["back"])
+    return due_view(num, card["front"], card["back"], bypass)
 
 
 @rt.delete("/{num:int}/delete")
 async def delete_word(auth, num: int, front: str):
     db.get(auth).execute("DELETE FROM deck WHERE front=?", (front,))
-
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    publish(auth, num, front)
 
 
 @rt.patch("/{num:int}/retire")
@@ -342,8 +347,7 @@ async def retire(auth, num: int, front: str, back: str):
     db.get(auth).execute(
         "UPDATE deck SET back=?, retire=? WHERE front=?", (back, 1, front)
     )
-
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    publish(auth, num, front)
 
 
 @rt.delete("/{num:int}/retire")
@@ -351,8 +355,7 @@ async def unretire(auth, num: int, front: str, back: str):
     db.get(auth).execute(
         "UPDATE deck SET back=?, retire=? WHERE front=?", (back, 0, front)
     )
-
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    publish(auth, num, front)
 
 
 @rt.post("/{num:int}/save")
@@ -379,7 +382,7 @@ async def save(auth, num: int, front: str, back: str):
         ),
     )
 
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    publish(auth, num, front)
 
 
 @rt.patch("/{num:int}/remembered")
@@ -472,4 +475,4 @@ def rate_card(auth, num: int, front: str, back: str, forgot: bool = False):
         ),
     )
 
-    relay.emit_element(chapter_main(auth, num, front), "main")
+    publish(auth, num, front)

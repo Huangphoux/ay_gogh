@@ -28,12 +28,10 @@ def fsrs(auth):
 async def fsrs_cqrs(req, auth):
     async for _, data in relay.subscribe(f"settings.{auth}.fsrs"):
         yield elements(
-            fsrs_main(auth, notif=data), selector="main", use_view_transition=True
+            fsrs_main(auth, notif=data["msg"]),
+            selector="main",
+            use_view_transition=True,
         )
-
-
-def morph(auth, notif: str):
-    relay.emit_element(fsrs_main(auth, notif), "main")
 
 
 def fsrs_main(auth, notif: str = ""):
@@ -107,6 +105,10 @@ def fsrs_main(auth, notif: str = ""):
     )
 
 
+def publish(auth, msg: str = ""):
+    relay.publish(f"settings.{auth}.fsrs", dict(msg=msg))
+
+
 @rt.patch("/fsrs/save")
 def save(auth, desired_retention: int):
     if desired_retention not in range(70, 100):
@@ -117,7 +119,7 @@ def save(auth, desired_retention: int):
         (desired_retention / 100, "desired_retention"),
     )
 
-    relay.publish(f"settings.{auth}.fsrs", "Your desired retention has been updated.")
+    publish(auth, "Your desired retention has been updated.")
 
 
 @rt.get("/fsrs/optimize")
@@ -147,4 +149,4 @@ async def optimize(auth):
         (", ".join([str(p) for p in optimal_parameters]), "parameters"),
     )
 
-    relay.publish(f"settings.{auth}.fsrs", "Your parameters have been optimized.")
+    publish(auth, "Your parameters have been optimized.")
