@@ -9,18 +9,17 @@ import simplemma
 from humanize import precisedelta
 from relay_instance import relay
 from read import chapter_main
-from load_env import is_debug
 
 rt: APIRouter = APIRouter("/read")  # so you can have identical APIRouter
 
 
-def morph(auth, num: int, word: str = ""):
-    relay.emit_element(chapter_main(auth, num, word), "main")
+def morph(auth, num: int, word: str = "", bypass: int = 0):
+    relay.emit_element(chapter_main(auth, num, word, bypass), "main")
 
 
 @rt.get("/{num:int}/open")
-def open(auth, num: int, word: str):
-    morph(auth, num, word)
+def open(auth, num: int, word: str, bypass: int = 0):
+    morph(auth, num, word, bypass)
 
 
 @rt.get("/{num:int}/close")
@@ -73,6 +72,17 @@ def close_btn(num: int, is_outlined: bool = False):
         _class="outline" if is_outlined else None,
         data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)),
     )("Close")
+
+
+def bypass_btn(num: int, word: str = "", is_outlined: bool = False):
+    # Review anyway → /open → morph() → chapter_main() → popup_view()
+    return Button(
+        _class="outline" if is_outlined else None,
+        data_on_click=(
+            get(f"/read/{num}/open?bypass=1&word={word}"),
+            dict(prevent=True),
+        ),
+    )("Review anyway")
 
 
 def wiktionary_view(word: str, num: int):
@@ -139,20 +149,23 @@ def wiktionary_view(word: str, num: int):
     return popup_form(num, content)
 
 
-def not_new_day_view(num: int):
+def not_new_day_view(num: int, word: str):
     content = (
         P(
             "※ ",
             Span(_class="n0t-y3t")("Yellow background"),
             ": the word can't be revealed until tomorrow.",
         ),
-        close_btn(num),
+        Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
+            close_btn(num),
+            bypass_btn(num, word, is_outlined=True),
+        ),
     )
 
     return popup_form(num, content)
 
 
-def not_due_view(num: int, due: str):
+def not_due_view(num: int, word: str, due: str):
     time_delta = datetime.strptime(due, "%Y-%m-%d %H:%M:%S").replace(
         tzinfo=timezone.utc
     ) - datetime.now(timezone.utc)
@@ -164,7 +177,10 @@ def not_due_view(num: int, due: str):
             ": the word is not due for a review yet.",
         ),
         P(f"Next review is in {precisedelta(time_delta)}."),
-        close_btn(num),
+        Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
+            close_btn(num),
+            bypass_btn(num, word, is_outlined=True),
+        ),
     )
 
     return popup_form(num, content)
@@ -262,7 +278,7 @@ This action is NOT reversible. Are you sure about this decision?"
     return popup_form(num, content)
 
 
-def popup_view(auth, num: int, word: str = ""):
+def popup_view(auth, num: int, word: str = "", bypass: int = 0):
     if not word:  # default view
         return P(_class="notice")(
             "Select a word to look up its definitions, \
@@ -301,14 +317,14 @@ def popup_view(auth, num: int, word: str = ""):
     if not card:  # not in memory, hasn't mined yet
         return wiktionary_view(word, num)
 
-    if not is_debug and not card["is_new_day"]:
-        return not_new_day_view(num)
-
-    if not card["is_due"]:
-        return not_due_view(num, card["due"])
-
     if card["retire"]:
         return retired_view(num, card["front"], card["back"])
+
+    if not bypass and not card["is_new_day"]:
+        return not_new_day_view(num, word)
+
+    if not bypass and not card["is_due"]:
+        return not_due_view(num, word, card["due"])
 
     return due_view(num, card["front"], card["back"])
 

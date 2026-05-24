@@ -33,7 +33,7 @@ def template(title: str, main, auth=None):
             data_on_click="evt.target.textContent=\
                 $brand[Math.floor(Math.random()*$brand.length)]",
         )("Ay Gogh!"),
-        Noscript(P("JavaScript is needed to ensure the best experience.")),
+        Noscript(P("Enable JavaScript to ensure the best experience.")),
     )
 
     footer = Footer(

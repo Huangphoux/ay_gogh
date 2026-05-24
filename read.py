@@ -1,3 +1,4 @@
+from load_env import is_debug
 from test import get_last_test
 from apswutils.db import NotFoundError
 from starhtml import *
@@ -232,7 +233,7 @@ class MyRenderer(HTMLRenderer):
         return Safe(Pre(_class="aside", data_show="$show_aside")(code))
 
 
-def chapter_main(auth, num: int, word: str = ""):
+def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
     word = simplemma.lemmatize(word, lang="en") if word else ""
 
     # execute for INSERT, query for SELECT
@@ -376,9 +377,10 @@ def chapter_main(auth, num: int, word: str = ""):
             dict(document=True),
         ),
     )(
-        popup_view(auth, num, word),
+        popup_view(auth, num, word, bypass),
         cardinal,
         h1,
+        Pre(data_json_signals=True) if is_debug else None,
         content,
         before_complete,
         mark_complete,
