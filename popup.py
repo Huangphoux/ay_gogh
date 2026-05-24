@@ -286,14 +286,13 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0):
         )
 
     if not word.isalpha():
-        return Form(_class="notice modal")(
+        content = (
             P(
                 "You have not selected a single word. Select a single word to look up its definitions."
             ),
-            Button(data_on_click=(get(f"/read/{num}/close"), dict(prevent=True)))(
-                "Close"
-            ),
+            close_btn(num),
         )
+        return popup_form(num, content)
 
     try:
         card = list(  # this one find the word's card

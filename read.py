@@ -380,7 +380,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         popup_view(auth, num, word, bypass),
         cardinal,
         h1,
-        Pre(data_json_signals=True) if is_debug else None,
+        Pre(data_json_signals=True, data_ignore_morph=True) if is_debug else None,
         content,
         before_complete,
         mark_complete,
