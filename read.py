@@ -210,10 +210,10 @@ def mark_word(content: str, word: str, due_class: str) -> str:
 
         tokens = simplemma.simple_tokenizer(line)
         lemmas = simplemma.text_lemmatizer(line, lang="en")
-        marked = []  # pass if already marked
+        marked = []  # pass token if already marked
 
         for j, lemma in enumerate(lemmas):
-            if word == lemma and lemma not in marked:
+            if word == lemma and tokens[j] not in marked:
                 split[i] = re.sub(
                     r"\b%s\b" % tokens[j],
                     Safe(
@@ -222,7 +222,7 @@ def mark_word(content: str, word: str, due_class: str) -> str:
                     split[i],  # why can't i use `line` here?
                 )
 
-                marked.append(lemma)
+                marked.append(tokens[j])
 
     return "\n".join(split)
 
