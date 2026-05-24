@@ -11,6 +11,7 @@
 - Progressive load từ điển Wiktionary: `data-ignore-morph`
 - Done toggle
 - CSV mỗi từ trong nguyên cả cuốn sách
+- Bỏ simplemma, dùng lemmatized and stats để kiểm tra
 - Chỉ tập trung từng câu: chia bài đọc ra thành từng câu nhỏ để có thể dễ dàng tập trung. Tách văn bản ra thành từng câu. Người đọc muốn đọc tiếp phải bấm nút để hiện câu tiếp theo.
     - Bấm tiếp theo thì thêm câu tiếp theo vào section
     - Load từng câu vào bộ nhớ. Khi người dùng bấm tiếp theo thì pop ở đầu mảng. Hàng đợi.

@@ -141,7 +141,9 @@ def wiktionary_view(word: str, num: int):
         close_btn(num, is_outlined=True),
         Button(data_on_click=post(f"/read/{num}/save", contentType="form"))("Save"),
         Span(style="display: grid; place-items: center;")(
-            f"✅ NGSL Level {lv}" if lv else f"❌ Not in NGSL"
+            f"✅ NGSL{f' Level {lv}' if lv > 0 else ''}"
+            if lv is not None
+            else f"❌ Not in NGSL"
         ),
     )
 
