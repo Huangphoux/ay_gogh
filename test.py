@@ -1,9 +1,8 @@
 from load_env import is_debug
 from starhtml import *
-from shared import db, template
+from shared import db, relay, template
 from math import ceil
 from random import choice
-from relay_instance import relay
 
 rt: APIRouter = APIRouter("/test")
 
@@ -68,7 +67,7 @@ def test(auth):
             ),
             P(
                 style=f"{'color: red;' if result and result < 80 else ''} font-weight: bold; font-size: 2rem",
-            )(f"Overall, you know {result}% of NGSL words."),
+            )(f"Overall, you know {result}% of NGSL words.") ,
         )
         if last_test and progress == 100
         else P(_class="notice")(
@@ -145,9 +144,9 @@ def progress_page(auth):
 
 @rt.get("/cqrs")
 @sse
-async def cqrs():
-    async for item in relay.stream():
-        yield item
+async def cqrs(req, auth):
+    async for _ in relay.subscribe(f"test.{auth}.progress"):
+        yield elements(progress_main(auth), selector="main", use_view_transition=True)
 
 
 def bold_to_strong(next_q):
@@ -218,7 +217,7 @@ def progress_main(auth):
 def progress_process(auth, choice: int):
     if choice not in (1, 2, 3, 4):
         return Redirect("/test")
-
+    
     last_test = get_last_test(auth)
     progress = last_test["progress"]
 
@@ -246,4 +245,4 @@ def progress_process(auth, choice: int):
     if is_last_finished(auth) is True:
         return Redirect("/test")
     elif is_last_finished(auth) is False:
-        relay.emit_element(progress_main(auth), "main")
+        relay.publish(f"test.{auth}.progress", "")

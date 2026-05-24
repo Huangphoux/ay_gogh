@@ -1,14 +1,12 @@
 from apswutils.db import NotFoundError
 from starhtml import *
-from shared import db
+from shared import db, relay
 import requests
 import json
 from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
 import simplemma
 from humanize import precisedelta
-from relay_instance import relay
-from read import chapter_main
 
 rt: APIRouter = APIRouter("/read")  # so you can have identical APIRouter
 
@@ -18,19 +16,20 @@ def morph(auth, num: int, word: str = "", bypass: int = 0):
 
 
 @rt.get("/{num:int}/open")
-def open(auth, num: int, word: str, bypass: int = 0):
-    morph(auth, num, word, bypass)
+def open(auth, num: int, word: str):
+    relay.emit_element(chapter_main(auth, num, word), "main")
 
 
 @rt.get("/{num:int}/close")
 def close(auth, num: int):
-    morph(auth, num)
+    relay.emit_element(chapter_main(auth, num), "main")
 
 
 @rt.patch("/{num:int}/close")
 def close_save(auth, num: int, front: str, back: str):
     db.get(auth).execute("UPDATE deck SET back=? WHERE front=?", (back, front))
-    morph(auth, num)
+
+    relay.emit_element(chapter_main(auth, num), "main")
 
 
 def fetch_definition(word: str = ""):
@@ -139,13 +138,12 @@ def wiktionary_view(word: str, num: int):
         else P("Sorry, couldn't find the word in the dictionary."),
     )
 
+
     buttons = Div(style="display: flex; gap: 1rem;")(
         close_btn(num, is_outlined=True),
         Button(data_on_click=post(f"/read/{num}/save", contentType="form"))("Save"),
         Span(style="display: grid; place-items: center;")(
-            f"✅ NGSL{f' Level {lv}' if lv > 0 else ''}"
-            if lv is not None
-            else f"❌ Not in NGSL"
+            f"✅ NGSL Level {lv}" if lv else f"❌ Not in NGSL"
         ),
     )
 
@@ -335,7 +333,8 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0):
 @rt.delete("/{num:int}/delete")
 async def delete_word(auth, num: int, front: str):
     db.get(auth).execute("DELETE FROM deck WHERE front=?", (front,))
-    morph(auth, num, front)
+
+    relay.emit_element(chapter_main(auth, num, front), "main")
 
 
 @rt.patch("/{num:int}/retire")
@@ -343,7 +342,8 @@ async def retire(auth, num: int, front: str, back: str):
     db.get(auth).execute(
         "UPDATE deck SET back=?, retire=? WHERE front=?", (back, 1, front)
     )
-    morph(auth, num, front)
+
+    relay.emit_element(chapter_main(auth, num, front), "main")
 
 
 @rt.delete("/{num:int}/retire")
@@ -351,7 +351,8 @@ async def unretire(auth, num: int, front: str, back: str):
     db.get(auth).execute(
         "UPDATE deck SET back=?, retire=? WHERE front=?", (back, 0, front)
     )
-    morph(auth, num, front)
+
+    relay.emit_element(chapter_main(auth, num, front), "main")
 
 
 @rt.post("/{num:int}/save")
@@ -377,7 +378,8 @@ async def save(auth, num: int, front: str, back: str):
             0,  # retire
         ),
     )
-    morph(auth, num, front)
+
+    relay.emit_element(chapter_main(auth, num, front), "main")
 
 
 @rt.patch("/{num:int}/remembered")
@@ -469,4 +471,5 @@ def rate_card(auth, num: int, front: str, back: str, forgot: bool = False):
             review_log.review_duration,
         ),
     )
-    morph(auth, num, front)
+
+    relay.emit_element(chapter_main(auth, num, front), "main")

@@ -2,13 +2,13 @@ from load_env import is_debug
 from test import get_last_test
 from apswutils.db import NotFoundError
 from starhtml import *
-from shared import db, template
+from shared import db, relay, template
 import mistletoe
 from math import ceil
 from mistletoe.html_renderer import HTMLRenderer
 import re
 import simplemma
-from relay_instance import relay
+from popup import popup_view
 
 rt: APIRouter = APIRouter("/read")
 
@@ -190,9 +190,13 @@ def chapter(auth, num: int, word: str = ""):
 
 @rt.get("/{num:int}/cqrs")
 @sse
-async def cqrs():
-    async for item in relay.stream():
-        yield item
+async def cqrs(req, auth, num: int):
+    async for _, data in relay.subscribe(f"read.{auth}.{num}"):
+        yield elements(
+            chapter_main(auth, num, word=data),
+            selector="main",
+            use_view_transition=True,
+        )
 
 
 def morph(auth, num: int):
@@ -368,8 +372,6 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         )
     )
 
-    from popup import popup_view
-
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
         data_on_selectionchange=(
@@ -403,10 +405,10 @@ def done(auth, num: int):
     db.get(auth).execute(
         "INSERT INTO chapter (number, done) VALUES (?, CURRENT_TIMESTAMP)", (num,)
     )
-    morph(auth, num)
+    relay.publish(f"read.{auth}.{num}", "")
 
 
 @rt.delete("/{num:int}")
 def undone(auth, num: int):
     db.get(auth).execute("DELETE FROM chapter WHERE number=?", (num,))
-    morph(auth, num)
+    relay.publish(f"read.{auth}.{num}", "")

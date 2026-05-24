@@ -8,7 +8,6 @@ from starlette_cramjam.middleware import CompressionMiddleware
 from test import is_last_finished
 from shared import template, is_signed_in, db
 from test import get_last_test
-from relay_instance import relay
 
 import settings
 import read
@@ -68,8 +67,6 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     datastar="cdn",
     inline_icons=True,
 )
-
-relay.install(app)
 
 auth.rt.to_app(app)
 test.rt.to_app(app)
