@@ -78,13 +78,7 @@ legend {
     width: 100%;
     height: fit-content;
     overflow: auto;
-    z-index: 10000;
-    isolation: isolate;
-    filter: brightness(80%);
-}
-
-body:has(.modal:hover) .modal {
-    filter: none;
+    z-index: 100;
 }
 
 .aside {
@@ -93,6 +87,7 @@ body:has(.modal:hover) .modal {
     width: 20vw;
 }
 
+.modal:hover,
 .aside:hover {
     filter: drop-shadow(10px 10px var(--accent));
 }

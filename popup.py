@@ -56,13 +56,15 @@ def fetch_definition(word: str = ""):
 
 
 def popup_form(num: int, content):
-    form = Form(
-        _class="notice modal",
-        data_on_keydown=(
-            f"evt.key === 'Escape' && @get('/read/{num}/close')",
-            dict(window=True),
-        ),
-    )(content)
+    form = Details(_class="modal", open=True)(
+        Summary("Click here to hide popup"),
+        Form(
+            data_on_keydown=(
+                f"evt.key === 'Escape' && @get('/read/{num}/close')",
+                dict(window=True),
+            ),
+        )(content),
+    )
 
     return form
 
