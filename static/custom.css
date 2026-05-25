@@ -25,22 +25,22 @@ legend {
     left: 0;
     z-index: 10000; /* nothing is in front */
     padding: 1.5rem 1.5rem;
-}
 
-.skip-link:focus-visible {
-    /* on keyboard focus */
-    top: 0; /* bring into view */
-    border: var(--accent) 0.25rem solid;
+    &:focus-visible {
+        /* on keyboard focus */
+        top: 0; /* bring into view */
+        border: var(--accent) 0.25rem solid;
+    }
 }
 
 .outline {
     border: solid var(--accent);
     color: var(--accent);
     background: var(--accent-bg);
-}
 
-.outline:hover {
-    color: var(--accent-text);
+    &:hover {
+        color: var(--accent-text);
+    }
 }
 
 .du3,
@@ -78,39 +78,39 @@ legend {
     width: 100%;
     height: fit-content;
     overflow: auto;
-    z-index: 100;
+    z-index: 1000;
+    &:hover {
+        filter: drop-shadow(10px 10px var(--accent));
+    }
 }
 
 .aside {
     display: inline;
     position: relative;
     width: 20vw;
-}
 
-.modal:hover,
-.aside:hover {
-    filter: drop-shadow(10px 10px var(--accent));
-}
+    &:hover {
+        z-index: 100;
+        filter: drop-shadow(10px 10px var(--accent));
+    }
+    &:nth-of-type(even) {
+        margin-right: -22vw;
+        float: right;
+    }
+    &:nth-of-type(odd) {
+        margin-left: -22vw;
+        float: left;
+    }
 
-.aside:nth-of-type(even) {
-    margin-right: -22vw;
-    float: right;
-}
-
-.aside:nth-of-type(odd) {
-    margin-left: -22vw;
-    float: left;
-}
-
-@media (max-width: 1400px) {
-    .aside,
-    .aside:nth-of-type(even),
-    .aside:nth-of-type(odd) {
-        display: block;
-        width: fit-content;
-        margin: 5% 10% 5% 10%;
-        float: none;
-        margin: auto;
+    @media (max-width: 1400px) {
+        &:nth-of-type(even),
+        &:nth-of-type(odd) {
+            display: block;
+            width: fit-content;
+            margin: 5% 10% 5% 10%;
+            float: none;
+            margin: auto;
+        }
     }
 }
 
@@ -118,18 +118,16 @@ legend {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     place-items: center;
-}
 
-.cardinal .notice {
-    grid-column: 1 / 4;
-}
-
-@media (max-width: 500px) {
-    .cardinal {
-        grid-template-columns: 1fr;
+    .notice {
+        grid-column: 1 / 4;
     }
 
-    .cardinal .notice {
-        grid-column: auto;
+    @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+
+        .notice {
+            grid-column: auto;
+        }
     }
 }
