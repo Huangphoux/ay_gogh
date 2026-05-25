@@ -199,8 +199,17 @@ async def cqrs(req, auth, num: int):
         )
 
 
-def mark_word(content: str, word: str, due_class: str) -> str:
+def mark_word(content: str, card: dict) -> str:
     code_block: bool = False
+
+    due_class = "n0t-du3"
+
+    if card["retire"]:
+        due_class = "r3t1r3"
+    elif not card["is_new_day"]:
+        due_class = "n0t-y3t"
+    elif card["is_due"]:
+        due_class = "du3"
 
     for i, line in enumerate(split := (content.splitlines())):
         if line == "```":
@@ -213,7 +222,7 @@ def mark_word(content: str, word: str, due_class: str) -> str:
         marked = []  # pass token if already marked
 
         for j, lemma in enumerate(lemmas):
-            if word == lemma and tokens[j] not in marked:
+            if card["front"] == lemma and tokens[j] not in marked:
                 split[i] = re.sub(
                     r"\b%s\b" % tokens[j],
                     Safe(
@@ -263,18 +272,8 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         cards = None
 
     if cards:
-        for c in cards:  # mark mined words
-            due_class = "n0t-du3"
-
-            if not c["is_new_day"]:
-                due_class = "n0t-y3t"
-            elif c["is_due"]:
-                due_class = "du3"
-
-            if c["retire"]:
-                due_class = "r3t1r3"
-
-            chap["content"] = mark_word(chap["content"], c["front"], due_class)
+        for card in cards:  # mark mined words
+            chap["content"] = mark_word(chap["content"], card)
 
     show_aside = db.get(auth).item(
         "SELECT value FROM settings WHERE setting = 'show_aside'"

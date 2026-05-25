@@ -56,7 +56,7 @@ def fetch_definition(word: str = ""):
 
 def popup_form(num: int, content):
     form = Details(_class="modal", open=True)(
-        Summary("Click here to hide popup"),
+        Summary("Popup"),
         Form(
             data_on_keydown=(
                 f"evt.key === 'Escape' && @get('/read/{num}/close')",
@@ -246,7 +246,7 @@ This action is NOT reversible. Are you sure about this decision?"
     )
 
     rate_part = Details(name="due")(
-        Summary("Recall before click this"),
+        Summary("Recall before reveal"),
         Label(_for="back")("Definition (Changeable, save using either buttons)"),
         Textarea(
             id="back",
