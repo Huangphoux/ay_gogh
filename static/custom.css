@@ -131,3 +131,19 @@ legend {
         }
     }
 }
+
+/* Animating details */
+:root {
+    interpolate-size: allow-keywords;
+}
+details::details-content {
+    height: 0;
+    
+    overflow: clip;
+    transition:
+        height 200ms ease,
+        content-visibility 200ms ease allow-discrete;
+}
+details[open]::details-content {
+    height: auto;
+}
