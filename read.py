@@ -401,8 +401,10 @@ def publish(auth, num: int, word: str = "", bypass: int = 0):
 @rt.patch("/{num:int}/save_toggles")
 def save_toggles(auth, num: int, show_aside: int, show_mark: int):
     db.get(auth).execute(
-        "UPDATE settings SET value=? WHERE setting=?",
-        [(show_aside, "show_aside"), (show_mark, "show_mark")],
+        "UPDATE settings SET value=? WHERE setting=?", (show_aside, "show_aside")
+    )
+    db.get(auth).execute(
+        "UPDATE settings SET value=? WHERE setting=?", (show_mark, "show_mark")
     )
     publish(auth, num)
 
