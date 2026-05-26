@@ -282,13 +282,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         "SELECT value FROM settings WHERE setting = 'show_mark'"
     )
 
-    cardinal = Section(_class="cardinal")(
-        P(f"Chapter {chap['number_word']} ({num})"),
-        Button(data_on_click="$show_toggles = !$show_toggles")("Toggles"),
-        P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
+    toggles = Details(data_ignore_morph=True)(
+        Summary("Toggles for changing visibility"),
         Ul(
-            _class="notice",
-            data_show="$show_toggles",
             style="list-style-type: none; width: 100%",
             data_signals=dict(show_mark=int(show_mark), show_aside=int(show_aside)),
         )(
@@ -321,6 +317,11 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
                 ),
             ),
         ),
+    )
+
+    cardinal = Section(_class="cardinal")(
+        P(f"Chapter {chap['number_word']} ({num})"),
+        P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
     )
 
     h1 = H1(id="main-heading", style="display:grid; place-items: center")(
@@ -384,9 +385,10 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         ),
     )(
         popup_view(auth, num, word, bypass),
+        debug_signals,
+        toggles,
         cardinal,
         h1,
-        debug_signals,
         content,
         before_complete,
         mark_complete,
