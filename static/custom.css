@@ -6,6 +6,20 @@
     /* Preventing layout shift from scrollbar appearance */
     scrollbar-gutter: stable;
     transition: filter 200ms;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+p,
+.aside {
+    content-visibility: auto;
+    contain-intrinsic-size: auto none;
+}
+
+:is(h1, h2, h3, h4) {
+    text-wrap: balance;
 }
 
 button,
@@ -17,6 +31,32 @@ legend {
     background-color: var(--accent);
     color: var(--bg);
     padding: 3px 6px;
+}
+
+/* Animating details */
+:root {
+    interpolate-size: allow-keywords;
+}
+details::details-content {
+    height: 0;
+
+    overflow: clip;
+    
+    transition:
+        height 200ms ease,
+        content-visibility 200ms ease allow-discrete;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+details[open]::details-content {
+    height: auto;
+}
+
+p {
+    /* no orphan words on the last line */
+    text-wrap: pretty;
 }
 
 .skip-link {
@@ -115,35 +155,10 @@ legend {
 }
 
 .cardinal {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    place-items: center;
-
-    .notice {
-        grid-column: 1 / 4;
-    }
+    display: flex;
+    justify-content: space-between;
 
     @media (max-width: 500px) {
-        grid-template-columns: 1fr;
-
-        .notice {
-            grid-column: auto;
-        }
+        display: inherit;
     }
-}
-
-/* Animating details */
-:root {
-    interpolate-size: allow-keywords;
-}
-details::details-content {
-    height: 0;
-    
-    overflow: clip;
-    transition:
-        height 200ms ease,
-        content-visibility 200ms ease allow-discrete;
-}
-details[open]::details-content {
-    height: auto;
 }
