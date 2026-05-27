@@ -103,6 +103,12 @@
 #include "200_kien_thuc_nen_tang/sqlite.typ"
 == Simple.css
 #include "200_kien_thuc_nen_tang/simplecss.typ"
+== Free Spaced Repetition Scheduling Algorithm
+#include "200_kien_thuc_nen_tang/fsrs.typ"
+== New General Service List
+#include "200_kien_thuc_nen_tang/ngsl.typ"
+== English by the Nature Method
+#include "200_kien_thuc_nen_tang/nature_method.typ"
 
 = PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
 
