@@ -5,7 +5,7 @@
 
 #set heading(offset: 2)
 
-StarHTML là một framework kết hợp Datastar với FastHTML, giúp viết các hàm gửi HTML đến trình duyệt một cách dễ dàng. Lấy cảm hứng từ FastHTML, người dùng có thể viết HTML bằng các hàm trong Python, từ đó loại bỏ lệ thuộc vào các template engine và tận dụng ngôn ngữ lập trình Python. StarHTML hỗ trợ viết các hàm gửi HTML và Server-sent Events bằng cách tận dụng tính năng decorator của Python.
+StarHTML là một framework được phát triển bởi banditburai, kết hợp Datastar với FastHTML, giúp viết các hàm gửi HTML đến trình duyệt một cách dễ dàng. Lấy cảm hứng từ FastHTML, người dùng có thể viết HTML bằng các hàm trong Python, từ đó loại bỏ lệ thuộc vào các template engine và tận dụng ngôn ngữ lập trình Python. StarHTML hỗ trợ viết các hàm gửi HTML và Server-sent Events bằng cách tận dụng tính năng decorator của Python.
 
 Trong đồ án này, việc StarHTML cũng sử dụng Python, cùng ngôn ngữ với các script xử lí dữ liệu thô, giúp làm giảm gánh nặng phải quản lí nhiều ngôn ngữ trong hệ thống.
 

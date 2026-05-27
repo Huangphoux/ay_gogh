@@ -5,7 +5,7 @@
 
 #set heading(offset: 2)
 
-Simple.css là một thư viện CSS cung cấp hệ thống thiết kế cho HTML ngữ nghĩa. Dung lượng của Simple.css chỉ 10 KB cực kì nhỏ gọn khi so với các thư viện khác như 144 KB của Bootstrap.
+Simple.css là một thư viện CSS được phát triển bởi Kev Quirk, cung cấp một hệ thống thiết kế cho HTML ngữ nghĩa. Dung lượng của Simple.css chỉ 10 KB cực kì nhỏ gọn khi so với các thư viện khác như 144 KB của Bootstrap.
 
 Trong đồ án này, Simple.css giúp cung cấp một giao diện đẹp mắt nhanh chóng cho trang web khi tận dụng HTML đúng ngữ nghĩa, không phải tốn thời gian tạo thiết kế riêng và phải tăng thêm thời gian chờ Tailwind tối ưu CSS.
 
