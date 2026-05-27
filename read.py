@@ -199,7 +199,7 @@ async def cqrs(req, auth, num: int):
         )
 
 
-def mark_word(content: str, card: dict) -> str:
+def mark_word(num: int, content: str, card: dict) -> str:
     code_block: bool = False
 
     due_class = "n0t-du3"
@@ -226,7 +226,10 @@ def mark_word(content: str, card: dict) -> str:
                 split[i] = re.sub(
                     r"\b%s\b" % tokens[j],
                     Safe(
-                        Span(data_attr_class=f"$show_mark && '{due_class}'")(tokens[j])
+                        Span(
+                            data_attr_class=f"$show_mark && '{due_class}'",
+                            data_on_click=f"$word = evt.target.textContent; @get('/read/{num}/open'); $word = '';",
+                        )(tokens[j])
                     ),
                     split[i],  # why can't i use `line` here?
                 )
@@ -273,7 +276,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
 
     if cards:
         for card in cards:  # mark mined words
-            chap["content"] = mark_word(chap["content"], card)
+            chap["content"] = mark_word(num, chap["content"], card)
 
     show_aside = db.get(auth).item(
         "SELECT value FROM settings WHERE setting = 'show_aside'"
@@ -385,9 +388,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         ),
     )(
         popup_view(auth, num, word, bypass),
+        cardinal,
         debug_signals,
         toggles,
-        cardinal,
         h1,
         content,
         before_complete,
