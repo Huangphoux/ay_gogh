@@ -2,10 +2,16 @@
     navigation: auto;
 }
 
+@property --transitionTime {
+    syntax: "<time>";
+    inherits: true;
+    initial-value: 500ms;
+}
+
 * {
     /* Preventing layout shift from scrollbar appearance */
     scrollbar-gutter: stable;
-    transition: filter 200ms;
+    transition: filter var(--transitionTime);
 
     @media (prefers-reduced-motion: reduce) {
         transition: none;
@@ -41,10 +47,10 @@ details::details-content {
     height: 0;
 
     overflow: clip;
-    
+
     transition:
-        height 200ms ease,
-        content-visibility 200ms ease allow-discrete;
+        height var(--transitionTime) ease,
+        content-visibility var(--transitionTime) ease allow-discrete;
 
     @media (prefers-reduced-motion: reduce) {
         transition: none;
@@ -83,28 +89,25 @@ p {
     }
 }
 
-.du3,
-.hard,
-.n0t-du3,
-.easy,
-.n0t-y3t,
-.medium,
-.r3t1r3 {
+:is(.easy, .medium, .hard) {
     color: light-dark(var(--text), var(--bg));
 }
 
-.du3,
-.hard {
+:is(.du3, .n0t-du3, .n0t-y3t, .r3t1r3) {
+    color: light-dark(var(--text), var(--bg));
+    user-select: none;
+    cursor: pointer;
+}
+
+:is(.du3, .hard) {
     background: red;
 }
 
-.n0t-du3,
-.easy {
+:is(.n0t-du3, .easy) {
     background: lime;
 }
 
-.n0t-y3t,
-.medium {
+:is(.n0t-y3t, .medium) {
     background: gold;
 }
 
@@ -119,6 +122,7 @@ p {
     height: fit-content;
     overflow: auto;
     z-index: 1000;
+
     &:hover {
         filter: drop-shadow(10px 10px var(--accent));
     }
@@ -127,22 +131,22 @@ p {
 .aside {
     display: inline;
     position: relative;
-    width: 20vw;
+    width: 20dvw;
 
     &:hover {
         z-index: 100;
         filter: drop-shadow(10px 10px var(--accent));
     }
     &:nth-of-type(even) {
-        margin-right: -22vw;
+        margin-right: -22dvw;
         float: right;
     }
     &:nth-of-type(odd) {
-        margin-left: -22vw;
+        margin-left: -22dvw;
         float: left;
     }
 
-    @media (max-width: 1400px) {
+    @media (max-width: 1200px) {
         &:nth-of-type(even),
         &:nth-of-type(odd) {
             display: block;
