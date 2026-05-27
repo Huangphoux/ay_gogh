@@ -24,17 +24,17 @@ def template(title: str, main, auth=None):
         )
 
     header = Header(
-        (
-            brand := Signal(
-                "brand",
-                ["Êy Gôgh!", "英語！", "エイ・ゴー！", "Eigo!", "/eigo/!", "𠲖姑！"],
-            )
-        ),
+        # (
+        #     brand := Signal(
+        #         "brand",
+        #         ["Êy Gôgh!", "英語！", "エイ・ゴー！", "Eigo!", "/eigo/!", "𠲖姑！"],
+        #     )
+        # ),
         nav,
         H1(
             style="cursor: pointer; user-select: none;",
-            data_on_click="evt.target.textContent=\
-                $brand[Math.floor(Math.random()*$brand.length)]",
+            # data_on_click="evt.target.textContent=\
+                # $brand[Math.floor(Math.random()*$brand.length)]",
         )("Ay Gogh!"),
         Noscript(P("Enable JavaScript to ensure the best experience.")),
     )
