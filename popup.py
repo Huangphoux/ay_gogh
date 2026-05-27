@@ -154,7 +154,7 @@ def wiktionary_view(word: str, num: int):
 
 def not_new_day_view(num: int, word: str):
     content = (
-        Small(
+        P(
             "※ ",
             Span(_class="n0t-y3t")("Yellow background"),
             ": the word can't be reviewed until tomorrow.",
@@ -270,9 +270,13 @@ This action is NOT reversible. Are you sure about this decision?"
     more_part = Details(name="due")(
         Summary("More actions"),
         Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
-            Button(data_on_click=patch(f"/read/{num}/retire", contentType="form"))(
-                "Retire"
-            ),
+            Button(
+                title="Retire this word so you don't have to review it anymore.",
+                data_on_click=patch(
+                    f"/read/{num}/retire",
+                    contentType="form",
+                ),
+            )("Retire"),
             Button(
                 _class="outline",
                 data_on_pointerdown=js(f"confirm('{delete_msg}')").if_(
