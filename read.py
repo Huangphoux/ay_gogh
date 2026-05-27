@@ -327,7 +327,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
     )
 
-    h1 = H1(id="main-heading", style="display:grid; place-items: center")(
+    h1 = H1(id="main-heading", style="display:grid; place-items: center;")(
         f"{chap['title']}",
         " (DONE)" if done else None,
     )
@@ -387,11 +387,11 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
             dict(document=True),
         ),
     )(
-        popup_view(auth, num, word, bypass),
         cardinal,
+        h1,
+        popup_view(auth, num, word, bypass),
         debug_signals,
         toggles,
-        h1,
         content,
         before_complete,
         mark_complete,

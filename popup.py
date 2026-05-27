@@ -292,10 +292,7 @@ This action is NOT reversible. Are you sure about this decision?"
 
 def popup_view(auth, num: int, word: str = "", bypass: int = 0):
     if not word:  # default view
-        return P(_class="notice")(
-            "Select a word to look up its definitions, \
-            save it in your memory, then review it in the future."
-        )
+        return P(_class="notice")("Select a word to look up its definitions.")
 
     if not word.isalpha():
         content = (

@@ -5,7 +5,7 @@
 @property --transitionTime {
     syntax: "<time>";
     inherits: true;
-    initial-value: 500ms;
+    initial-value: 200ms;
 }
 
 * {
@@ -49,8 +49,8 @@ details::details-content {
     overflow: clip;
 
     transition:
-        height var(--transitionTime) ease,
-        content-visibility var(--transitionTime) ease allow-discrete;
+        height var(--transitionTime) ease-out,
+        content-visibility var(--transitionTime) ease-out allow-discrete;
 
     @media (prefers-reduced-motion: reduce) {
         transition: none;
