@@ -95,6 +95,14 @@
 
 == Python
 #include "200_kien_thuc_nen_tang/python.typ"
+== Datastar
+#include "200_kien_thuc_nen_tang/datastar.typ"
+== StarHTML
+#include "200_kien_thuc_nen_tang/starhtml.typ"
+== SQLite
+#include "200_kien_thuc_nen_tang/sqlite.typ"
+== Simple.css
+#include "200_kien_thuc_nen_tang/simplecss.typ"
 
 = PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
 
