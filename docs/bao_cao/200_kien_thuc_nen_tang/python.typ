@@ -5,7 +5,7 @@
 
 #set heading(offset: 2)
 
-Python là một ngôn ngữ lập trình bậc cao đa năng được phát triển bởi Guido van Rossum. Đặc điểm khác biệt của Python so với các ngôn ngữ lập trình khác là các từ khoá hoàn toàn bằng tiếng Anh tự nhiên, giúp tăng tính dễ đọc của mã nguồn. Hệ sinh thái của Python cũng rất rộng mở không kém JavaScript, trừ một đặc điểm rằng Python ít bị tấn công hàng loạt so với JavaScript.
+Python @python là một ngôn ngữ lập trình bậc cao đa năng được phát triển bởi Guido van Rossum. Đặc điểm khác biệt của Python so với các ngôn ngữ lập trình khác là các từ khoá hoàn toàn bằng tiếng Anh tự nhiên, giúp tăng tính dễ đọc của mã nguồn. Hệ sinh thái của Python cũng rất rộng mở không kém JavaScript, trừ một đặc điểm rằng Python ít bị tấn công hàng loạt so với JavaScript.
 
 Trong dự án Ay Gogh!, Python được sử dụng để thực hiện những công việc sau:
 - Viết các script xử lý các dữ liệu thô của cuốn sách English by the Nature Method. Các script nằm trong thư mục `/read/text_cleaners`. Kết quả sau khi xử lí là các chương trong quyển sách được chia ra thành các tệp Markdown riêng và được lưu trữ trong thư mục `/read/chapter`.

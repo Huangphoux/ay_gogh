@@ -5,7 +5,7 @@
 
 #set heading(offset: 2)
 
-English by the Nature Method là một quyển sách được viết bởi Arthur Jensen, được ra mắt vào năm 1942, là một quyển sách dạy học tiếng Anh hoàn toàn bằng tiếng Anh. Độ khó tăng dần với mỗi chương của quyển sách. Mỗi chương sẽ giới thiệu từ vựng và ngữ pháp mới, kèm theo với các hình ảnh và chú thích dễ hiểu ở lề trang để hỗ trợ người học. Quyển sách sẽ giúp người học tích luỹ được 2300 từ trải qua 60 chương và tập trung vào tiếng Anh của nước Anh.
+English by the Nature Method @nature_method là một quyển sách được viết bởi Arthur Jensen, được ra mắt vào năm 1942, là một quyển sách dạy học tiếng Anh hoàn toàn bằng tiếng Anh. Độ khó tăng dần với mỗi chương của quyển sách. Mỗi chương sẽ giới thiệu từ vựng và ngữ pháp mới, kèm theo với các hình ảnh và chú thích dễ hiểu ở lề trang để hỗ trợ người học. Quyển sách sẽ giúp người học tích luỹ được 2300 từ trải qua 60 chương và tập trung vào tiếng Anh của nước Anh.
 
 Đồ án này được phát triển để xoay quanh việc hỗ trợ đọc sách English by the Nature Method do cách duy nhất để đọc quyển sách hiện tại chỉ có là tệp PDF.
 

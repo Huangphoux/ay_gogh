@@ -5,7 +5,7 @@
 
 #set heading(offset: 2)
 
-SQLite là một hệ thống cơ sở dữ liệu quan hệ được viết bởi Richard Hipp dưới dạng thư viện bằng ngôn ngữ lập trình C. SQLite là hệ thống cơ sở dữ liệu được dùng nhiều nhất trên thế giới, được nhúng vào các trình duyệt web, hệ điều hành, và điện thoại di động.
+SQLite @sqlite là một hệ thống cơ sở dữ liệu quan hệ được viết bởi Richard Hipp dưới dạng thư viện bằng ngôn ngữ lập trình C. SQLite là hệ thống cơ sở dữ liệu được dùng nhiều nhất trên thế giới, được nhúng vào các trình duyệt web, hệ điều hành, và điện thoại di động.
 
 Trong đồ án này, SQLite được sử dụng để lưu trữ thông tin đăng nhập tài khoản của người dùng, bộ câu hỏi của NGSLT, các chương của quyển sách English by the Nature Method, 2809 từ của NGSL và xếp hạng cấp độ của mỗi từ; và các dữ liệu của riêng mỗi người dùng như kết quả bài kiểm tra, danh sách các chương đã hoàn thành, các từ được lưu lại trong từ điển cá nhân, lịch sử ôn tập từ vựng, và cài đặt hệ thống.
 

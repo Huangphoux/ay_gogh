@@ -5,7 +5,7 @@
 
 #set heading(offset: 2)
 
-StarHTML là một framework được phát triển bởi banditburai, kết hợp Datastar với FastHTML, giúp viết các hàm gửi HTML đến trình duyệt một cách dễ dàng. Lấy cảm hứng từ FastHTML, người dùng có thể viết HTML bằng các hàm trong Python, từ đó loại bỏ lệ thuộc vào các template engine và tận dụng ngôn ngữ lập trình Python. StarHTML hỗ trợ viết các hàm gửi HTML và Server-sent Events bằng cách tận dụng tính năng decorator của Python.
+StarHTML @starhtml là một framework được phát triển bởi banditburai, kết hợp Datastar với FastHTML, giúp viết các hàm gửi HTML đến trình duyệt một cách dễ dàng. Lấy cảm hứng từ FastHTML, người dùng có thể viết HTML bằng các hàm trong Python, từ đó loại bỏ lệ thuộc vào các template engine và tận dụng ngôn ngữ lập trình Python. StarHTML hỗ trợ viết các hàm gửi HTML và Server-sent Events bằng cách tận dụng tính năng decorator của Python.
 
 Trong đồ án này, việc StarHTML cũng sử dụng Python, cùng ngôn ngữ với các script xử lí dữ liệu thô, giúp làm giảm gánh nặng phải quản lí nhiều ngôn ngữ trong hệ thống.
 
@@ -19,7 +19,7 @@ Trong đồ án này, việc StarHTML cũng sử dụng Python, cùng ngôn ng�
 
 = Kiến trúc CQRS
 
-- Đồ án này sử dụng Pub/Sub, Brotli, và Server-sent Events để triển khai kiến trúc CQRS, giúp đơn giản hoá việc cập nhật giao diện.
+- Đồ án này sử dụng Pub/Sub, Brotli, và Server-sent Events để triển khai kiến trúc CQRS, giúp đơn giản hoá việc cập nhật giao diện. @the_datastar_way
   - Pub/Sub: sử dụng `relay.py` của framework Stario để hệ thống gửi và nhận các tín hiệu cập nhật giao diện.
   - Server-sent Events: khi gửi kiểu dữ liệu `text/event-stream` thay vì `text/html` đến trình duyệt, máy chủ có thể gửi HTML liên tục trong một luồng dữ liệu đến trình duyệt.
   - Brotli: thuật toán nén dữ liệu ưu việt hơn gzip. Sử dụng Brotli để nén luồng dữ liệu Server-sent Events, ta có thể gửi HTML vô số lần mà không phải lo về việc tốn dữ liệu di động của người dùng.

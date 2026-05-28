@@ -4,7 +4,7 @@
 )
 #set heading(offset: 2)
 
-New General Service List (NGSL, Danh sách hỗ trợ tổng quát mới) là một danh sách được tạo ra bởi Charles Browne và Brent Culligan, gồm 2809 từ quan trọng nhất trong tiếng Anh tổng quát và cuộc sống thường nhật của người học tiếng Anh. Các từ trong danh sách này chiếm đến trên trung bình 92% đa số văn bản tiếng Anh. Được phát triển từ năm 2013, phiên bản mới nhất của NGSL được phát hành vào tháng 4/2023.
+New General Service List (NGSL, Danh sách hỗ trợ tổng quát mới) @ngsl là một danh sách được tạo ra bởi Charles Browne và Brent Culligan, gồm 2809 từ quan trọng nhất trong tiếng Anh tổng quát và cuộc sống thường nhật của người học tiếng Anh. Các từ trong danh sách này chiếm đến trên trung bình 92% đa số văn bản tiếng Anh. Được phát triển từ năm 2013, phiên bản mới nhất của NGSL được phát hành vào tháng 4/2023.
 
 New General Service Lists Test (NGSLT, Bài kiểm tra danh sách hỗ trợ tổng quát mới) là một bài kiểm tra để xác định khả năng nhận biết được mặt chữ của các từ trong NGSL. NGSLT chia NGSL thành 5 cấp độ, mỗi cấp độ chứa 562 từ. Trong mỗi cấp độ, chọn ra 20 từ để đại diện cho độ khó trung bình của các từ trong cấp độ đấy. Ta dùng kết quả của mỗi cấp độ để đánh giá ngưỡng kiến thức của người học.
 

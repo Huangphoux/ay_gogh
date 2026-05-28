@@ -5,8 +5,7 @@
 
 #set heading(offset: 2)
 
-Datastar là một framework được phát triển chủ yếu bởi 
-Delaney Gillilan và Ben Croker, được tạo ra để giúp xây dựng các trang web sử dụng HTML thay vì JSON. Datastar cung cấp các thuộc tính HTML `data-*` và Signal để điều khiển giao diện của mỗi trang và gửi yêu cầu đến Back-End. Sau đó Back-End sẽ gửi HTML đến Front-End, Datastar sẽ sử dụng thuật toán morphing để thay đổi giao diện của trang.
+Datastar @datastar là một framework được phát triển chủ yếu bởi Delaney Gillilan và Ben Croker, được tạo ra để giúp xây dựng các trang web sử dụng HTML thay vì JSON. Datastar cung cấp các thuộc tính HTML `data-*` và Signal để điều khiển giao diện của mỗi trang và gửi yêu cầu đến Back-End. Sau đó Back-End sẽ gửi HTML đến Front-End, Datastar sẽ sử dụng thuật toán morphing để thay đổi giao diện của trang.
 
 = Ưu điểm
 - *Làm việc bằng HTML thay vì JSON*: Datastar là một trong các thư viện hỗ trợ xây dựng trang web bằng HTML. Thay vì phải tốn thời gian xây dựng Front-End và Back-End riêng (nghĩa rằng Back-End phải viết API bằng JSON để gửi dữ liệu đến Front-End, và Front-End phải điềU hướng giao diện trên trình duyệt bằng JavaScript), ta chỉ cần cho máy chủ gửi HTML đến trình duyệt và Datastar sẽ đảm nhiệm công việc thay đổi giao diện.
