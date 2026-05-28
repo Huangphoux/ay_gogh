@@ -39,27 +39,6 @@ legend {
     padding: 3px 6px;
 }
 
-/* Animating details */
-:root {
-    interpolate-size: allow-keywords;
-}
-details::details-content {
-    height: 0;
-
-    overflow: clip;
-
-    transition:
-        height var(--transitionTime) ease-out,
-        content-visibility var(--transitionTime) ease-out allow-discrete;
-
-    @media (prefers-reduced-motion: reduce) {
-        transition: none;
-    }
-}
-details[open]::details-content {
-    height: auto;
-}
-
 p {
     /* no orphan words on the last line */
     text-wrap: pretty;
