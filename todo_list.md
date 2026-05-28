@@ -13,6 +13,9 @@
     - Pagination trong Read, Test Progress, Reading Ease, vào bài đọc: move trái move phải
     - Bấm vào 1 chap thì giữ tên của chap
     - Hiện popup: wipe như Star War từ trên xuống
+- Lỗi replace whole word
+  - các `data-*` attribute có khả năng bị regex nhận dạng là whole word
+  - cần phải đổi thuật toán tìm whole word
 
 # Read
 
