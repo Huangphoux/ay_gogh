@@ -202,10 +202,10 @@ async def cqrs(req, auth, num: int):
 def mark_word(num: int, content: str, card: dict) -> str:
     showpopup = js(
         f"if ($word !== \"\" ) {{ @get('/read/{num}/open');\
-        const popup=document.querySelector('#popup'); popup.showPopover(); }};"
+        document.querySelector('#popup').showPopover(); }}; $word = ''"
     )
 
-    click_showpopup = f"$word = evt.target.textContent; {showpopup} $word = '';"
+    click_showpopup = js(f"$word = evt.target.textContent; {showpopup}")
 
     code_block: bool = False
 
@@ -229,7 +229,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_is_new_day=card["is_new_day"],
                             data_is_due=card["is_due"],
                             data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
-                            data_on_click=click_showpopup,
+                            data_on_pointerup=(click_showpopup, dict(stop=True)),
                         )(tokens[j])
                     ),
                     split[i],  # why can't i use `line` here?
@@ -335,7 +335,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
 
     showpopup = js(
         f"if ($word !== \"\" ) {{ @get('/read/{num}/open');\
-        const popup=document.querySelector('#popup'); popup.showPopover(); }};"
+        document.querySelector('#popup').showPopover(); }};"
     )
 
     content = Section(data_on_pointerup=showpopup)(
@@ -352,7 +352,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
 
     retired_cards = [c for c in cards if c["is_retired"]] if cards else None
 
-    click_showpopup = f"$word = evt.target.textContent; {showpopup} $word = '';"
+    click_showpopup = js(f"$word = evt.target.textContent; {showpopup} $word = '';")
 
     before_complete = (
         Section(
@@ -409,7 +409,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
         data_on_selectionchange=(
-            "$word = document.getSelection().toString().trim()",
+            js("$word = document.getSelection().toString().trim()"),
             dict(document=True),
         ),
     )(

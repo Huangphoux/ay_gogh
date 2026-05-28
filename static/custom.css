@@ -2,7 +2,7 @@
     navigation: auto;
 }
 
-@property --transitionTime {
+@property --transition-time {
     syntax: "<time>";
     inherits: true;
     initial-value: 200ms;
@@ -11,11 +11,6 @@
 * {
     /* Preventing layout shift from scrollbar appearance */
     scrollbar-gutter: stable;
-    transition: filter var(--transitionTime);
-
-    @media (prefers-reduced-motion: reduce) {
-        transition: none;
-    }
 }
 
 p,
@@ -103,6 +98,7 @@ p {
     display: inline;
     position: relative;
     width: 20dvw;
+    transition: filter var(--transition-time);
 
     &:hover {
         z-index: 1;
@@ -130,16 +126,25 @@ p {
 }
 
 .cardinal {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    place-items: center;
 
+    grid-auto-flow: column;
     @media (max-width: 500px) {
-        display: inherit;
+        grid-auto-flow: row;
     }
 }
 
 details[popover] {
-    width: 45rem;
-    margin: 0;
-    position-area: bottom;
+    max-width: 45rem;
+    width: 100dvw;
+
+    @media (min-width: 1000px) {
+        margin: 0;
+        position-area: bottom;
+    }
+
+    &::backdrop {
+        backdrop-filter: brightness(80%);
+    }
 }

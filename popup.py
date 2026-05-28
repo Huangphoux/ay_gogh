@@ -54,10 +54,22 @@ def fetch_definition(word: str = ""):
     return definition
 
 
-def popup_form(content):
+def popup_form(num: int, content, is_save: bool = False):
+    closepopup = js(
+        f"{get(f'/read/{num}/close') if not is_save else patch(f'/read/{num}/close', contentType='form')};\
+            document.querySelector('#popup').hidePopover();"
+    )
+
     form = Details(open=True, popover=True, id="popup")(
         Summary("Popup"),
-        Form(content),
+        Form(
+            # data_on_keydown=(
+            #     js(
+            #         f"evt.key === 'Escape' && {closepopup}"
+            #     ),
+            #     dict(window=True),
+            # ),
+        )(content),
     )
 
     return form
@@ -65,16 +77,14 @@ def popup_form(content):
 
 def close_btn(num: int, is_outlined: bool = False, is_save: bool = False):
     closepopup = js(
-        f"{get(f'/read/{num}/close') if not is_save else patch(f"/read/{num}/close", contentType="form")};\
-    const popup=document.querySelector('#popup'); popup.hidePopover();"
+        f"{get(f'/read/{num}/close') if not is_save else patch(f'/read/{num}/close', contentType='form')};\
+            document.querySelector('#popup').hidePopover();"
     )
 
     return Button(
         _class="outline" if is_outlined else None,
-        data_on_click=(closepopup, dict(prevent=True))
-        if not is_save
-        else closepopup
-    )("Close")
+        data_on_click=(closepopup, dict(prevent=True)) if not is_save else closepopup,
+    )("Close" if not is_save else "Close & Save")
 
 
 def bypass_btn(num: int, word: str = "", is_outlined: bool = False):
@@ -151,7 +161,7 @@ def wiktionary_view(word: str, num: int):
     )
 
     content = (front_part, back_part, wiktionary_part, buttons)
-    return popup_form(content)
+    return popup_form(num, content)
 
 
 def not_new_day_view(num: int, word: str):
@@ -165,7 +175,7 @@ def not_new_day_view(num: int, word: str):
         ),
     )
 
-    return popup_form(content)
+    return popup_form(num, content)
 
 
 def not_due_view(num: int, word: str, due: str):
@@ -184,7 +194,7 @@ def not_due_view(num: int, word: str, due: str):
         ),
     )
 
-    return popup_form(content)
+    return popup_form(num, content)
 
 
 def retired_view(num: int, front: str, back: str):
@@ -216,7 +226,7 @@ def retired_view(num: int, front: str, back: str):
     )
 
     content = (small, front_part, back_part, buttons)
-    return popup_form(content)
+    return popup_form(num, content)
 
 
 def due_view(num: int, front: str, back: str, bypass: int):
@@ -278,7 +288,7 @@ This action is NOT reversible. Are you sure about this decision?"
     )
 
     content = (small, front_part, rate_part, more_part, close_btn(num))
-    return popup_form(content)
+    return popup_form(num, content)
 
 
 def search_view(num: int):
@@ -298,7 +308,7 @@ def search_view(num: int):
 
     content = P("Searching the word in your memory …")
 
-    return popup_form(content)
+    return popup_form(num, content)
 
 
 def popup_view(auth, num: int, word: str = "", bypass: int = 0):
@@ -312,7 +322,7 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0):
             ),
             close_btn(num),
         )
-        return popup_form(content)
+        return popup_form(num, content)
 
     try:
         card = list(  # this one find the word's card
