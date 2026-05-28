@@ -5,7 +5,15 @@
     - Rút db.execute ra từ retire và delete? Nah, có chút xíu vậy mà cũng rút ra chi, mệt vl
     - Rút popup
 - Tham khảo sqlite_demo: DB_DIR
-- Dùng `<dialog>`
+- Popover API
+- Tương tự các từ mined giờ chỉ cần click, từ nào trong bài đọc giờ cũng có thể click
+    - Bỏ các từ trong các ô giải thích ra, vẫn cần phải select
+    - Các từ trong ô Wiktionary cũng phải click được → cũng hiện từ đã mined chưa
+- View Transition
+    - Chuyển giữa các trang thì là fade
+    - Pagination trong Read, Test Progress: move trái move phải
+    - Bấm vào 1 chap thì giữ tên của chap
+    - Hiện popup: wipe như Star War từ trên xuống
 
 # Read
 
