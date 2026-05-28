@@ -200,6 +200,13 @@ async def cqrs(req, auth, num: int):
 
 
 def mark_word(num: int, content: str, card: dict) -> str:
+    showpopup = js(
+        f"if ($word !== \"\" ) {{ @get('/read/{num}/open');\
+        const popup=document.querySelector('#popup'); popup.showPopover(); }};"
+    )
+
+    click_showpopup = f"$word = evt.target.textContent; {showpopup} $word = '';"
+
     code_block: bool = False
 
     for i, line in enumerate(split := (content.splitlines())):
@@ -222,7 +229,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_is_new_day=card["is_new_day"],
                             data_is_due=card["is_due"],
                             data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
-                            data_on_click=f"$word = evt.target.textContent; @get('/read/{num}/open'); $word = '';",
+                            data_on_click=click_showpopup,
                         )(tokens[j])
                     ),
                     split[i],  # why can't i use `line` here?
@@ -326,9 +333,12 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         " (DONE)" if done else None,
     )
 
-    content = Section(
-        data_on_pointerup=f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};",
-    )(
+    showpopup = js(
+        f"if ($word !== \"\" ) {{ @get('/read/{num}/open');\
+        const popup=document.querySelector('#popup'); popup.showPopover(); }};"
+    )
+
+    content = Section(data_on_pointerup=showpopup)(
         Safe(
             mistletoe.markdown(chap["content"], MyRenderer),  # text section
         ),
@@ -342,14 +352,16 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
 
     retired_cards = [c for c in cards if c["is_retired"]] if cards else None
 
+    click_showpopup = f"$word = evt.target.textContent; {showpopup} $word = '';"
+
     before_complete = (
         Section(
             H2("Due words"),
-            Ul()(
+            Ul(
                 *(
                     Li(
                         style="user-select: none; cursor: pointer;",
-                        data_on_click=f"$word = evt.target.textContent; @get('/read/{num}/open'); $word = '';",
+                        data_on_click=click_showpopup,
                     )(c["front"])
                     for c in due_cards
                 )
@@ -359,11 +371,11 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         else None,
         Section(
             H2("Retired words"),
-            Ul()(
+            Ul(
                 *(
                     Li(
                         style="user-select: none; cursor: pointer;",
-                        data_on_click=f"$word = evt.target.textContent; @get('/read/{num}/open'); $word = '';",
+                        data_on_click=click_showpopup,
                     )(c["front"])
                     for c in retired_cards
                 )

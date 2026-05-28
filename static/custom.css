@@ -99,26 +99,13 @@ p {
     background: aqua;
 }
 
-.modal {
-    position: sticky;
-    inset: 0;
-    width: 100%;
-    height: fit-content;
-    overflow: auto;
-    z-index: 1000;
-
-    &:hover {
-        filter: drop-shadow(10px 10px var(--accent));
-    }
-}
-
 .aside {
     display: inline;
     position: relative;
     width: 20dvw;
 
     &:hover {
-        z-index: 100;
+        z-index: 1;
         filter: drop-shadow(10px 10px var(--accent));
     }
     &:nth-of-type(even) {
@@ -149,4 +136,10 @@ p {
     @media (max-width: 500px) {
         display: inherit;
     }
+}
+
+details[popover] {
+    width: 45rem;
+    margin: 0;
+    position-area: bottom;
 }
