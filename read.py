@@ -340,17 +340,37 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         else None
     )
 
+    retired_cards = [c for c in cards if c["is_retired"]] if cards else None
+
     before_complete = (
         Section(
             H2("Due words"),
-            Ul(
-                data_on_pointerup=(
-                    f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
+            Ul()(
+                *(
+                    Li(
+                        style="user-select: none; cursor: pointer;",
+                        data_on_click=f"$word = evt.target.textContent; @get('/read/{num}/open'); $word = '';",
+                    )(c["front"])
+                    for c in due_cards
                 )
-            )(*(Li(c["front"]) for c in due_cards)),
+            ),
         )
         if due_cards
-        else None
+        else None,
+        Section(
+            H2("Retired words"),
+            Ul()(
+                *(
+                    Li(
+                        style="user-select: none; cursor: pointer;",
+                        data_on_click=f"$word = evt.target.textContent; @get('/read/{num}/open'); $word = '';",
+                    )(c["front"])
+                    for c in retired_cards
+                )
+            ),
+        )
+        if retired_cards
+        else None,
     )
 
     mark_complete = Section(style="display: grid; place-items: center")(
