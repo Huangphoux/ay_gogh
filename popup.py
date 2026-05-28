@@ -308,7 +308,7 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0):
             db.get(auth).query(
                 """
                 SELECT
-                    front, back, due, last_review, retire,
+                    front, back, due, last_review, is_retired,
                     CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
                            -- datetime now is after due
                     CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) < 1) THEN 0 ELSE 1 END AS is_new_day
@@ -325,7 +325,7 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0):
     if not card:  # not in memory, hasn't mined yet
         return wiktionary_view(word, num)
 
-    if card["retire"]:
+    if card["is_retired"]:
         return retired_view(num, card["front"], card["back"])
 
     if not bypass and not card["is_new_day"]:
@@ -346,7 +346,7 @@ async def delete_word(auth, num: int, front: str):
 @rt.patch("/{num:int}/retire")
 async def retire(auth, num: int, front: str, back: str):
     db.get(auth).execute(
-        "UPDATE deck SET back=?, retire=? WHERE front=?", (back, 1, front)
+        "UPDATE deck SET back=?, is_retired=? WHERE front=?", (back, 1, front)
     )
     publish(auth, num, front)
 
@@ -354,7 +354,7 @@ async def retire(auth, num: int, front: str, back: str):
 @rt.delete("/{num:int}/retire")
 async def unretire(auth, num: int, front: str, back: str):
     db.get(auth).execute(
-        "UPDATE deck SET back=?, retire=? WHERE front=?", (back, 0, front)
+        "UPDATE deck SET back=?, is_retired=? WHERE front=?", (back, 0, front)
     )
     publish(auth, num, front)
 
@@ -365,7 +365,7 @@ async def save(auth, num: int, front: str, back: str):
 
     db.get(auth).execute(
         """
-        INSERT INTO deck (id, front, back, state, step, stability, difficulty, due, last_review, retire)
+        INSERT INTO deck (id, front, back, state, step, stability, difficulty, due, last_review, is_retired)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
@@ -379,7 +379,7 @@ async def save(auth, num: int, front: str, back: str):
             # datetime UTC object → str
             card.due.strftime("%Y-%m-%d %H:%M:%S"),  # due
             card.last_review,
-            0,  # retire
+            0,  # is_retired
         ),
     )
 

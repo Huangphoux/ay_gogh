@@ -262,7 +262,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
             db.get(auth).query(
                 """
     SELECT
-        front, back, due, last_review, retire,
+        front, back, due, last_review, is_retired,
         CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
                 -- datetime now is after due
         CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) < 1) THEN 0 ELSE 1 END AS is_new_day
@@ -341,7 +341,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
     )
 
     due_cards = (
-        [c for c in cards if c["is_due"] and c["is_new_day"] and not c["retire"]]
+        [c for c in cards if c["is_due"] and c["is_new_day"] and not c["is_retired"]]
         if cards
         else None
     )
