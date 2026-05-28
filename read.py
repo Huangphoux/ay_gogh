@@ -221,7 +221,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_is_retired=card["is_retired"],
                             data_is_new_day=card["is_new_day"],
                             data_is_due=card["is_due"],
-                            data_attr_class=f"!$show_mark && 'background: initial;'",
+                            data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
                             data_on_click=f"$word = evt.target.textContent; @get('/read/{num}/open'); $word = '';",
                         )(tokens[j])
                     ),
@@ -296,7 +296,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
                     data_bind="show_mark",
                 ),
                 Label(_for="show_mark", style=" flex-shrink: 0; padding-left: 0.5rem")(
-                    "Show marked words"
+                    "Show colorful highlights"
                 ),
             ),
             Li(
@@ -310,7 +310,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
                     data_bind="show_aside",
                 ),
                 Label(_for="show_aside", style=" flex-shrink: 0; padding-left: 0.5rem")(
-                    "Show explanations"
+                    "Show marginal explanations"
                 ),
             ),
         ),
