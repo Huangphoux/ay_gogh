@@ -60,7 +60,12 @@ def popup_form(num: int, content, is_save: bool = False):
             document.querySelector('#popup').hidePopover();"
     )
 
-    form = Details(open=True, popover=True, id="popup")(
+    form = Details(
+        open=True,
+        popover=True,
+        id="popup",
+        data_on_toggle=f"evt.newState === 'closed' && @get('/read/{num}/close')",
+    )(
         Summary("Popup"),
         Form(
             # data_on_keydown=(
@@ -121,9 +126,14 @@ def wiktionary_view(word: str, num: int):
                     f"if (evt.target.value !== \"\" )\
                     {{ $word = evt.target.value; @get('/read/{num}/open') }};"
                 ),
-                dict(debounce=300),
+                dict(debounce=100),
             ),
         ),
+    )
+
+    front_part = (
+        H2(f"Word: {word}"),
+        Input(type="hidden", id="front", name="front", value=word),
     )
 
     back_part = (
