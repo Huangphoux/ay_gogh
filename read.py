@@ -202,15 +202,6 @@ async def cqrs(req, auth, num: int):
 def mark_word(num: int, content: str, card: dict) -> str:
     code_block: bool = False
 
-    due_class = "n0t-du3"
-
-    if card["retire"]:
-        due_class = "r3t1r3"
-    elif not card["is_new_day"]:
-        due_class = "n0t-y3t"
-    elif card["is_due"]:
-        due_class = "du3"
-
     for i, line in enumerate(split := (content.splitlines())):
         if line == "```":
             code_block = not code_block
@@ -227,7 +218,10 @@ def mark_word(num: int, content: str, card: dict) -> str:
                     r"\b%s\b" % tokens[j],
                     Safe(
                         Span(
-                            data_attr_class=f"$show_mark && '{due_class}'",
+                            data_is_retired=card["is_retired"],
+                            data_is_new_day=card["is_new_day"],
+                            data_is_due=card["is_due"],
+                            data_attr_class=f"!$show_mark && 'background: initial;'",
                             data_on_click=f"$word = evt.target.textContent; @get('/read/{num}/open'); $word = '';",
                         )(tokens[j])
                     ),

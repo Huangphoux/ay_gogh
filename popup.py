@@ -155,9 +155,7 @@ def wiktionary_view(word: str, num: int):
 def not_new_day_view(num: int, word: str):
     content = (
         P(
-            "※ ",
-            Span(_class="n0t-y3t")("Yellow background"),
-            ": the word can't be reviewed until tomorrow.",
+            "※ Yellow background: the word can't be reviewed until tomorrow.",
         ),
         Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
             close_btn(num),
@@ -175,9 +173,7 @@ def not_due_view(num: int, word: str, due: str):
 
     content = (
         Small(
-            "※ ",
-            Span(_class="n0t-du3")("Green background"),
-            ": the word is not due for a review yet.",
+            "※ Green background: the word is not due for a review yet.",
         ),
         P(f"Next review is in {precisedelta(time_delta)}."),
         Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
@@ -191,9 +187,7 @@ def not_due_view(num: int, word: str, due: str):
 
 def retired_view(num: int, front: str, back: str):
     small = Small(
-        " ※ ",
-        Span(_class="r3t1r3")("Magenta background"),
-        ": you don't have to review it anymore.",
+        " ※ Blue background: you don't have to review it anymore.",
     )
 
     front_part = (
@@ -232,9 +226,7 @@ This action is NOT reversible. Are you sure about this decision?"
 
     small = (
         Small(
-            "※ ",
-            Span(_class="du3")("Red background"),
-            ": the word is due for a review.",
+            "※ Red background: the word is due for a review.",
         )
         if not bypass
         else None

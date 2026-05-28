@@ -93,26 +93,28 @@ p {
     color: light-dark(var(--text), var(--bg));
 }
 
-:is(.du3, .n0t-du3, .n0t-y3t, .r3t1r3) {
+:is([data-is-new-day], [data-is-due], [data-is-due], [data-is-retired]) {
     color: light-dark(var(--text), var(--bg));
     user-select: none;
     cursor: pointer;
 }
 
-:is(.du3, .hard) {
+[data-is-due="1"] {
     background: red;
 }
 
-:is(.n0t-du3, .easy) {
+[data-is-due="0"] {
     background: lime;
 }
 
-:is(.n0t-y3t, .medium) {
+[data-is-new-day="0"] {
+    /* If not new day yet then doesn't matter due or not */
     background: gold;
 }
 
-.r3t1r3 {
-    background: magenta;
+[data-is-retired="1"] { 
+    /* Retire mean no review, so don't show any other color */
+    background: aqua;
 }
 
 .modal {
