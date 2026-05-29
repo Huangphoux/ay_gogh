@@ -54,27 +54,24 @@ def fetch_definition(word: str = ""):
     return definition
 
 
-def popup_form(num: int, content, is_save: bool = False):
-    closepopup = js(
-        f"{get(f'/read/{num}/close') if not is_save else patch(f'/read/{num}/close', contentType='form')};\
-            document.querySelector('#popup').hidePopover();"
-    )
-
+def popup_form(num: int, content):
     form = Details(
         open=True,
-        popover=True,
+        popover="manual",
         id="popup",
-        data_on_toggle=f"evt.newState === 'closed' && @get('/read/{num}/close')",
+        # details also have a `toggle` event, so I have to use `beforetoggle`
+        data_on_beforetoggle=(
+            f"evt.newState === 'closed' && @get('/read/{num}/close')"
+        ),
+        data_on_keydown=(
+            js(
+                f"evt.key === 'Escape' && document.querySelector('#popup').hidePopover();"
+            ),
+            dict(window=True),
+        ),
     )(
         Summary("Popup"),
-        Form(
-            # data_on_keydown=(
-            #     js(
-            #         f"evt.key === 'Escape' && {closepopup}"
-            #     ),
-            #     dict(window=True),
-            # ),
-        )(content),
+        Form(content),
     )
 
     return form
