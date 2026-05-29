@@ -16,9 +16,7 @@
 - Lỗi replace whole word
   - các `data-*` attribute có khả năng bị regex nhận dạng là whole word
   - cần phải đổi thuật toán tìm whole word
-- Popover: "auto" hay "manual"
-    - "auto": bị flicker khi chọn từ khác ngoài Popover, nhưng mà phím Escape và bấm ở ngoài tự tắt
-    - "manual": phím Escape và bấm ở ngoài không tắt, nhưng giống khi mình morph vô details không phải Popover
+- Dark mode switcher
 
 # Read
 

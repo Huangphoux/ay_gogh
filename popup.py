@@ -184,9 +184,10 @@ def wiktionary_view(word: str, num: int):
 
 def not_new_day_view(num: int, word: str):
     content = (
-        P(
-            "※ Yellow background: the word can't be reviewed until tomorrow.",
-        ),
+        # P(
+        #     "※ Yellow background: the word can't be reviewed until tomorrow.",
+        # ),
+        P("This word cannot be reviewed until tomorrow."),
         Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
             close_btn(num),
             bypass_btn(num, word, is_outlined=True),
@@ -202,9 +203,9 @@ def not_due_view(num: int, word: str, due: str):
     ) - datetime.now(timezone.utc)
 
     content = (
-        Small(
-            "※ Green background: the word is not due for a review yet.",
-        ),
+        # Small(
+        #     "※ Green background: the word is not due for a review yet.",
+        # ),
         P(f"Next review is in {precisedelta(time_delta)}."),
         Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
             close_btn(num),
@@ -243,7 +244,7 @@ def retired_view(num: int, front: str, back: str):
         ),
     )
 
-    content = (small, front_part, back_part, buttons)
+    content = (front_part, back_part, buttons)
     return popup_form(num, content)
 
 
@@ -305,7 +306,7 @@ This action is NOT reversible. Are you sure about this decision?"
         ),
     )
 
-    content = (small, front_part, rate_part, more_part, close_btn(num))
+    content = (front_part, rate_part, more_part, close_btn(num))
     return popup_form(num, content)
 
 
