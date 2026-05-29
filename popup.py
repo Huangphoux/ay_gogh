@@ -59,13 +59,10 @@ def popup_form(num: int, content):
         open=True,
         popover="manual",
         id="popup",
-        # details also have a `toggle` event, so I have to use `beforetoggle`
-        # data_on_beforetoggle=(
-        #     f"evt.newState === 'closed' && @get('/read/{num}/close')"
-        # ),
         data_on_keydown=(
             js(
-                f"evt.key === 'Escape' && document.querySelector('#popup').hidePopover();"
+                f"if ( evt.key === 'Escape' && document.querySelector('#popup').checkVisibility() === true )  \
+                {{ @get('/read/{num}/close'); document.querySelector('#popup').hidePopover(); }}"
             ),
             dict(window=True),
         ),
