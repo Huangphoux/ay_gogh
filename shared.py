@@ -32,7 +32,7 @@ def template(title: str, main, auth=None):
         # ),
         nav,
         H1(
-            style="cursor: pointer; user-select: none;",
+            # style="cursor: pointer; user-select: none;",
             # data_on_click="evt.target.textContent=\
                 # $brand[Math.floor(Math.random()*$brand.length)]",
         )("Ay Gogh!"),

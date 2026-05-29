@@ -60,9 +60,9 @@ def popup_form(num: int, content):
         popover="manual",
         id="popup",
         # details also have a `toggle` event, so I have to use `beforetoggle`
-        data_on_beforetoggle=(
-            f"evt.newState === 'closed' && @get('/read/{num}/close')"
-        ),
+        # data_on_beforetoggle=(
+        #     f"evt.newState === 'closed' && @get('/read/{num}/close')"
+        # ),
         data_on_keydown=(
             js(
                 f"evt.key === 'Escape' && document.querySelector('#popup').hidePopover();"
@@ -78,15 +78,29 @@ def popup_form(num: int, content):
 
 
 def close_btn(num: int, is_outlined: bool = False, is_save: bool = False):
-    closepopup = js(
-        f"{get(f'/read/{num}/close') if not is_save else patch(f'/read/{num}/close', contentType='form')};\
-            document.querySelector('#popup').hidePopover();"
-    )
+    if is_save:
+        btn = Button(
+            _class="outline" if is_outlined else None,
+            data_on_click=(
+                js(
+                    f"@patch('/read/{num}/close', {{contentType: 'form'}});\
+                    document.querySelector('#popup').hidePopover();"
+                ),
+            ),
+        )("Close & Save")
+    else:
+        btn = Button(
+            _class="outline" if is_outlined else None,
+            data_on_click=(
+                js(
+                    f"@get('/read/{num}/close');\
+                    document.querySelector('#popup').hidePopover();"
+                ),
+                dict(prevent=True),
+            ),
+        )("Close")
 
-    return Button(
-        _class="outline" if is_outlined else None,
-        data_on_click=(closepopup, dict(prevent=True)) if not is_save else closepopup,
-    )("Close" if not is_save else "Close & Save")
+    return btn
 
 
 def bypass_btn(num: int, word: str = "", is_outlined: bool = False):
