@@ -17,6 +17,9 @@
   - các `data-*` attribute có khả năng bị regex nhận dạng là whole word
   - cần phải đổi thuật toán tìm whole word
 - Dark mode switcher
+- Thống kê quá trình học tập
+- Thêm Indexing cho các truy vấn WHERE
+- Viết READ.ME đẹp hơn
 
 # Read
 

@@ -120,15 +120,21 @@
 
 = KẾT LUẬN
 
-== Kết quả đạt được
+#include "500_ket_luan/tom_tat_chuong.typ"
 
+== Kết quả đạt được
+#include "500_ket_luan/ket_qua.typ"
 == Nhận xét
 === Thuận lợi
+#include "500_ket_luan/thuan_loi.typ"
 === Khó khăn
-
+#include "500_ket_luan/kho_khan.typ"
 == Ưu điểm
+#include "500_ket_luan/uu_diem.typ"
 == Nhược điểm
+#include "500_ket_luan/nhuoc_diem.typ"
 == Hướng phát triển
+#include "500_ket_luan/huong_phat_trien.typ"
 
 = TÀI LIỆU THAM KHẢO
 #bibliography(title: none, "bib.bib")

@@ -1,0 +1,4 @@
+- Dù đã cố gắng hết sức, nhưng do thời gian eo hẹp, kiến thức hạn chế và kinh nghiệm thực tế ít ỏi nên đồ án vẫn còn nhiều sai sót và bất cập.
+- *Hạn chế về thời gian*: Với quỹ thời gian giới hạn trong học kỳ, tác giả phải cân đối giữa các môn học khác và thời gian làm đồ án, dẫn đến việc một số tính năng chưa được tối ưu như mong muốn.
+- *Thiếu kinh nghiệm thực tế*: Đây là một trong những đồ án lớn đầu tiên nên tác giả còn thiếu kỹ năng xử lý các vấn đề phức tạp phát sinh trong khi lập trình hoặc vận hành hệ thống.
+- *Kiến thức còn hạn chế*: Một số công nghệ mới như tích hợp FSRS vẫn chưa được khai thác triệt để do nhóm cần thêm thời gian nghiên cứu sâu hơn.
