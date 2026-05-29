@@ -310,9 +310,17 @@ This action is NOT reversible. Are you sure about this decision?"
 
 
 def search_view(num: int):
+    buttons = Div(style="display: flex; gap: 1rem;", data_show="!$searching")(
+        close_btn(num, is_outlined=True),
+        Button(data_on_click=get(f"/read/{num}/open", contentType="form"))("Search"),
+    )
+
     content = (
-        Label(_for="word")("Write the word you want to search in your memory here."),
-        Input(
+        P(data_show="$searching")("Searching the word in your memory …"),
+        Label(_for="word", data_show="!$searching")(
+            "Write the word you want to search in your memory here."
+        ),
+        Input(data_show="!$searching")(
             type="text",
             id="word",
             name="word",
@@ -321,10 +329,8 @@ def search_view(num: int):
             placeholder="e.g. hawk tuah",
             style="width: 100%;",
         ),
-        Button(data_on_click=get(f"/read/{num}/open", contentType="form"))("Search"),
+        buttons,
     )
-
-    content = P("Searching the word in your memory …")
 
     return popup_form(num, content)
 

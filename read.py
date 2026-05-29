@@ -230,6 +230,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_is_due=card["is_due"],
                             data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
                             data_on_pointerup=(click_showpopup, dict(stop=True)),
+                            data_indicator="searching"
                         )(tokens[j])
                     ),
                     split[i],  # why can't i use `line` here?
@@ -338,7 +339,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         document.querySelector('#popup').showPopover(); }};"
     )
 
-    content = Section(data_on_pointerup=showpopup)(
+    content = Section(data_on_pointerup=showpopup, data_indicator="searching")(
         Safe(
             mistletoe.markdown(chap["content"], MyRenderer),  # text section
         ),
@@ -406,6 +407,12 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         else None
     )
 
+    popup_btn = Button(
+        _class="outline",
+        style="width: 100%; position: sticky; top: 0; z-index: 2;",
+        data_on_click="document.querySelector('#popup').togglePopover();",
+    )("Toggle popup")
+
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
         data_on_selectionchange=(
@@ -418,6 +425,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         popup_view(auth, num, word, bypass),
         debug_signals,
         toggles,
+        popup_btn,
         content,
         before_complete,
         mark_complete,

@@ -145,6 +145,6 @@ details[popover] {
     }
 
     &::backdrop {
-        backdrop-filter: brightness(80%);
+        backdrop-filter: brightness(50%) blur(1px) saturate(1);
     }
 }
