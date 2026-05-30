@@ -113,13 +113,12 @@
 
 == Thiết kế cơ sở dữ liệu
 === Cơ sở dữ liệu của hệ thống
-
 #include "300_phan_tich_thiet_ke/csdl_app/danh_sach.typ"
-
-
 === Cơ sở dữ liệu của người dùng
-
 #include "300_phan_tich_thiet_ke/csdl_user/danh_sach.typ"
+
+== Kiến trúc hệ thống
+#include "300_phan_tich_thiet_ke/kien_truc_he_thong.typ"
 
 = XÂY DỰNG ỨNG DỤNG
 
