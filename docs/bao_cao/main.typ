@@ -14,6 +14,9 @@
   } else { it.body })
 }
 
+#set table(inset: 1em)
+#show figure: set block(breakable: true)
+
 #let h1 = (
   [TÓM TẮT ĐỒ ÁN],
   [GIỚI THIỆU ĐỀ TÀI],
@@ -119,6 +122,7 @@
 #include "400_xay_dung_ung_dung/tom_tat_chuong.typ"
 
 == Danh sách các màn hình
+#include "400_xay_dung_ung_dung/danh_sach.typ"
 == Mô tả chi tiết các màn hình
 
 = KẾT LUẬN
