@@ -11,7 +11,17 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Popup tìm kiếm từ điển trực tuyến", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Khung popup", kieu: "Details/Popover", rang_buoc: "", y_nghia: "Hiển thị popup tra cứu"),
+  (ten: "Tiêu đề Popup", kieu: "Summary", rang_buoc: "", y_nghia: "Hiển thị trạng thái"),
+  (ten: "Tiêu đề Word", kieu: "Heading", rang_buoc: "", y_nghia: "Hiển thị từ đang tra"),
+  (ten: "Input ẩn front", kieu: "Input", rang_buoc: "", y_nghia: "Lưu từ cần lưu"),
+  (ten: "Label Definition", kieu: "Label", rang_buoc: "", y_nghia: "Nhãn định nghĩa"),
+  (ten: "Textarea định nghĩa", kieu: "Textarea", rang_buoc: "", y_nghia: "Nhập/ghi định nghĩa"),
+  (ten: "Khối Dictionary", kieu: "Details", rang_buoc: "", y_nghia: "Hiển thị kết quả tra cứu"),
+  (ten: "Danh sách định nghĩa", kieu: "Section", rang_buoc: "", y_nghia: "Các nghĩa tìm được"),
+  (ten: "Nút Close", kieu: "Button", rang_buoc: "", y_nghia: "Đóng popup"),
+  (ten: "Nút Save", kieu: "Button", rang_buoc: "", y_nghia: "Lưu từ vào bộ nhớ"),
+  (ten: "Nhãn NGSL", kieu: "Badge", rang_buoc: "", y_nghia: "Thông tin level NGSL"),
 )
 
 #figure(
@@ -30,7 +40,9 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Save", xu_li: "POST /read/{num}/save"),
+  (bien_co: "Nhấn Close", xu_li: "Đóng popup"),
+  (bien_co: "Nhấn Esc", xu_li: "GET /read/{num}/close và ẩn popup"),
 )
 
 #figure(

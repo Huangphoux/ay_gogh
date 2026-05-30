@@ -11,7 +11,9 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Trang hướng dẫn kiểm tra", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Tiêu đề Intro", kieu: "Heading", rang_buoc: "", y_nghia: "Nhận diện trang"),
+  (ten: "Mô tả bài test", kieu: "Paragraph", rang_buoc: "", y_nghia: "Giới thiệu bài kiểm tra"),
+  (ten: "Nút Start", kieu: "Button", rang_buoc: "", y_nghia: "Bắt đầu làm bài"),
 )
 
 #figure(
@@ -30,7 +32,7 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Start", xu_li: "Đi đến /test/progress"),
 )
 
 #figure(

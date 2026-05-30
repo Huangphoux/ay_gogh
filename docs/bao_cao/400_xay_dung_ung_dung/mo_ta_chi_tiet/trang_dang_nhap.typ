@@ -11,7 +11,13 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Trang Đăng nhập", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Tiêu đề Log In", kieu: "Heading", rang_buoc: "", y_nghia: "Nhận diện màn hình"),
+  (ten: "Form đăng nhập", kieu: "Form", rang_buoc: "", y_nghia: "Gửi thông tin đăng nhập"),
+  (ten: "Username", kieu: "Input", rang_buoc: "", y_nghia: "Nhập tên đăng nhập"),
+  (ten: "Password", kieu: "Input", rang_buoc: "", y_nghia: "Nhập mật khẩu"),
+  (ten: "Show Password", kieu: "Checkbox", rang_buoc: "", y_nghia: "Hiện/ẩn mật khẩu"),
+  (ten: "Log In", kieu: "Button", rang_buoc: "", y_nghia: "Xác nhận đăng nhập"),
+  (ten: "Sign Up", kieu: "Link", rang_buoc: "", y_nghia: "Chuyển sang đăng kí"),
 )
 
 #figure(
@@ -30,7 +36,9 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Bấm vào Log In", xu_li: "Gửi POST /auth/login"),
+  (bien_co: "Bấm Show Password", xu_li: "Đổi kiểu input password/text"),
+  (bien_co: "Bấm Sign Up", xu_li: "Đi đến /auth/signup"),
 )
 
 #figure(

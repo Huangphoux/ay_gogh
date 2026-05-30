@@ -11,7 +11,13 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Trang tiến độ học tập", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Tiêu đề Profile", kieu: "Heading", rang_buoc: "", y_nghia: "Hiển thị tên người dùng"),
+  (ten: "Khối Test", kieu: "Section", rang_buoc: "", y_nghia: "Trạng thái kiểm tra"),
+  (ten: "Liên kết Test", kieu: "Link", rang_buoc: "", y_nghia: "Đi đến trang kiểm tra"),
+  (ten: "Thông báo Test", kieu: "Notice", rang_buoc: "", y_nghia: "Nhắc làm bài kiểm tra"),
+  (ten: "Khối Read", kieu: "Section", rang_buoc: "", y_nghia: "Tiến độ đọc"),
+  (ten: "Liên kết Read", kieu: "Link", rang_buoc: "", y_nghia: "Đi đến danh sách đọc"),
+  (ten: "Tiến độ chương", kieu: "Paragraph", rang_buoc: "", y_nghia: "Số chương đã hoàn thành"),
 )
 
 #figure(
@@ -30,7 +36,8 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Test", xu_li: "Đi đến /test/"),
+  (bien_co: "Nhấn Read", xu_li: "Đi đến /read/ hoặc /read/?p=n"),
 )
 
 #figure(

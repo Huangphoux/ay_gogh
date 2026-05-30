@@ -11,7 +11,12 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Trang danh sách 10 bài đọc đầu tiên", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Tiêu đề Read, 1-10", kieu: "Heading", rang_buoc: "", y_nghia: "Hiển thị phạm vi chương"),
+  (ten: "Thành phần trang", kieu: "Navigation", rang_buoc: "", y_nghia: "Chuyển trang danh sách"),
+  (ten: "Liên kết Chapter", kieu: "Link", rang_buoc: "", y_nghia: "Đi đến trang đọc chương"),
+  (ten: "Trạng thái DONE", kieu: "Label", rang_buoc: "", y_nghia: "Đánh dấu chương đã hoàn thành"),
+  (ten: "Nhãn độ khó", kieu: "Link", rang_buoc: "", y_nghia: "Đi đến đánh giá độ khó"),
+  (ten: "Show all", kieu: "Link", rang_buoc: "", y_nghia: "Chuyển sang xem tất cả"),
 )
 
 #figure(
@@ -30,7 +35,11 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Previous/Next", xu_li: "Đi đến trang trước/sau"),
+  (bien_co: "Nhấn số trang", xu_li: "Đi đến trang tương ứng"),
+  (bien_co: "Nhấn Chapter", xu_li: "Đi đến /read/{num}"),
+  (bien_co: "Nhấn độ khó", xu_li: "Đi đến /read/{num}/ease"),
+  (bien_co: "Nhấn Show all", xu_li: "Đi đến danh sách tất cả"),
 )
 
 #figure(

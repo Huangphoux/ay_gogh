@@ -11,7 +11,12 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Trang đánh giá độ khó bài đọc", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Tiêu đề Reading Ease", kieu: "Heading", rang_buoc: "", y_nghia: "Nhận diện trang"),
+  (ten: "Bảng đánh giá", kieu: "Table", rang_buoc: "", y_nghia: "Tỉ lệ NGSL và mức độ"),
+  (ten: "Kết luận độ khó", kieu: "Paragraph", rang_buoc: "", y_nghia: "Mức độ easy/medium/hard"),
+  (ten: "Nút Let's read", kieu: "Button/Link", rang_buoc: "", y_nghia: "Quay về bài đọc"),
+  (ten: "Phần tham chiếu", kieu: "Section", rang_buoc: "", y_nghia: "Giải thích bảng tham chiếu"),
+  (ten: "Bảng tham chiếu", kieu: "Table", rang_buoc: "", y_nghia: "Ngưỡng % và độ khó"),
 )
 
 #figure(
@@ -30,7 +35,8 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Mở trang", xu_li: "Chuyển về /read/{num} nếu chưa hoàn thành test"),
+  (bien_co: "Nhấn Let's read", xu_li: "Đi đến /read/{num}"),
 )
 
 #figure(

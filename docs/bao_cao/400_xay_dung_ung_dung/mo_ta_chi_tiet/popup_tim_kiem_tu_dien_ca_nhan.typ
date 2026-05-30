@@ -11,7 +11,13 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Popup tìm kiếm từ điển cá nhân", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Khung popup", kieu: "Details/Popover", rang_buoc: "", y_nghia: "Hiển thị popup tra cứu"),
+  (ten: "Tiêu đề Popup", kieu: "Summary", rang_buoc: "", y_nghia: "Trạng thái Searching"),
+  (ten: "Thông báo Searching", kieu: "Paragraph", rang_buoc: "", y_nghia: "Báo trạng thái tìm kiếm"),
+  (ten: "Label nhập từ", kieu: "Label", rang_buoc: "", y_nghia: "Hướng dẫn nhập từ"),
+  (ten: "Ô nhập từ", kieu: "Input", rang_buoc: "", y_nghia: "Nhập từ cần tra"),
+  (ten: "Nút Close", kieu: "Button", rang_buoc: "", y_nghia: "Đóng popup"),
+  (ten: "Nút Search", kieu: "Button", rang_buoc: "", y_nghia: "Bắt đầu tra cứu"),
 )
 
 #figure(
@@ -30,7 +36,9 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Search", xu_li: "GET /read/{num}/open"),
+  (bien_co: "Nhấn Close", xu_li: "Đóng popup"),
+  (bien_co: "Nhấn Esc", xu_li: "GET /read/{num}/close và ẩn popup"),
 )
 
 #figure(

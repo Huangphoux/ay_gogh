@@ -11,9 +11,20 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Home", kieu: "Liên kết", rang_buoc: "", y_nghia: "Liên kết chuyển hướng đến trang chủ"),
-  (ten: "Log In", kieu: "Liên kết", rang_buoc: "", y_nghia: "Liên kết chuyển hướng đến trang đăng nhập"),
-  (ten: "Sign Up", kieu: "Liên kết", rang_buoc: "", y_nghia: "Liên kết chuyển hướng đến trang đăng kí"),
+  (ten: "Header", kieu: "Khu vực", rang_buoc: "", y_nghia: "Chứa điều hướng và tiêu đề"),
+  (ten: "Nav (chưa đăng nhập)", kieu: "Liên kết", rang_buoc: "", y_nghia: "Điều hướng cơ bản"),
+  (ten: "Tiêu đề Ay Gogh!", kieu: "Heading", rang_buoc: "", y_nghia: "Nhận diện thương hiệu"),
+  (ten: "Hero: Just Read", kieu: "Section", rang_buoc: "", y_nghia: "Thông điệp chính"),
+  (ten: "Nút Sign up", kieu: "Button/Link", rang_buoc: "", y_nghia: "Đi đến đăng kí"),
+  (ten: "Video giới thiệu", kieu: "Video", rang_buoc: "", y_nghia: "Nội dung demo"),
+  (ten: "Giới thiệu Ay Gogh!", kieu: "Paragraph", rang_buoc: "", y_nghia: "Mô tả nền tảng"),
+  (ten: "NGSL/FSRS/Nature Method", kieu: "Section", rang_buoc: "", y_nghia: "Giới thiệu công nghệ"),
+  (ten: "Testimonials", kieu: "Blockquote", rang_buoc: "", y_nghia: "Đánh giá người dùng"),
+  (ten: "Last chance CTA", kieu: "Section", rang_buoc: "", y_nghia: "Kêu gọi đăng kí"),
+  (ten: "Profile heading", kieu: "Heading", rang_buoc: "", y_nghia: "Tên người dùng"),
+  (ten: "Khối Test", kieu: "Section", rang_buoc: "", y_nghia: "Trạng thái kiểm tra"),
+  (ten: "Khối Read", kieu: "Section", rang_buoc: "", y_nghia: "Tiến độ đọc"),
+  (ten: "Footer", kieu: "Khu vực", rang_buoc: "", y_nghia: "Thông tin bản quyền và liên kết"),
 )
 
 #figure(
@@ -32,9 +43,9 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "Nhấn Home", xu_li: "Chuyển hướng đến trang chủ"),
-  (bien_co: "Nhấn Log In", xu_li: "Chuyển hướng đến trang đăng nhập"),
-  (bien_co: "Nhấn Sign Up", xu_li: "Chuyển hướng đến trang đăng kí"),
+  (bien_co: "Nhấn Home", xu_li: "Đi đến /"),
+  (bien_co: "Nhấn Log In", xu_li: "Đi đến /auth/login/"),
+  (bien_co: "Nhấn Sign Up", xu_li: "Đi đến /auth/signup"),
 )
 
 #figure(

@@ -11,7 +11,8 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Trang cài đặt", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Tiêu đề Settings", kieu: "Heading", rang_buoc: "", y_nghia: "Nhận diện trang"),
+  (ten: "Liên kết FSRS", kieu: "Link", rang_buoc: "", y_nghia: "Đi đến trang cài đặt FSRS"),
 )
 
 #figure(
@@ -30,7 +31,7 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn FSRS", xu_li: "Đi đến /settings/fsrs"),
 )
 
 #figure(

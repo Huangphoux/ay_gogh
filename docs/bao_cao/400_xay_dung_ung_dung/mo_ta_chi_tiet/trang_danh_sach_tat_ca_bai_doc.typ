@@ -11,7 +11,12 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Trang danh sách tất cả các bài đọc", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Tiêu đề Read All", kieu: "Heading", rang_buoc: "", y_nghia: "Hiển thị chế độ xem tất cả"),
+  (ten: "Danh sách chương", kieu: "Navigation", rang_buoc: "", y_nghia: "Liệt kê toàn bộ chương"),
+  (ten: "Liên kết Chapter", kieu: "Link", rang_buoc: "", y_nghia: "Đi đến trang đọc chương"),
+  (ten: "Trạng thái DONE", kieu: "Label", rang_buoc: "", y_nghia: "Đánh dấu chương đã hoàn thành"),
+  (ten: "Nhãn độ khó", kieu: "Link", rang_buoc: "", y_nghia: "Đi đến đánh giá độ khó"),
+  (ten: "Show less", kieu: "Link", rang_buoc: "", y_nghia: "Quay về danh sách 10"),
 )
 
 #figure(
@@ -30,7 +35,9 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Chapter", xu_li: "Đi đến /read/{num}"),
+  (bien_co: "Nhấn độ khó", xu_li: "Đi đến /read/{num}/ease"),
+  (bien_co: "Nhấn Show less", xu_li: "Đi đến /read/?all=0"),
 )
 
 #figure(

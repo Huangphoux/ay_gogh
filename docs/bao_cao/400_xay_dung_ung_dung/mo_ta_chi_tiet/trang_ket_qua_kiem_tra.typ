@@ -11,7 +11,17 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Trang kết quả kiểm tra", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Tiêu đề Test", kieu: "Heading", rang_buoc: "", y_nghia: "Nhận diện trang"),
+  (
+    ten: "Nút Take a test/Continue",
+    kieu: "Button",
+    rang_buoc: "",
+    y_nghia: "Bắt đầu/tiếp tục bài kiểm tra",
+  ),
+  (ten: "Bảng lịch sử kết quả kiểm tra", kieu: "Table", rang_buoc: "", y_nghia: "Danh sách các lần kiểm tra"),
+  (ten: "Khối phân tích kết quả", kieu: "Section", rang_buoc: "", y_nghia: "Giải thích kết quả"),
+  (ten: "Kết quả tổng", kieu: "Paragraph", rang_buoc: "", y_nghia: "Tổng % từ vựng NGSL"),
+  (ten: "Thông báo chờ kết quả", kieu: "Notice", rang_buoc: "", y_nghia: "Hiển thị khi chưa xong"),
 )
 
 #figure(
@@ -30,7 +40,7 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Take a test/Continue", xu_li: "Đi đến /test/intro"),
 )
 
 #figure(

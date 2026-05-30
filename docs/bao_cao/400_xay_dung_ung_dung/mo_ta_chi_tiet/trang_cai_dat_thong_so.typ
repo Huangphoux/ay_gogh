@@ -11,7 +11,16 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Trang cài đặt các thông số", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Tiêu đề FSRS", kieu: "Heading", rang_buoc: "", y_nghia: "Nhận diện trang"),
+  (ten: "Mô tả FSRS", kieu: "Paragraph", rang_buoc: "", y_nghia: "Giới thiệu thuật toán"),
+  (ten: "Khối Desired Retention", kieu: "Section", rang_buoc: "", y_nghia: "Thiết lập tỉ lệ ghi nhớ"),
+  (ten: "Input Desired Retention", kieu: "Input", rang_buoc: "", y_nghia: "Nhập giá trị 70-100"),
+  (ten: "Nút Save", kieu: "Button", rang_buoc: "", y_nghia: "Lưu tỉ lệ ghi nhớ"),
+  (ten: "Thông báo retention", kieu: "Notice", rang_buoc: "", y_nghia: "Phản hồi sau khi lưu"),
+  (ten: "Khối Parameters", kieu: "Section", rang_buoc: "", y_nghia: "Giải thích tham số"),
+  (ten: "Danh sách tham số", kieu: "Paragraph", rang_buoc: "", y_nghia: "Hiển thị tham số hiện tại"),
+  (ten: "Nút Optimize", kieu: "Button", rang_buoc: "", y_nghia: "Tối ưu tham số"),
+  (ten: "Thông báo tối ưu", kieu: "Notice", rang_buoc: "", y_nghia: "Trạng thái tối ưu hóa"),
 )
 
 #figure(
@@ -30,7 +39,8 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Save", xu_li: "Gửi PATCH /settings/fsrs/save"),
+  (bien_co: "Nhấn Optimize", xu_li: "Gửi GET /settings/fsrs/optimize"),
 )
 
 #figure(
