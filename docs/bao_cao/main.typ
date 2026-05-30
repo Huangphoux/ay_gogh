@@ -14,7 +14,7 @@
   } else { it.body })
 }
 
-#set table(inset: 1em)
+#set table(inset: 10pt)
 #show figure: set block(breakable: true)
 
 #let h1 = (
@@ -124,6 +124,26 @@
 == Danh sách các màn hình
 #include "400_xay_dung_ung_dung/danh_sach.typ"
 == Mô tả chi tiết các màn hình
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_chu.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_dang_nhap.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_dang_ki.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_tien_do_hoc_tap.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_ket_qua_kiem_tra.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_huong_dan_kiem_tra.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_tien_do_kiem_tra.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_cai_dat.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_cai_dat_thong_so.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_danh_sach_10_bai_doc_dau_tien.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_danh_sach_tat_ca_bai_doc.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_bai_doc.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/trang_danh_gia_do_kho_bai_doc.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/popup_tim_kiem_tu_dien_ca_nhan.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/popup_tim_kiem_tu_dien_truc_tuyen.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/popup_thong_bao_ngay_mai_moi_co_the_hoc_tu.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/popup_tra_loi_nho_hay_khong.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/popup_cac_thao_tac_khac.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/popup_hien_thi_tu_bi_hoan.typ"
+#include "400_xay_dung_ung_dung/mo_ta_chi_tiet/popup_thong_bao_tu_chua_can_duoc_on.typ"
 
 = KẾT LUẬN
 
