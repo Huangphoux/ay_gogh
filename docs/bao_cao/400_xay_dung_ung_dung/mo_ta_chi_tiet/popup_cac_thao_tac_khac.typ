@@ -11,7 +11,13 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Popup các thao tác khác", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Khung popup", kieu: "Details/Popover", rang_buoc: "", y_nghia: "Hiển thị popup thao tác"),
+  (ten: "Tiêu đề Popup", kieu: "Summary", rang_buoc: "", y_nghia: "Hiển thị trạng thái"),
+  (ten: "Tiêu đề Word", kieu: "Heading", rang_buoc: "", y_nghia: "Hiển thị từ đang ôn"),
+  (ten: "Khối More actions", kieu: "Details", rang_buoc: "", y_nghia: "Các thao tác khác"),
+  (ten: "Nút Retire", kieu: "Button", rang_buoc: "", y_nghia: "Đánh dấu từ đã hoãn"),
+  (ten: "Nút Delete", kieu: "Button", rang_buoc: "", y_nghia: "Xóa từ khỏi bộ nhớ"),
+  (ten: "Nút Close", kieu: "Button", rang_buoc: "", y_nghia: "Đóng popup"),
 )
 
 #figure(
@@ -30,7 +36,10 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Retire", xu_li: "PATCH /read/{num}/retire"),
+  (bien_co: "Nhấn Delete", xu_li: "DELETE /read/{num}/delete (có xác nhận)"),
+  (bien_co: "Nhấn Close", xu_li: "Đóng popup"),
+  (bien_co: "Nhấn Esc", xu_li: "GET /read/{num}/close và ẩn popup"),
 )
 
 #figure(

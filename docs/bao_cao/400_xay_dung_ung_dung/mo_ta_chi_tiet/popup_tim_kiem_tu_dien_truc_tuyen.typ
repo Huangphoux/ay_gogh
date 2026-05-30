@@ -14,7 +14,6 @@
   (ten: "Khung popup", kieu: "Details/Popover", rang_buoc: "", y_nghia: "Hiển thị popup tra cứu"),
   (ten: "Tiêu đề Popup", kieu: "Summary", rang_buoc: "", y_nghia: "Hiển thị trạng thái"),
   (ten: "Tiêu đề Word", kieu: "Heading", rang_buoc: "", y_nghia: "Hiển thị từ đang tra"),
-  (ten: "Input ẩn front", kieu: "Input", rang_buoc: "", y_nghia: "Lưu từ cần lưu"),
   (ten: "Label Definition", kieu: "Label", rang_buoc: "", y_nghia: "Nhãn định nghĩa"),
   (ten: "Textarea định nghĩa", kieu: "Textarea", rang_buoc: "", y_nghia: "Nhập/ghi định nghĩa"),
   (ten: "Khối Dictionary", kieu: "Details", rang_buoc: "", y_nghia: "Hiển thị kết quả tra cứu"),

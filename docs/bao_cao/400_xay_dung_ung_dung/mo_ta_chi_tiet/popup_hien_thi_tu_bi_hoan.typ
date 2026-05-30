@@ -11,7 +11,13 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Popup hiển thị từ bị hoãn", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Khung popup", kieu: "Details/Popover", rang_buoc: "", y_nghia: "Hiển thị popup từ bị hoãn"),
+  (ten: "Tiêu đề Popup", kieu: "Summary", rang_buoc: "", y_nghia: "Hiển thị trạng thái"),
+  (ten: "Tiêu đề Word", kieu: "Heading", rang_buoc: "", y_nghia: "Hiển thị từ"),
+  (ten: "Label Definition", kieu: "Label", rang_buoc: "", y_nghia: "Nhãn định nghĩa"),
+  (ten: "Textarea định nghĩa", kieu: "Textarea", rang_buoc: "", y_nghia: "Chỉnh sửa định nghĩa"),
+  (ten: "Nút Close & Save", kieu: "Button", rang_buoc: "", y_nghia: "Lưu và đóng"),
+  (ten: "Nút Unretire", kieu: "Button", rang_buoc: "", y_nghia: "Bỏ hoãn từ"),
 )
 
 #figure(
@@ -30,7 +36,9 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Close & Save", xu_li: "PATCH /read/{num}/close"),
+  (bien_co: "Nhấn Unretire", xu_li: "DELETE /read/{num}/retire"),
+  (bien_co: "Nhấn Esc", xu_li: "GET /read/{num}/close và ẩn popup"),
 )
 
 #figure(

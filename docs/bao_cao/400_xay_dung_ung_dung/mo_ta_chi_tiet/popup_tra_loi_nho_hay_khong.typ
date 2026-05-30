@@ -11,7 +11,15 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Popup trả lời nhớ hay không", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Khung popup", kieu: "Details/Popover", rang_buoc: "", y_nghia: "Hiển thị popup ôn tập"),
+  (ten: "Tiêu đề Popup", kieu: "Summary", rang_buoc: "", y_nghia: "Hiển thị trạng thái"),
+  (ten: "Tiêu đề Word", kieu: "Heading", rang_buoc: "", y_nghia: "Hiển thị từ đang ôn"),
+  (ten: "Khối Recall before reveal", kieu: "Details", rang_buoc: "", y_nghia: "Khu vực trả lời nhớ/không"),
+  (ten: "Label Definition", kieu: "Label", rang_buoc: "", y_nghia: "Nhãn định nghĩa"),
+  (ten: "Textarea định nghĩa", kieu: "Textarea", rang_buoc: "", y_nghia: "Nhập/ghi định nghĩa"),
+  (ten: "Nút I forgot", kieu: "Button", rang_buoc: "", y_nghia: "Đánh giá quên"),
+  (ten: "Nút I remembered", kieu: "Button", rang_buoc: "", y_nghia: "Đánh giá nhớ"),
+  (ten: "Nút Close", kieu: "Button", rang_buoc: "", y_nghia: "Đóng popup"),
 )
 
 #figure(
@@ -30,7 +38,10 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn I forgot", xu_li: "PATCH /read/{num}/forgot"),
+  (bien_co: "Nhấn I remembered", xu_li: "PATCH /read/{num}/remembered"),
+  (bien_co: "Nhấn Close", xu_li: "Đóng popup"),
+  (bien_co: "Nhấn Esc", xu_li: "GET /read/{num}/close và ẩn popup"),
 )
 
 #figure(

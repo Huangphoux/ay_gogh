@@ -11,7 +11,11 @@
 - *Các thành phần của màn hình*:
 
 #let thanh_phan = (
-  (ten: "Popup thông báo từ chưa cần được ôn", kieu: "", rang_buoc: "", y_nghia: ""),
+  (ten: "Khung popup", kieu: "Details/Popover", rang_buoc: "", y_nghia: "Hiển thị popup thông báo"),
+  (ten: "Tiêu đề Popup", kieu: "Summary", rang_buoc: "", y_nghia: "Hiển thị trạng thái"),
+  (ten: "Thông báo thời gian", kieu: "Paragraph", rang_buoc: "", y_nghia: "Báo thời gian ôn tiếp"),
+  (ten: "Nút Close", kieu: "Button", rang_buoc: "", y_nghia: "Đóng popup"),
+  (ten: "Nút Review anyway", kieu: "Button", rang_buoc: "", y_nghia: "Bỏ qua chờ, vẫn ôn"),
 )
 
 #figure(
@@ -30,7 +34,9 @@
 - *Danh sách các biến cố của màn hình*:
 
 #let bien_co = (
-  (bien_co: "", xu_li: ""),
+  (bien_co: "Nhấn Close", xu_li: "Đóng popup"),
+  (bien_co: "Nhấn Review anyway", xu_li: "GET /read/{num}/open?bypass=1"),
+  (bien_co: "Nhấn Esc", xu_li: "GET /read/{num}/close và ẩn popup"),
 )
 
 #figure(
