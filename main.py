@@ -133,7 +133,7 @@ def hero_page():
     )
     testimonials = Section(
         Blockquote(
-            P("Oh yeah, Ay Gogh is great. What else can I not say about it?"),
+            P("Oh yeah, Ay Gogh! is great. What else can I not say about it?"),
             P(Cite("– Random guy of the street")),
         ),
     )
@@ -150,7 +150,7 @@ def hero_page():
             nature_method,
             ngsl,
             fsrs,
-            standard_ebooks,
+            # standard_ebooks,
             testimonials,
             last_chance,
         ),

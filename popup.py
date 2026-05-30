@@ -67,7 +67,7 @@ def popup_form(num: int, content):
             dict(window=True),
         ),
     )(
-        Summary("Popup"),
+        Summary(data_text="$searching ? 'Popup (Searching …)' : 'Popup'"),
         Form(content),
     )
 
@@ -140,7 +140,7 @@ def wiktionary_view(word: str, num: int):
     )
 
     front_part = (
-        H2(f"Word: {word}"),
+        P(f"Word: {word}"),
         Input(type="hidden", id="front", name="front", value=word),
     )
 
@@ -161,6 +161,7 @@ def wiktionary_view(word: str, num: int):
         Ul(
             style="max-height: 20vh; overflow: auto",
             data_on_pointerup=(f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"),
+            data_indicator="searching",
         )(
             *(Li(d) for d in definition),
         )
@@ -313,7 +314,10 @@ This action is NOT reversible. Are you sure about this decision?"
 def search_view(num: int):
     buttons = Div(style="display: flex; gap: 1rem;", data_show="!$searching")(
         close_btn(num, is_outlined=True),
-        Button(data_on_click=get(f"/read/{num}/open", contentType="form"))("Search"),
+        Button(
+            data_on_click=get(f"/read/{num}/open", contentType="form"),
+            data_indicator="searching",
+        )("Search"),
     )
 
     content = (

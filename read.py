@@ -97,7 +97,7 @@ def read(auth, p: int = 0, all: int = 0):
                     href=f"/read/{c['number']}/ease",
                     title=f"You know {result * c['ngsl']:.2f}% of the words in chapter {c['number']}.",
                 )(ease.title())
-                if result and progress == 100 and not c["done"]
+                if result is not None and progress == 100 and not c["done"]
                 else None,
             )
             for c in chap
