@@ -140,7 +140,7 @@ def wiktionary_view(word: str, num: int):
     )
 
     front_part = (
-        P(f"Word: {word}"),
+        H2(f"Word: {word}"),
         Input(type="hidden", id="front", name="front", value=word),
     )
 

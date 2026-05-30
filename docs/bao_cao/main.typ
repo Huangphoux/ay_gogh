@@ -113,7 +113,10 @@
 = PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
 
 
+
 = XÂY DỰNG ỨNG DỤNG
+
+#include "400_xay_dung_ung_dung/tom_tat_chuong.typ"
 
 == Danh sách các màn hình
 == Mô tả chi tiết các màn hình

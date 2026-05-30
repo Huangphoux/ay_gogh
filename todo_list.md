@@ -18,8 +18,11 @@
   - cần phải đổi thuật toán tìm whole word
 - Dark mode switcher
 - Thống kê quá trình học tập
-- Thêm Indexing cho các truy vấn WHERE
 - Viết READ.ME đẹp hơn
+
+# CSDL
+- Thêm Indexing cho các truy vấn WHERE
+- Gộp các execute vào 1 transaction
 
 # Read
 
