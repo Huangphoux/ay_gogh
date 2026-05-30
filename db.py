@@ -11,7 +11,7 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 class DatabaseDict:
     def __init__(self):
-        self._user: dict[str, Database] = {}  # store connections
+        self.user: dict[str, Database] = {}  # store connections
         # python wouldn't know where to find and reuse connections
 
         os.makedirs("db", exist_ok=True)
@@ -135,10 +135,10 @@ class DatabaseDict:
         )
 
     def get(self, name: str = "app") -> Database:
-        if name not in self._user:
-            self._user[name] = Database(f"db/{name}.db", strict=True)
+        if name not in self.user:
+            self.user[name] = Database(f"db/{name}.db", strict=True)
             # test
-            self._user[name].execute(""" 
+            self.user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS test (
                         number INTEGER PRIMARY KEY,
                         day TEXT NOT NULL,
@@ -152,14 +152,14 @@ class DatabaseDict:
                     )
             """)
             # chapter
-            self._user[name].execute(""" 
+            self.user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS chapter (
                         number INTEGER PRIMARY KEY,
                         done TEXT NOT NULL
                     )
             """)
             # deck
-            self._user[name].execute(""" 
+            self.user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS deck (
                         id INTEGER PRIMARY KEY,
                         front TEXT NOT NULL UNIQUE,
@@ -174,7 +174,7 @@ class DatabaseDict:
                     )
             """)
             # review_log
-            self._user[name].execute("""
+            self.user[name].execute("""
                     CREATE TABLE IF NOT EXISTS review_log (
                         id INTEGER PRIMARY KEY,
                         card_id INTEGER NOT NULL REFERENCES deck(id) ON DELETE CASCADE,
@@ -184,7 +184,7 @@ class DatabaseDict:
                     )
             """)
             # settings
-            self._user[name].execute("""
+            self.user[name].execute("""
                     CREATE TABLE IF NOT EXISTS settings (
                         id INTEGER PRIMARY KEY,
                         setting TEXT UNIQUE NOT NULL,
@@ -192,12 +192,12 @@ class DatabaseDict:
                     )
             """)
             # desired_retention
-            self._user[name].execute(
+            self.user[name].execute(
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 ("desired_retention", 0.8),
             )
             # parameters
-            self._user[name].execute(
+            self.user[name].execute(
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 (
                     "parameters",  # defaults from https://github.com/open-spaced-repetition/py-fsrs#usage
@@ -207,22 +207,22 @@ class DatabaseDict:
                 ),
             )
 
-            self._user[name].execute(
+            self.user[name].execute(
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 ("show_mark", "1"),
             )
             
-            self._user[name].execute(
+            self.user[name].execute(
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 ("show_aside", "1"),
             )
 
             self.seed_user(name) if is_debug else None
 
-        return self._user[name] if name else self.app
+        return self.user[name] if name else self.app
 
     def seed_user(self, name: str):
-        self._user[name].execute(
+        self.user[name].execute(
             """
                 INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
                 VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
@@ -230,7 +230,7 @@ class DatabaseDict:
             ("c", 100, 20, 19, 20, 20, 20),
         ) if whose_test == "Phuc" else None
 
-        self._user[name].execute(
+        self.user[name].execute(
             """
             INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
             VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
@@ -240,8 +240,8 @@ class DatabaseDict:
 
     def close(self, name: str = "app"):
         try:
-            self._user[name].close()
-            del self._user[name]
+            self.user[name].close()
+            del self.user[name]
         except KeyError:
             # Newly created then sign out immediately means no DB made yet
             # but bypassing that is okay tho
@@ -250,6 +250,6 @@ class DatabaseDict:
     def close_all(self):
         self.app.close()
 
-        for name in self._user:
-            self._user[name].close()
-            del self._user[name]
+        for name in self.user:
+            self.user[name].close()
+            del self.user[name]
