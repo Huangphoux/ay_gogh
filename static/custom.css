@@ -113,6 +113,7 @@ p {
         float: left;
     }
 
+    /* this is where the viewport covers the notes */
     @media (max-width: 1200px) {
         &:nth-of-type(even),
         &:nth-of-type(odd) {
@@ -129,6 +130,7 @@ p {
     display: grid;
     place-items: center;
 
+    /* this is where the cardinal looks ugly */
     grid-auto-flow: column;
     @media (max-width: 500px) {
         grid-auto-flow: row;
@@ -138,13 +140,18 @@ p {
 details[popover] {
     max-width: 45rem;
     width: 100dvw;
+    transition: filter var(--transition-time);
 
-    @media (min-width: 1000px) {
-        margin: 0;
-        position-area: bottom;
+    &:open {
+        filter: none;
+
+        &::backdrop {
+            backdrop-filter: brightness(50%) grayscale(80%);
+        }
     }
 
-    &::backdrop {
-        backdrop-filter: brightness(50%) blur(1px) saturate(1);
+    /* this is the average laptop screen size assumed by Google */
+    @media (min-width: 1024px) {
+        margin-top: 0;
     }
 }
