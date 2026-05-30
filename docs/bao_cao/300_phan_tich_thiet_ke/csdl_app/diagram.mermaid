@@ -1,0 +1,57 @@
+classDiagram
+	%% App DB tables
+	class User {
+		+INTEGER id
+		+TEXT name
+		+TEXT pwd
+	}
+
+	class Chapter {
+		+INTEGER number
+		+TEXT number_word
+		+TEXT cardinal
+		+TEXT cardinal_word
+		+TEXT title
+		+TEXT content
+		+REAL ngsl
+	}
+
+	class Ngsl {
+		+INTEGER number
+		+TEXT lemma
+		+INTEGER level
+	}
+
+	class FormA {
+		+INTEGER number
+		+TEXT lemma
+		+TEXT question
+		+TEXT "1"
+		+TEXT "2"
+		+TEXT "3"
+		+TEXT "4"
+		+INTEGER answer
+	}
+
+	class FormB {
+		+INTEGER number
+		+TEXT lemma
+		+TEXT question
+		+TEXT "1"
+		+TEXT "2"
+		+TEXT "3"
+		+TEXT "4"
+		+INTEGER answer
+	}
+
+	class FormC {
+		+INTEGER number
+		+TEXT lemma
+		+TEXT question
+		+TEXT "1"
+		+TEXT "2"
+		+TEXT "3"
+		+TEXT "4"
+		+INTEGER answer
+	}
+
