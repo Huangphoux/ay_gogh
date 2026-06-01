@@ -126,6 +126,8 @@
 === Danh sách các Use Case
 #include "300_phan_tich_thiet_ke/danh_sach_use_case.typ"
 
+== Sơ đồ Use Case
+#include "300_phan_tich_thiet_ke/danh_sach_so_do_use_case.typ"
 
 
 == Thiết kế cơ sở dữ liệu

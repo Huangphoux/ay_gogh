@@ -1,0 +1,21 @@
+@startuml Tổng quát
+
+left to right direction
+
+actor "Người dùng cá nhân" as fc
+
+rectangle "Trang web hỗ trợ đọc và học từ vựng bằng AI" {
+  usecase "Quản lí tài khoản" as UC1
+  usecase "Kiểm tra vốn từ vựng" as UC2
+  usecase "Đọc sách" as UC3
+  usecase "Thu thập từ vựng" as UC4
+  usecase "Chỉnh thông số thuật toán" as UC5
+}
+
+fc --> UC1
+fc --> UC2
+fc --> UC3
+fc --> UC4
+fc --> UC5
+
+@enduml
