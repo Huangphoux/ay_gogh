@@ -120,6 +120,13 @@
 === Yêu cầu phi chức năng
 #include "300_phan_tich_thiet_ke/yeu_cau_phi_chuc_nang.typ"
 
+== Use Case
+=== Danh sách các Actor
+#include "300_phan_tich_thiet_ke/danh_sach_actor.typ"
+=== Danh sách các Use Case
+#include "300_phan_tich_thiet_ke/danh_sach_use_case.typ"
+
+
 
 == Thiết kế cơ sở dữ liệu
 === Cơ sở dữ liệu của hệ thống

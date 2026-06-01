@@ -1,11 +1,29 @@
-- *Quản lý tài khoản*: đăng ký, đăng nhập; lưu trữ các thông tin sau: kết quả các bài kiểm tra, từ điển cá nhân, số lượng chương đã hoàn thành, lịch sử ôn tập từ vựng, thông số tuỳ biến thuật toán lên lịch ôn tập.
-- *Kiểm tra vốn từ vựng*: người học có thể kiểm tra vốn từ vựng cốt lõi của bản thân bất cứ lúc nào.
-- *Đọc sách*: sử dụng kết quả bài kiểm tra để đánh giá độ khó của bài đọc, phân tích xem người học có thể hiểu được bao nhiêu từ trong bài đọc đó.
-- *Pop-up*: trong quá trình đọc, người học bôi đen một từ, hệ thống sẽ hiện một pop-up cho phép người dùng lưu từ đó vào từ điển cá nhân.
-  - Một ô chứa từ người học bôi đen. Người học có thể sửa ô này để hệ thống tìm nghĩa của từ mới.
-  - Một ô để người đọc tự điền vào nghĩa của từ đấy, sau đó hệ thống sẽ lưu từ đó vào từ điển cá nhân của người học.
-  - Một ô chứa các nghĩa của từ đấy, được rút từ dữ liệu của Wiktionary.
-  - Thông báo cho người dùng biết từ đó thuộc cấp độ nào, để người học tập trung vào việc cải thiện các cấp độ còn yếu.
-  - Đến một câu chứa từ cần phải ôn, người đọc cần trả lời trước khi tiếp tục đọc. Những từ này cũng sẽ được chuẩn bị ở cuối bài trước khi hoàn thành bài đọc để người học thực hiện việc ôn tập ngay trong bài đọc đó.
-  - Người dùng có thể cho từ đó "nghỉ hưu" nếu người dùng không muốn ôn tập từ này nữa, nhưng vẫn muốn giữ từ đó trong từ điển cá nhân.
-- *Chỉnh thông số thuật toán*: người học có thể tuỳ biến thuật toán lên lịch học tập để tăng tần suất ôn tập lên, hoặc tối ưu thông số để đáp ứng với thói quen học tập của người học.
+- *Quản lí tài khoản*:
+  - Đăng ký
+  - Đăng nhập
+  - Đăng xuất
+- *Kiểm tra vốn từ vựng*:
+  - Làm bài kiểm tra mới
+  - Tiếp tục bài kiểm tra chưa hoàn thành
+- *Đọc sách*:
+  - Truy cập bài đọc
+  - Xem phân tích độ khó bài đọc
+  - Đánh dấu hoàn thành bài đọc
+  - Huỷ đánh dấu hoàn thành bài đọc
+  - Hiện/ẩn đánh dấu các từ trong từ điển cá nhân
+  - Hiện/ẩn các chú thích trong bài đọc
+- *Thu thập từ vựng*:
+  - Tìm từ trong từ điển cá nhân
+  - Tìm nghĩa của từ trong từ điển trực tuyến
+  - Tìm từ khác trong khi đang hiển thị nghĩa của một từ
+  - Lưu từ vào từ điển cá nhân
+  - Bỏ qua ràng buộc thời gian và ôn từ vựng
+  - Đánh giá nhớ từ vựng
+  - Đánh giá quên từ vựng
+  - Hoãn việc ôn tập từ vựng
+  - Bỏ hoãn việc ôn tập từ vựng
+  - Xoá từ vựng khỏi từ điển cá nhân
+  - Ẩn ô tìm kiếm
+- *Chỉnh thông số thuật toán*:
+  - Chỉnh thông số Desired Retention
+  - Tối ưu các thông số thuật toán
