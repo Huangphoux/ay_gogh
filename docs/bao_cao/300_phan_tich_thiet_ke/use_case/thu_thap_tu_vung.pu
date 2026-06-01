@@ -1,0 +1,32 @@
+@startuml Thu thập từ vựng
+left to right direction
+
+actor "Người dùng" as user
+
+rectangle "Thu thập từ vựng" {
+	usecase "Tìm từ trong từ điển cá nhân" as UC_FindPersonal
+	usecase "Tìm nghĩa của từ trong từ điển trực tuyến" as UC_FindOnline
+	usecase "Tìm từ khác trong khi đang hiển thị nghĩa của một từ" as UC_FindOther
+	usecase "Lưu từ vào từ điển cá nhân" as UC_SavePersonal
+	usecase "Bỏ qua ràng buộc thời gian và ôn từ vựng" as UC_ReviewBypass
+	usecase "Đánh giá nhớ từ vựng" as UC_RateRemember
+	usecase "Đánh giá quên từ vựng" as UC_RateForget
+	usecase "Hoãn việc ôn tập từ vựng" as UC_DeferReview
+	usecase "Bỏ hoãn việc ôn tập từ vựng" as UC_UndoDefer
+	usecase "Xoá từ vựng khỏi từ điển cá nhân" as UC_DeletePersonal
+	usecase "Ẩn ô tìm kiếm" as UC_HideSearch
+}
+
+user --> UC_FindPersonal
+user --> UC_FindOnline
+user --> UC_FindOther
+user --> UC_SavePersonal
+user --> UC_ReviewBypass
+user --> UC_RateRemember
+user --> UC_RateForget
+user --> UC_DeferReview
+user --> UC_UndoDefer
+user --> UC_DeletePersonal
+user --> UC_HideSearch
+
+@enduml

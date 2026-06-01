@@ -1,0 +1,14 @@
+@startuml Chỉnh thông số thuật toán
+left to right direction
+
+actor "Người dùng" as user
+
+rectangle "Chỉnh thông số thuật toán" {
+	usecase "Chỉnh thông số Desired Retention" as UC_DesiredRetention
+	usecase "Tối ưu các thông số thuật toán" as UC_OptimizeParams
+}
+
+user --> UC_DesiredRetention
+user --> UC_OptimizeParams
+
+@enduml

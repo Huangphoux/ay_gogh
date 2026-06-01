@@ -7,3 +7,9 @@
 
 
 === Sơ đồ use case chi tiết và đặc tả use case
+
+#include "use_case/quan_li_tai_khoan.typ"
+#include "use_case/kiem_tra_von_tu_vung.typ"
+#include "use_case/doc_sach.typ"
+#include "use_case/thu_thap_tu_vung.typ"
+#include "use_case/chinh_thong_so_thuat_toan.typ"

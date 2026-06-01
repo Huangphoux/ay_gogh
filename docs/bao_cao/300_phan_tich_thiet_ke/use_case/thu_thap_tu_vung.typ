@@ -10,11 +10,11 @@
   table(
     [*Use Case*: Thu thập từ vựng],
     [*Tác nhân chính*: User ],
-    [*Mô tả ngắn gọn*: ],
-    [*Điều kiện tiên quyết*: ],
-    [*Sự kiện kích hoạt*: ],
-    [*Điều kiện thực hiện*: ],
-    [*Luồng sự kiện chính*: ],
+    [*Mô tả ngắn gọn*: Tra cứu, lưu, đánh giá và quản lý ôn tập từ vựng.],
+    [*Điều kiện tiên quyết*: Đã đăng nhập và có từ điển cá nhân.],
+    [*Sự kiện kích hoạt*: Người dùng mở chức năng từ vựng hoặc tra cứu từ.],
+    [*Điều kiện thực hiện*: Có kết nối mạng khi tra cứu trực tuyến.],
+    [*Luồng sự kiện chính*: 1) Nhập từ cần tra. 2) Hệ thống hiển thị nghĩa hoặc từ trong từ điển cá nhân. 3) Người dùng lưu, đánh giá nhớ/quên, hoãn hoặc bỏ hoãn. 4) Hệ thống cập nhật từ điển và lịch ôn tập.],
   ),
   caption: [Bảng mô tả Use Case Thu thập từ vựng],
 )

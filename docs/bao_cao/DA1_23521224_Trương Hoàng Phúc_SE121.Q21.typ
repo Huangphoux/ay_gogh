@@ -129,7 +129,6 @@
 == Sơ đồ Use Case
 #include "300_phan_tich_thiet_ke/danh_sach_so_do_use_case.typ"
 
-
 == Thiết kế cơ sở dữ liệu
 === Cơ sở dữ liệu của hệ thống
 #include "300_phan_tich_thiet_ke/csdl_app/danh_sach.typ"

@@ -10,11 +10,11 @@
   table(
     [*Use Case*: Kiểm tra vốn từ vựng],
     [*Tác nhân chính*: User ],
-    [*Mô tả ngắn gọn*: ],
-    [*Điều kiện tiên quyết*: ],
-    [*Sự kiện kích hoạt*: ],
-    [*Điều kiện thực hiện*: ],
-    [*Luồng sự kiện chính*: ],
+    [*Mô tả ngắn gọn*: Thực hiện bài kiểm tra mới hoặc tiếp tục bài đang dở.],
+    [*Điều kiện tiên quyết*: Đã đăng nhập và có kết nối mạng.],
+    [*Sự kiện kích hoạt*: Người dùng chọn mục Kiểm tra vốn từ vựng.],
+    [*Điều kiện thực hiện*: Có bộ câu hỏi hoặc bài kiểm tra chưa hoàn thành.],
+    [*Luồng sự kiện chính*: 1) Chọn làm mới hoặc tiếp tục. 2) Hệ thống tải câu hỏi. 3) Người dùng trả lời. 4) Hệ thống chấm điểm hoặc lưu tiến trình. 5) Hiển thị kết quả.],
   ),
   caption: [Bảng mô tả Use Case Kiểm tra vốn từ vựng],
 )

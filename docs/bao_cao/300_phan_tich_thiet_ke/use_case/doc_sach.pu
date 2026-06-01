@@ -1,0 +1,22 @@
+@startuml Đọc sách
+left to right direction
+
+actor "Người dùng" as user
+
+rectangle "Đọc sách" {
+	usecase "Truy cập bài đọc" as UC_AccessReading
+	usecase "Xem phân tích độ khó bài đọc" as UC_ViewDifficulty
+	usecase "Đánh dấu hoàn thành bài đọc" as UC_MarkCompleted
+	usecase "Huỷ đánh dấu hoàn thành bài đọc" as UC_UnmarkCompleted
+	usecase "Hiện/ẩn đánh dấu các từ trong từ điển cá nhân" as UC_TogglePersonalMarks
+	usecase "Hiện/ẩn các chú thích trong bài đọc" as UC_ToggleNotes
+}
+
+user --> UC_AccessReading
+user --> UC_ViewDifficulty
+user --> UC_MarkCompleted
+user --> UC_UnmarkCompleted
+user --> UC_TogglePersonalMarks
+user --> UC_ToggleNotes
+
+@enduml

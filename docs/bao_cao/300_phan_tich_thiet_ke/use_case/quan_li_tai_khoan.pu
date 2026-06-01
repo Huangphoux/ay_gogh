@@ -1,0 +1,16 @@
+@startuml Quản lý tài khoản
+left to right direction
+
+actor "Người dùng" as user
+
+rectangle "Quản lý tài khoản" {
+	usecase "Đăng ký" as UC_Register
+	usecase "Đăng nhập" as UC_Login
+	usecase "Đăng xuất" as UC_Logout
+}
+
+user --> UC_Register
+user --> UC_Login
+user --> UC_Logout
+
+@enduml
