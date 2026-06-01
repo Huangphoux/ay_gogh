@@ -1,4 +1,4 @@
-- *Quản lý tài khoản người học*: đăng ký, đăng nhập; lưu trữ các thông tin sau: kết quả các bài kiểm tra, từ điển cá nhân, số lượng chương đã hoàn thành, lịch sử ôn tập từ vựng, thông số tuỳ biến thuật toán lên lịch ôn tập.
+- *Quản lý tài khoản*: đăng ký, đăng nhập; lưu trữ các thông tin sau: kết quả các bài kiểm tra, từ điển cá nhân, số lượng chương đã hoàn thành, lịch sử ôn tập từ vựng, thông số tuỳ biến thuật toán lên lịch ôn tập.
 - *Kiểm tra vốn từ vựng*: người học có thể kiểm tra vốn từ vựng cốt lõi của bản thân bất cứ lúc nào.
 - *Đọc sách*: sử dụng kết quả bài kiểm tra để đánh giá độ khó của bài đọc, phân tích xem người học có thể hiểu được bao nhiêu từ trong bài đọc đó.
 - *Pop-up*: trong quá trình đọc, người học bôi đen một từ, hệ thống sẽ hiện một pop-up cho phép người dùng lưu từ đó vào từ điển cá nhân.

@@ -1,0 +1,10 @@
+- *Bảo mật và Riêng tư*:
+  - Dữ liệu nhật ký là thông tin nhạy cảm, cần được bảo mật tuyệt đối.
+  - Mọi giao tiếp giữa máy người dùng và máy chủ phải được mã hóa qua giao thức HTTPS.
+- *Hiệu năng và Độ mượt mà*:
+  - Trang web phản hồi nhanh, thao tác tốn nhiều thời gian phải phản hồi ngay lập tức cho người dùng biết.
+  - Tốc độ phản hồi phải nằm trong mức chấp nhận được (dưới 15 giây) để không làm gián đoạn trải nghiệm người dùng.
+- *Giao diện*:
+  - Thiết kế theo phong cách tối giản, sử dụng tông màu dịu nhẹ để tạo cảm giác thư thái cho người dùng.
+  - Các thao tác nhập liệu đơn giản, dễ sử dụng trên máy tính cũng như bằng một tay trên thiết bị di động.
+- *Tính mở rộng*: Cơ sở dữ liệu SQLite cần được thiết kế linh hoạt để dễ dàng thêm các tính năng mới trong tương lai (ví dụ: Cộng đồng chia sẻ, lưu trữ hình vẽ) mà không ảnh hưởng đến dữ liệu cũ.
