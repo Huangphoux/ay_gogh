@@ -111,6 +111,16 @@
 
 #include "300_phan_tich_thiet_ke/tom_tat_chuong.typ"
 
+== Khảo sát hiện trạng
+#include "300_phan_tich_thiet_ke/khao_sat.typ"
+
+== Xác định các chức năng, yêu cầu
+=== Yêu cầu chức năng
+#include "300_phan_tich_thiet_ke/yeu_cau_chuc_nang.typ"
+=== Yêu cầu phi chức năng
+#include "300_phan_tich_thiet_ke/yeu_cau_phi_chuc_nang.typ"
+
+
 == Thiết kế cơ sở dữ liệu
 === Cơ sở dữ liệu của hệ thống
 #include "300_phan_tich_thiet_ke/csdl_app/danh_sach.typ"
