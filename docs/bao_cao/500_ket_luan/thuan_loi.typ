@@ -1,4 +1,4 @@
-- Giảng viên hướng đã hỗ trợ chúng em rất nhiều trong việc xác định và giải quyết khó khăn, từ đó chúng em đã có định hướng rõ ràng về việc thực hiện đề tài.
+- Giảng viên hướng đã hỗ trợ em rất nhiều trong việc xác định và giải quyết khó khăn, từ đó em đã có định hướng rõ ràng về việc thực hiện đề tài.
 - Có sẵn các kiến thức từ các môn học trước nên thuận lợi cho việc thực hiện và triển khai đề tài.
 - Các công nghệ có cách viết dễ hiểu, dễ tiếp thu để nắm bắt ở mức cơ bản.
 - Khối lượng công việc được sắp xếp và chia nhỏ các nhiệm vụ ngay từ đầu nên cũng có hướng làm rõ ràng.
