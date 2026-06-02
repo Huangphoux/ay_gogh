@@ -1,0 +1,27 @@
+@startuml Tìm từ
+
+actor User
+participant "Read Page" as UI
+participant "Read Router" as Read
+participant "Relay" as Relay
+participant "Popup View" as Popup
+database "User DB" as DB
+participant "Free Dictionary API" as Dict
+
+User -> UI: select word
+UI -> Read: GET /read/{num}/open?word=...
+Read -> Relay: publish read.{auth}.{num}
+Relay -> UI: SSE /read/{num}/cqrs
+UI -> Popup: render popup_view(word)
+Popup -> DB: query deck for word
+
+alt word not in memory
+	Popup -> Popup: fetch_definition(word)
+	Popup -> Dict: GET /api/v1/entries/en/{word}
+	Dict --> Popup: entries
+	Popup --> UI: popup with definitions
+else word in memory
+	Popup --> UI: due/retired/etc view
+end
+
+@enduml

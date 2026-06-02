@@ -143,6 +143,9 @@
 === Cơ sở dữ liệu của người dùng
 #include "300_phan_tich_thiet_ke/csdl_user/danh_sach.typ"
 
+== Sơ đồ tuần tự
+#include "300_phan_tich_thiet_ke/so_do_tuan_tu.typ"
+
 == Kiến trúc hệ thống
 #include "300_phan_tich_thiet_ke/kien_truc_he_thong.typ"
 
