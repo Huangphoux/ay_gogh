@@ -14,10 +14,16 @@
   } else { it.body })
 }
 
+// padding for table
 #set table(inset: 10pt)
+// table can be split into next page
 #show figure: set block(breakable: true)
-
+// figure numbering by chapter
 #set figure(numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()))
+// caption của bảng nằm trên, còn lại nằm dưới
+#show figure.where(
+  kind: table,
+): set figure.caption(position: top)
 
 #let h1 = (
   [TÓM TẮT ĐỒ ÁN],
