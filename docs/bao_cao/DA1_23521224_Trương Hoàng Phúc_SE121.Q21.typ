@@ -17,6 +17,8 @@
 #set table(inset: 10pt)
 #show figure: set block(breakable: true)
 
+#set figure(numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()))
+
 #let h1 = (
   [TÓM TẮT ĐỒ ÁN],
   [GIỚI THIỆU ĐỀ TÀI],
