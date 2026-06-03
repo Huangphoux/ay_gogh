@@ -165,7 +165,7 @@ class DatabaseDict:
                         front TEXT NOT NULL UNIQUE,
                         back TEXT NOT NULL,
                         state INTEGER NOT NULL,
-                        step INTEGER NOT NULL,
+                        step INTEGER,
                         stability REAL,
                         difficulty REAL,
                         due TEXT NOT NULL, -- new cards due upon creation

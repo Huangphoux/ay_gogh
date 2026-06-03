@@ -39,7 +39,7 @@ def fsrs_main(auth, notif: str = ""):
 
     for s in settings:
         if s["setting"] == "desired_retention":
-            desired_retention = s["value"]
+            desired_retention = float(s["value"])
         if s["setting"] == "parameters":
             parameters = [float(p.strip()) for p in s["value"].split(",")]
 
@@ -65,7 +65,7 @@ def fsrs_main(auth, notif: str = ""):
         Label(_for="desired_retention")("Desired Retention (70-100)"),
         Input(
             id="desired_retention",
-            value=int(float(desired_retention) * 100),
+            value=int(desired_retention * 100),
             type="number",
             max="100",
             min="70",
@@ -124,15 +124,11 @@ def save(auth, desired_retention: int):
 
 @rt.get("/fsrs/optimize")
 async def optimize(auth):
-    query = list(
-        db.get(auth).query(
-            "SELECT * FROM review_log",
-        ),
-    )
+    query = list(db.get(auth).query("SELECT * FROM review_log"))
 
     review_logs: list[ReviewLog] = [
         ReviewLog(
-            card_id=q["card_id"],
+            card_id=int(q["card_id"]),
             rating=q["rating"],
             review_datetime=datetime.strptime(
                 q["review_datetime"], "%Y-%m-%d %H:%M:%S"

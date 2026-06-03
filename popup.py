@@ -459,31 +459,26 @@ def rate_card(auth, num: int, front: str, back: str, forgot: bool = False):
     )[0]
 
     card = Card(
-        query["id"],
+        int(query["id"]),
         query["state"],
         query["step"],
-        query["stability"],
-        query["difficulty"],
+        query["stability"] and float(query["stability"]),
+        query["difficulty"] and float(query["difficulty"]),
         # str → datetime UTC object
         datetime.strptime(query["due"], "%Y-%m-%d %H:%M:%S").replace(
             tzinfo=timezone.utc
         ),
-        datetime.strptime(query["last_review"], "%Y-%m-%d %H:%M:%S").replace(
+        query["last_review"]
+        and datetime.strptime(query["last_review"], "%Y-%m-%d %H:%M:%S").replace(
             tzinfo=timezone.utc
-        )
-        if query["last_review"]
-        else None,
-    )
-
-    settings = list(
-        db.get(auth).query(
-            "SELECT setting, value FROM settings",
         ),
     )
 
+    settings = list(db.get(auth).query("SELECT setting, value FROM settings"))
+
     for s in settings:
         if s["setting"] == "desired_retention":
-            desired_retention = s["value"]
+            desired_retention = float(s["value"])
         if s["setting"] == "parameters":
             parameters = [float(p) for p in s["value"].split(",")]
 
