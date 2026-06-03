@@ -56,9 +56,12 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     static_path="static",
     # default_hdrs=False,
     hdrs=(  # keep / in href, if not, /auth/custom.css
-        Link(rel="stylesheet", href="/custom.css"),
         Link(rel="icon", href="https://fav.farm/📖"),  # favicon
         Link(rel="stylesheet", href="https://cdn.simplecss.org/simple.min.css"),
+        Script(
+            src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.1.0/dist/confetti.min.js"
+        ),
+        Link(rel="stylesheet", href="/custom.css"),
     ),
     sess_https_only=not is_debug,  # set Secure flag on cookies
     same_site="strict",

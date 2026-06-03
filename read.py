@@ -230,7 +230,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_is_due=card["is_due"],
                             data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
                             data_on_pointerup=(click_showpopup, dict(stop=True)),
-                            data_indicator="searching"
+                            data_indicator="searching",
                         )(tokens[j])
                     ),
                     split[i],  # why can't i use `line` here?
@@ -387,7 +387,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
     )
 
     mark_complete = Section(style="display: grid; place-items: center")(
-        Button(data_on_click=patch(f"/read/{num}"))("Mark Complete")
+        Button(data_on_click=(patch(f"/read/{num}"), ";confetti();"))("Mark Complete")
         if not done
         else (
             Button(data_on_click=delete(f"/read/{num}"), _class="outline")(
