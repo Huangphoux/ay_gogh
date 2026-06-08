@@ -48,7 +48,7 @@ hỗ trợ đọc và ghi nhớ từ vựng tiếng Anh bằng AI",
 - Simple.css: hệ thống giao diện
   - Giảm thời gian thiết kế trang web
 
-= Công việc trước báo cáo giữa kỳ
+= Trước báo cáo giữa kì
 - Trang đăng nhập, đăng kí
 
 - Kiểm tra vốn từ vựng
@@ -71,7 +71,7 @@ hỗ trợ đọc và ghi nhớ từ vựng tiếng Anh bằng AI",
   - Đánh dấu trong bài đọc các từ trong từ điển cá nhân
 
 
-= Công việc sau báo cáo giữa kỳ
+= Sau báo cáo giữa kì
 - Đánh giá độ khó bài đọc
   - Phân tích người học biết được bao nhiêu % từ NGSL trong bài đọc
 
@@ -106,8 +106,6 @@ hỗ trợ đọc và ghi nhớ từ vựng tiếng Anh bằng AI",
 - Trang web chưa tạo được động lực học và sự hứng thú cho người dùng
 
 - Khó unit test
-
-- Chưa có luồng
 
 = Hướng phát triển đề tài
 - Trang thống kê quá trình học
