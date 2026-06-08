@@ -1,7 +1,8 @@
 #import "@preview/diatypst:0.8.0": *
 
 #show: slides.with(
-  title: "Xây dựng trang web hỗ trợ đọc và ghi nhớ từ vựng tiếng Anh bằng AI",
+  title: "Xây dựng trang web
+hỗ trợ đọc và ghi nhớ từ vựng tiếng Anh bằng AI",
   subtitle: "Đồ án 1 - SE121.Q21",
   date: datetime.today().display(),
   authors: "23521224 Trương Hoàng Phúc",
@@ -78,27 +79,39 @@
   - Đánh dấu nguyên từ, thay vì một phần của từ
   - Huỷ đánh dấu hoàn thành bài đọc
   - Chú thích nằm ở 2 bên lề trái phải
+  - Bật tắt chú thích và đánh dấu từ và lưu cài đặt vào CSDL
+  - Bấm vào từ được đánh dấu, không cần bôi đen
+
+
+#pagebreak()
 
 - Popup
   - Sử dụng API có sẵn của trình duyệt: Popover API
   - Xoá từ
   - Hoãn ôn tập từ
   - Làm việc bằng lemma, dạng gốc của từ
-
-
-- Cho biết từ có nằm trong danh sách NGSL hay không, và cấp độ của từ.
--
-
-= Các đặc biệt nổi bật của đồ án
-- Cơ hội tìm hiểu kiến trúc và công nghệ mới
-- MPA thay vì SPA: sử dụng Datastar thay React để làm Front-End ⇒ toàn bộ đồ án được làm bằng Python
-- CQRS + Fat Morph: giao diện phản ánh trạng thái của cơ sở dữ liệu.
-- Single Tenant:
+  - Nút `Review anyway` bỏ qua giới hạn thời gian
+  - Cho biết từ có nằm trong danh sách NGSL hay không, nếu có thì hiện cấp độ của từ.
 
 = Ưu điểm
+- MPA thay vì SPA: toàn bộ đồ án có thể được làm bằng Python
+
+- Sử dụng Datastar, SSE, Brotli, SQLite, và kiến trúc CQRS để cập nhật giao diện nhanh chóng
+
+- Mỗi người dùng một CSDL: không cần `JOIN`, không sợ bị rò rỉ dữ liệu của người dùng khác
 
 = Khuyết điểm
+- Thiết kế trang web quá tối giản
+
+- Trang web chưa tạo được động lực học và sự hứng thú cho người dùng
+
+- Khó unit test
+
+- Chưa có luồng
 
 = Hướng phát triển đề tài
-- Trang thống kê
+- Trang thống kê quá trình học
+
 - Trang quản lí từ điển cá nhân
+
+- Chuẩn bị trước dữ liệu từ điển
