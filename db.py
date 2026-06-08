@@ -226,7 +226,7 @@ class DatabaseDict:
             """
                 INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
                 VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
-            """,  # Truong Hoang Phuc, (UTC) 2026-05-06 07:57:12
+            """,  # Trương Hoàng Phúc, (UTC) 2026-05-06 07:57:12
             ("c", 100, 20, 19, 20, 20, 20),
         ) if whose_test == "Phuc" else None
 
@@ -234,9 +234,17 @@ class DatabaseDict:
             """
             INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
             VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
-        """,  # Le Minh Phat, (UTC) 2026-05-08 01:48:52
+        """,  # Lê Minh Phát, (UTC) 2026-05-08 01:48:52
             ("c", 100, 18, 18, 20, 17, 16),
         ) if whose_test == "Phat" else None
+        
+        self.user[name].execute(
+            """
+                INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
+                VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?)
+            """,  # Lý Hoàng Em, (UTC) 2026-06-04 11:27:17
+            ("c", 100, 15, 13, 16, 12, 13),
+        ) if whose_test == "HoangEm" else None
 
     def close(self, name: str = "app"):
         try:
