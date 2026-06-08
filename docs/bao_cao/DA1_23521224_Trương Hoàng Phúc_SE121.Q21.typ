@@ -54,6 +54,24 @@
   )
 }
 
+// #show outline.entry.where(level: 1): it => {
+//   if it.element.func() == heading {
+//     text(
+//       weight: "bold",
+//       link(
+//         // in đậm heading 1 trong mục lục
+//         it.element.location(),
+//         it.indented(
+//           "Chương " + it.prefix(),
+//           it.inner(),
+//         ),
+//       ),
+//     )
+//   } else {
+//     it
+//   }
+// }
+
 #include "000_mo_dau/trang_bia.typ"
 
 #heading(outlined: false, "LỜI CẢM ƠN")

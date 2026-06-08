@@ -14,13 +14,14 @@
     - Bấm vào 1 chap thì giữ tên của chap
     - Hiện popup: wipe như Star War từ trên xuống
 - Lỗi replace whole word
-  - các `data-*` attribute có khả năng bị regex nhận dạng là whole word
-  - cần phải đổi thuật toán tìm whole word
+    - các `data-*` attribute có khả năng bị regex nhận dạng là whole word
+    - cần phải đổi thuật toán tìm whole word
 - Dark mode switcher
 - Thống kê quá trình học tập
 - Viết READ.ME đẹp hơn
 
 # CSDL
+
 - Thêm Indexing cho các truy vấn WHERE
 - Gộp các execute vào 1 transaction
 
@@ -49,6 +50,8 @@
 - spaCy: phân tích part of speech của từ bôi đen để lọc ra kết quả Wiktionary Parser
 - Show toàn bộ entry trong từ điển
 - CSS calc top của inset để popup giữa màn hình
+- Popup, bôi một từ trong dictionary, quay trở lại từ trước
+-
 
 # SRS
 
@@ -101,3 +104,10 @@
 - Column
     - Bài làm: 12341243
     - Đúng sai: 10010101
+- Không hiểu bolded là gì ⇒ chụp hình giải thích
+- Giải thích cách làm bài bằng bàn phím nhanh hơn
+- Các đáp án nên làm bằng ngôn ngữ mẹ đẻ sẽ dễ hiểu hơn
+
+# UI
+- Focus state, viền nên dày hơn
+- Giao diện phèn
