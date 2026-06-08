@@ -9,16 +9,13 @@
     - Bỏ các từ trong các ô giải thích ra, vẫn cần phải select
     - Các từ trong ô Wiktionary cũng phải click được → cũng hiện từ đã mined chưa
 - View Transition
-    - Chuyển giữa các trang thì là fade
     - Pagination trong Read, Test Progress, Reading Ease, vào bài đọc: move trái move phải
-    - Bấm vào 1 chap thì giữ tên của chap
     - Hiện popup: wipe như Star War từ trên xuống
 - Lỗi replace whole word
     - các `data-*` attribute có khả năng bị regex nhận dạng là whole word
     - cần phải đổi thuật toán tìm whole word
 - Dark mode switcher
 - Thống kê quá trình học tập
-- Viết READ.ME đẹp hơn
 
 # CSDL
 

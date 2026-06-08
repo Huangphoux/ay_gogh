@@ -1,5 +1,7 @@
-@view-transition {
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
     navigation: auto;
+  }
 }
 
 @property --transition-time {
@@ -21,6 +23,7 @@ p,
 
 :is(h1, h2, h3, h4) {
     text-wrap: balance;
+    text-align: center;
 }
 
 button,
@@ -153,5 +156,22 @@ details[popover] {
     /* this is the average laptop screen size assumed by Google */
     @media (min-width: 1024px) {
         margin-top: 0;
+    }
+}
+
+.profile {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: stretch;
+    gap: 2rem;
+
+    @media (max-width: 500px) {
+        grid-auto-flow: row;
+    }
+
+    & section {
+        border: var(--border-width) solid var(--border);
+        padding: 0;
+        margin: 0;
     }
 }

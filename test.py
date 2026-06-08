@@ -35,7 +35,7 @@ def test(auth):
     progress = last_test["progress"] if last_test else None
 
     main = Main(
-        H1("Test", id="main-heading"),
+        H1("Test", id="main-heading", style=f"view-transition-name: test"),
         A(_class="button", href="/test/intro")(
             "Continue last test" if last_test and progress != 100 else "Take a test",
         ),
@@ -48,7 +48,7 @@ def test(auth):
         if tests
         else None,
         Section(
-            H2("How to interpret your result"),
+            H2("Your result"),
             P(
                 Span(style="color:red; font-weight: bold")("Red-highlighted"),
                 ": score < 80%. You should learn more words in this level.",
@@ -67,7 +67,7 @@ def test(auth):
             ),
             P(
                 style=f"{'color: red;' if result and result < 80 else ''} font-weight: bold; font-size: 2rem",
-            )(f"Overall, you know {result}% of NGSL words.") ,
+            )(f"Overall, you know {result}% of NGSL words."),
         )
         if last_test and progress == 100
         else P(_class="notice")(
@@ -208,7 +208,7 @@ def progress_main(auth):
                     ],
                 ),
             ),
-            Button("Next"),
+            Button("Advance"),
         ),
     )
 
@@ -217,7 +217,7 @@ def progress_main(auth):
 def progress_process(auth, choice: int):
     if choice not in (1, 2, 3, 4):
         return Redirect("/test")
-    
+
     last_test = get_last_test(auth)
     progress = last_test["progress"]
 

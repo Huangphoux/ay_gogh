@@ -51,7 +51,10 @@ def read(auth, p: int = 0, all: int = 0):
     progress = last_test["progress"] if last_test else None
 
     if not all:
-        h1 = H1(id="main-heading")(f"Read, {p * 10 + 1} to {(p + 1) * 10}")
+        h1 = H1(
+            id="main-heading",
+            style=f"view-transition-name: read",
+        )(f"Read, {p * 10 + 1} to {(p + 1) * 10}")
 
         pagination = Div(
             style="display: flex; gap: 1rem; align-items: center; height: 1.5rem"
@@ -78,7 +81,10 @@ def read(auth, p: int = 0, all: int = 0):
         show_all = A(href="/read/?all=1")("Show all")
 
     else:
-        h1 = H1(id="main-heading")(f"Read All")
+        h1 = H1(
+            id="main-heading",
+            style=f"view-transition-name: read",
+        )(f"Read All")
         pagination = None
         show_all = A(href="/read/?all=0")("Show less")
 
@@ -86,13 +92,21 @@ def read(auth, p: int = 0, all: int = 0):
         *(
             Li(style="display: flex; justify-content: space-between;")(
                 # Chapter {number}: {title}
-                A(href=f"/read/{c['number']}")(f"Chapter {c['number']}: {c['title']}")
-                if not c["done"]
-                else A(href=f"/read/{c['number']}", style="color: var(--border)")(
-                    "(DONE)"
+                Span(
+                    f"Chapter {c['number']:02}: ",
+                    A(
+                        href=f"/read/{c['number']}",
+                        style=f"view-transition-name: chap{c['number']}",
+                    )(f"{c['title']}")
+                    if not c["done"]
+                    else A(href=f"/read/{c['number']}", style="color: var(--border)")(
+                        "(DONE)"
+                    ),
                 ),
                 # Reading ease difficulty: Easy, Medium, Hard
-                A(style="display: grid;  place-items: center;")(
+                A(
+                    style=f"display: grid; place-items: center; view-transition-name: ease{c['number']};"
+                )(
                     _class=(ease := get_ease(result, c["ngsl"])),
                     href=f"/read/{c['number']}/ease",
                     title=f"You know {result * c['ngsl']:.2f}% of the words in chapter {c['number']}.",
@@ -145,7 +159,10 @@ async def ease(auth, num: int):
         ),
         P(
             "This chapter is deemed of ",
-            Span(_class=ease)(ease.title()),
+            Span(
+                style=f"view-transition-name: ease{num}",
+                _class=ease,
+            )(ease.title()),
             " difficulty for you.",
         ),
         A(href=f"/read/{num}", _class="button")("Let's read!"),
@@ -324,12 +341,17 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         ),
     )
 
-    cardinal = Section(_class="cardinal")(
+    cardinal = Section(
+        _class="cardinal", style="padding: 0; margin: 0;"
+    )(
         P(f"Chapter {chap['number_word']} ({num})"),
         P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
     )
 
-    h1 = H1(id="main-heading", style="display:grid; place-items: center;")(
+    h1 = H1(
+        id="main-heading",
+        style=f"display:grid; place-items: center; text-align: center; view-transition-name: chap{num}",
+    )(
         f"{chap['title']}",
         " (DONE)" if done else None,
     )
