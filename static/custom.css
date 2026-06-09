@@ -23,7 +23,6 @@ p,
 
 :is(h1, h2, h3, h4) {
     text-wrap: balance;
-    text-align: center;
 }
 
 button,
@@ -173,5 +172,6 @@ details[popover] {
         border: var(--border-width) solid var(--border);
         padding: 0;
         margin: 0;
+        text-align: center;
     }
 }

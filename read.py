@@ -88,7 +88,7 @@ def read(auth, p: int = 0, all: int = 0):
         pagination = None
         show_all = A(href="/read/?all=0")("Show less")
 
-    chapters = Ul(
+    chapters = Ul(style="padding: 0;")(
         *(
             Li(style="display: flex; justify-content: space-between;")(
                 # Chapter {number}: {title}
@@ -101,9 +101,10 @@ def read(auth, p: int = 0, all: int = 0):
                         style=f"view-transition-name: chap{c['number']}",
                     )(f"{c['title']}")
                     if not c["done"]
-                    else A(href=f"/read/{c['number']}", style="color: var(--border)")(
-                        "(DONE)"
-                    ),
+                    else A(
+                        href=f"/read/{c['number']}",
+                        style=f"color: var(--border); view-transition-name: done{c['number']}",
+                    )("(DONE)"),
                 ),
                 # Reading ease difficulty: Easy, Medium, Hard
                 A(
@@ -355,7 +356,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         style=f"display:grid; place-items: center; text-align: center; view-transition-name: chap{num}",
     )(
         f"{chap['title']}",
-        " (DONE)" if done else None,
+        Span(style=f"view-transition-name: done{num}")(" (DONE)") if done else None,
     )
 
     showpopup = js(

@@ -39,7 +39,7 @@ def test(auth):
         A(_class="button", href="/test/intro")(
             "Continue last test" if last_test and progress != 100 else "Take a test",
         ),
-        Figure(style="max-height: 20vh; overflow: auto")(
+        Figure(style="height: 20dvh; resize: vertical; overflow: auto;")(
             Table(
                 Thead(Tr(Th(h.title()) for h in header)),
                 Tbody(*[Tr(*[Td(t[h]) for h in header]) for t in tests]),

@@ -156,10 +156,11 @@ def wiktionary_view(word: str, num: int):
         ),
     )
 
-    wiktionary_part = Details(open=True)(
+    wiktionary_part = Details(
+        open=True, style="height: 20dvh; resize: vertical; overflow: auto;"
+    )(
         Summary(f"Dictionary"),
         Ul(
-            style="max-height: 20vh; overflow: auto",
             data_on_pointerup=(f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"),
             data_indicator="searching",
         )(
