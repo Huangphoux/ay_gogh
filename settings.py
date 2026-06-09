@@ -11,7 +11,7 @@ def index(auth):
     main = Main(
         H1("Settings", id="main-heading"),
         Ul(
-            Li(A(href="/settings/fsrs")("FSRS")),
+            Li(style="view-transition-name: fsrs")(A(href="/settings/fsrs")("FSRS")),
         ),
     )
 
@@ -44,7 +44,7 @@ def fsrs_main(auth, notif: str = ""):
             parameters = [float(p.strip()) for p in s["value"].split(",")]
 
     return Main(data_init=get("/settings/fsrs/cqrs"))(
-        H1("FSRS", id="main-heading"),
+        H1("FSRS", id="main-heading", style="view-transition-name: fsrs"),
         P(
             "FSRS, the Free Spaced Repetition Scheduling algorithm, \
                      is the backbone of the spaced retention aspect of this app."
