@@ -93,7 +93,9 @@ def read(auth, p: int = 0, all: int = 0):
             Li(style="display: flex; justify-content: space-between;")(
                 # Chapter {number}: {title}
                 Span(
-                    f"Chapter {c['number']:02}: ",
+                    Span(style=f"view-transition-name: num{c['number']}")(
+                        f"Chapter {c['number']:02}: "
+                    ),
                     A(
                         href=f"/read/{c['number']}",
                         style=f"view-transition-name: chap{c['number']}",
@@ -143,7 +145,10 @@ async def ease(auth, num: int):
     else:
         return Redirect(f"/read/{num}")
 
-    h1 = H1(id="main-heading")(f"Chapter {num}: Reading Ease")
+    h1 = H1(id="main-heading", style=f"view-transition-name: num{num}")(
+        f"Chapter {num}: ",
+        Span(_class=ease, style=f"view-transition-name: ease{num}")(ease.title()),
+    )
 
     judgement = Section(
         Table(
@@ -159,10 +164,7 @@ async def ease(auth, num: int):
         ),
         P(
             "This chapter is deemed of ",
-            Span(
-                style=f"view-transition-name: ease{num}",
-                _class=ease,
-            )(ease.title()),
+            Span(_class=ease)(ease.title()),
             " difficulty for you.",
         ),
         A(href=f"/read/{num}", _class="button")("Let's read!"),
@@ -341,10 +343,10 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         ),
     )
 
-    cardinal = Section(
-        _class="cardinal", style="padding: 0; margin: 0;"
-    )(
-        P(f"Chapter {chap['number_word']} ({num})"),
+    cardinal = Section(_class="cardinal", style="padding: 0; margin: 0;")(
+        P(style=f"view-transition-name: num{num}")(
+            f"Chapter {chap['number_word']} ({num})"
+        ),
         P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
     )
 
