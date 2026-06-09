@@ -77,17 +77,15 @@ def popup_form(num: int, content):
 def close_btn(num: int, is_outlined: bool = False, is_save: bool = False):
     if is_save:
         btn = Button(
-            _class="outline" if is_outlined else None,
             data_on_click=(
                 js(
                     f"@patch('/read/{num}/close', {{contentType: 'form'}});\
                     document.querySelector('#popup').hidePopover();"
                 ),
             ),
-        )("Close & Save")
+        )
     else:
         btn = Button(
-            _class="outline" if is_outlined else None,
             data_on_click=(
                 js(
                     f"@get('/read/{num}/close');\
@@ -95,9 +93,11 @@ def close_btn(num: int, is_outlined: bool = False, is_save: bool = False):
                 ),
                 dict(prevent=True),
             ),
-        )("Close")
+        )
 
-    return btn
+    return btn(_class="outline" if is_outlined else None)(
+        "Close", " & Save" if is_save else ""
+    )
 
 
 def bypass_btn(num: int, word: str = "", is_outlined: bool = False):
@@ -326,7 +326,7 @@ def search_view(num: int):
         Label(_for="word", data_show="!$searching")(
             "Write the word you want to search in your memory here."
         ),
-        Input(data_show="!$searching")(
+        Input(
             type="text",
             id="word",
             name="word",
@@ -334,6 +334,7 @@ def search_view(num: int):
             required=True,
             placeholder="e.g. hawk tuah",
             style="width: 100%;",
+            data_show="!$searching",
         ),
         buttons,
     )
