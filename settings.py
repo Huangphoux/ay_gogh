@@ -73,8 +73,17 @@ def fsrs_main(auth, notif: str = ""):
             placeholder="e.g. 80",
             data_bind="desired_retention",
         ),
-        Button(data_on_click=patch("/settings/fsrs/save"))("Save"),
-        P(_class="notice")(notif) if "retention" in notif else None,
+        Button(
+            data_on_click=patch("/settings/fsrs/save"),
+            data_indicator="updating",
+            data_attr_disabled="$updating",
+        )("Save"),
+        P(_class="notice", data_show="$updating", style="display: none")(
+            "Updating your desired retention. This won't be long, please standby."
+        ),
+        P(_class="notice", data_show="!$updating")(notif)
+        if "retention" in notif
+        else None,
         H2("Parameters"),
         P(
             "From the Anki manual:",
@@ -89,7 +98,6 @@ def fsrs_main(auth, notif: str = ""):
                 There is no need to optimize your parameters frequently: once every month is sufficient."
             ),
         ),
-        P("Parameters"),
         P(_class="notice")(parameters),
         Button(
             data_on_click=get("/settings/fsrs/optimize"),
