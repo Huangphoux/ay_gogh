@@ -1,10 +1,11 @@
 #set heading(level: 3)
 
+#pagebreak()
 = Trang Đăng nhập
 - *Giao diện*:
 
 #figure(
-  image("../images/auth.login.png", height: 40%),
+  image("../images/auth.login.png", height: 50%),
   caption: [Trang Đăng nhập],
 )
 

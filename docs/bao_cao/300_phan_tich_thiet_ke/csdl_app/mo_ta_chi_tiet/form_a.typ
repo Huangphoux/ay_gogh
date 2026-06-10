@@ -1,6 +1,6 @@
 #set heading(level: 5)
 
-
+#pagebreak()
 = Bảng Form A
 
 #let thanh_phan = (

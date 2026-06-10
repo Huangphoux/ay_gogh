@@ -4,7 +4,7 @@
 - *Giao diện*:
 
 #figure(
-  image("../images/test.progress.png", height: 40%),
+  image("../images/test.progress.png", height: 45%),
   caption: [Trang tiến độ kiểm tra],
 )
 

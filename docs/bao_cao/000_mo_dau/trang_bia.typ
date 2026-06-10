@@ -42,9 +42,9 @@
   ]]
 
 
-#block(stroke: 2pt + blue, inset: 1em, outset: 2.6em)[
-  #block(stroke: 8pt + navy, inset: 1em, outset: 3em)[
-    #block(stroke: 2pt + blue, inset: 1em, outset: 3.4em)[
+#block(stroke: 2pt + black, inset: 1em, outset: 2.6em)[
+  #block(stroke: 8pt + black, inset: 1em, outset: 3em)[
+    #block(stroke: 2pt + black, inset: 1em, outset: 3.4em)[
       #content
     ]
   ]

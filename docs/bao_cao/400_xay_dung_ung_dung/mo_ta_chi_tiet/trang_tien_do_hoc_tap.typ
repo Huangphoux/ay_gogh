@@ -4,7 +4,7 @@
 - *Giao diện*:
 
 #figure(
-  image("../images/profile.png", height: 60%),
+  image("../images/profile.png", height: 37%),
   caption: [Trang tiến độ học tập],
 )
 

@@ -20,3 +20,32 @@ Ngoài ra, một lí do khác mà tác giả muốn thực hiện đề tài nà
 
 // Thêm nữa,
 // // https://support.cambridgeenglish.org/hc/en-gb/articles/202838506-Guided-learning-hours
+
+Ở trên vừa chỉ ra một đặc điểm của Duolingo làm ảnh hưởng đến việc tích luỹ ngoại ngữ không hiệu quả, dưới đây xin trình bày ra rõ điểm khác biệt giữa Ay Gogh! với Duolingo.
+#[
+  #set list(marker: [-], indent: 0em)
+
+  #figure(
+    table(
+      columns: 3,
+      align: (left, left, left),
+      table.header([*Tiêu chí*], [*Duolingo*], [*Ay Gogh!*]),
+      [Phương pháp học], [Dịch từng mẩu câu ngắn gọn], [Đọc số lượng nhiều],
+      [Học tự do],
+      [Phải theo lộ trình định sẵn],
+      [
+        - Có thể bỏ những chương dễ với trình độ
+        - Ôn từ vựng bất cứ lúc nào
+      ],
+
+      [Nội dung học],
+      [Tự sáng tác, không mang tính khoa học],
+      [
+        - English by the Nature Method: nội dung tiếng Anh số lượng lớn
+        - NGSL: danh sách các từ cần phải học trước
+        - FSRS: thuật toán lên lịch học tập biết thích ứng với thói quen của người dùng
+      ],
+    ),
+    caption: ["Bảng so sánh Duolingo với Ay Gogh!"],
+  )
+]

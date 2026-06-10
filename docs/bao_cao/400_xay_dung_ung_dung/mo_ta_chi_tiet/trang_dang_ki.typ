@@ -1,6 +1,5 @@
 #set heading(level: 3)
 
-#pagebreak()
 = Trang Đăng kí
 - *Giao diện*:
 

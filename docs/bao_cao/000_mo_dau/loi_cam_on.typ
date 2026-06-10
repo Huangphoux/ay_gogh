@@ -9,6 +9,8 @@ Trong quá trình thực hiện, em đã chủ động tìm hiểu công nghệ 
 
 Cuối cùng, em xin kính chúc cô và các thầy cô tại Trường Đại học Công nghệ Thông tin luôn dồi dào sức khỏe và nhiệt huyết trong sự nghiệp giảng dạy.
 
+#v(10%)
+
 #align(right)[
   #let time = datetime.today()
 

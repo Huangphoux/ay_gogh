@@ -18,7 +18,7 @@
 }
 
 // padding for table
-#set table(inset: 10pt)
+#set table(inset: 7pt)
 // header căn giữa
 #show table.cell.where(y: 0): it => table.cell(align: center, inset: 12pt)[#text(
   weight: "bold",
@@ -45,9 +45,14 @@
   [XÂY DỰNG ỨNG DỤNG],
   [KẾT LUẬN],
   [TÀI LIỆU THAM KHẢO],
+  [PHỤ LỤC],
 )
 
-#let irregular = ([TÓM TẮT ĐỒ ÁN], [TÀI LIỆU THAM KHẢO])
+#let irregular = (
+  [TÓM TẮT ĐỒ ÁN],
+  [TÀI LIỆU THAM KHẢO],
+  [PHỤ LỤC],
+)
 
 // thêm chữ Chapter cho Heading 1
 #show outline.entry.where(level: 1): it => {
@@ -139,12 +144,7 @@
 #include "200_kien_thuc_nen_tang/sqlite.typ"
 == Simple.css
 #include "200_kien_thuc_nen_tang/simplecss.typ"
-== Free Spaced Repetition Scheduling Algorithm
-#include "200_kien_thuc_nen_tang/fsrs.typ"
-== New General Service List
-#include "200_kien_thuc_nen_tang/ngsl.typ"
-== English by the Nature Method
-#include "200_kien_thuc_nen_tang/nature_method.typ"
+
 
 = PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
 
@@ -204,3 +204,11 @@
 
 = TÀI LIỆU THAM KHẢO
 #bibliography(title: none, "bib.bib")
+
+= PHỤ LỤC
+== English by the Nature Method
+#include "200_kien_thuc_nen_tang/nature_method.typ"
+== New General Service List
+#include "200_kien_thuc_nen_tang/ngsl.typ"
+== Free Spaced Repetition Scheduling Algorithm
+#include "200_kien_thuc_nen_tang/fsrs.typ"

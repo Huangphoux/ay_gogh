@@ -4,7 +4,7 @@
 - *Giao diện*:
 
 #figure(
-  image("../images/settings.png", height: 25%),
+  image("../images/settings.png", height: 30%),
   caption: [Trang cài đặt],
 )
 
