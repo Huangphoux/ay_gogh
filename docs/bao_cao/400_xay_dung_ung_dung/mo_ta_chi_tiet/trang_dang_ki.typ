@@ -1,10 +1,11 @@
 #set heading(level: 3)
 
+#pagebreak()
 = Trang Đăng kí
 - *Giao diện*:
 
 #figure(
-  image("../images/auth.signup.png", height: 50%),
+  image("../images/auth.signup.png", height: 40%),
   caption: [Trang Đăng kí],
 )
 

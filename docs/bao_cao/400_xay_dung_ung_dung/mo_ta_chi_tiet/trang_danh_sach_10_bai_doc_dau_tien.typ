@@ -1,5 +1,6 @@
 #set heading(level: 3)
 
+#pagebreak()
 = Trang danh sách 10 bài đọc đầu tiên
 - *Giao diện*:
 

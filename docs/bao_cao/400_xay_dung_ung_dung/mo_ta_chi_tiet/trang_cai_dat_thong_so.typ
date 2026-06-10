@@ -3,10 +3,7 @@
 = Trang cài đặt các thông số
 - *Giao diện*:
 
-#figure(
-  image("../images/settings.fsrs.png", height: 50%),
-  caption: [Trang cài đặt các thông số],
-)
+Do kích cỡ hình ảnh quá khổ, kính mời bạn đọc xem thiết kế của #link("https://raw.githubusercontent.com/Huangphoux/ay_gogh/refs/heads/main/docs/bao_cao/400_xay_dung_ung_dung/images/settings.fsrs.png")[Trang cài đặt các thông số].
 
 - *Các thành phần của màn hình*:
 

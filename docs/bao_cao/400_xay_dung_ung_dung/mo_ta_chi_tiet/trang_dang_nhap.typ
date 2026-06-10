@@ -4,7 +4,7 @@
 - *Giao diện*:
 
 #figure(
-  image("../images/auth.login.png", height: 50%),
+  image("../images/auth.login.png", height: 40%),
   caption: [Trang Đăng nhập],
 )
 

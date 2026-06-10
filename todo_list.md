@@ -1,3 +1,10 @@
+# Đồ án 2
+
+- Tách văn bản mỗi dòng 1 câu
+- Đa dạng ý nghĩa, từ trái nghĩa, đồng nghĩa
+- Nhận diện ngữ nghĩa đúng ngữ cảnh
+- Tạo động lực: game, xếp hạng, huy hiệu
+
 # To-Do List
 
 - Show toàn bộ entry trong từ điển
@@ -106,5 +113,6 @@
 - Các đáp án nên làm bằng ngôn ngữ mẹ đẻ sẽ dễ hiểu hơn
 
 # UI
+
 - Focus state, viền nên dày hơn
 - Giao diện phèn

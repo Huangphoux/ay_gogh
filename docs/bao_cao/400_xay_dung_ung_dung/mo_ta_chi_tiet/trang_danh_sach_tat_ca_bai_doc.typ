@@ -3,10 +3,9 @@
 = Trang danh sách tất cả các bài đọc
 - *Giao diện*:
 
-#figure(
-  image("../images/read.index.all.png", height: 50%),
-  caption: [Trang danh sách tất cả các bài đọc],
-)
+Do kích cỡ hình ảnh quá khổ, kính mời bạn đọc xem thiết kế của #link("https://raw.githubusercontent.com/Huangphoux/ay_gogh/refs/heads/main/docs/bao_cao/400_xay_dung_ung_dung/images/read.index.all.png")[Trang danh sách tất cả các bài đọc].
+
+
 
 - *Các thành phần của màn hình*:
 

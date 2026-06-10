@@ -1,5 +1,6 @@
 #set heading(level: 3)
 
+#pagebreak()
 = Popup thông báo ngày mai mới có thể học từ
 - *Giao diện*:
 

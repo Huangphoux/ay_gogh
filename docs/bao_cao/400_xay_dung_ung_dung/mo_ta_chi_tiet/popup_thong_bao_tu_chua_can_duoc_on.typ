@@ -1,5 +1,6 @@
 #set heading(level: 3)
 
+#pagebreak()
 = Popup thông báo từ chưa cần được ôn
 - *Giao diện*:
 

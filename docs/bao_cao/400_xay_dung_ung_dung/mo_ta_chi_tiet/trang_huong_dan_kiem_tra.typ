@@ -4,7 +4,7 @@
 - *Giao diện*:
 
 #figure(
-  image("../images/test.intro.png", height: 50%),
+  image("../images/test.intro.png", height: 48%),
   caption: [Trang hướng dẫn kiểm tra],
 )
 

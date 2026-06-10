@@ -1,5 +1,6 @@
 #set heading(level: 3)
 
+#pagebreak()
 = Trang kết quả kiểm tra
 - *Giao diện*:
 

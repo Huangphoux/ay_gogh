@@ -1,7 +1,10 @@
+#set text(font: "Times New Roman", size: 13pt, lang: "vi")
+
+#include "000_mo_dau/trang_bia.typ"
+
 #set page(margin: (top: 3cm, bottom: 3.5cm, left: 3.5cm, right: 2cm))
 // leading: giữa các dòng; spacing: giữa các đoạn văn
-#set par(leading: 21pt, spacing: 1.5em, first-line-indent: 0pt, justify: true)
-#set text(font: "Times New Roman", size: 13pt, lang: "vi")
+#set par(leading: 0.9em, spacing: 1.5em, first-line-indent: 0pt, justify: true)
 #set list(marker: [-], indent: 1em)
 #show heading: set block(above: 1.4em, below: 1em)
 
@@ -16,14 +19,23 @@
 
 // padding for table
 #set table(inset: 10pt)
+// header căn giữa
+#show table.cell.where(y: 0): it => table.cell(align: center, inset: 12pt)[#text(
+  weight: "bold",
+  it.body,
+)]
+// giảm line spacing trong bảng
+#show table: set par(leading: 0.5em)
 // table can be split into next page
-#show figure: set block(breakable: true)
+#show figure.where(kind: table): set block(breakable: true)
 // figure numbering by chapter
 #set figure(numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()))
 // caption của bảng nằm trên, còn lại nằm dưới
 #show figure.where(
   kind: table,
 ): set figure.caption(position: top)
+// in nghiêng (italic) chú thích
+#show figure.caption: set text(style: "italic")
 
 #let h1 = (
   [TÓM TẮT ĐỒ ÁN],
@@ -72,7 +84,6 @@
 //   }
 // }
 
-#include "000_mo_dau/trang_bia.typ"
 
 #heading(outlined: false, "LỜI CẢM ƠN")
 #include "000_mo_dau/loi_cam_on.typ"
@@ -83,6 +94,8 @@
 
 #set page(numbering: "1")
 #counter(page).update(1)
+
+#show link: it => underline(text(fill: blue)[#it])
 
 = TÓM TẮT ĐỒ ÁN
 #include "000_mo_dau/tom_tat_do_an.typ"
@@ -182,11 +195,6 @@
 
 == Kết quả đạt được
 #include "500_ket_luan/ket_qua.typ"
-== Nhận xét
-=== Thuận lợi
-#include "500_ket_luan/thuan_loi.typ"
-=== Khó khăn
-#include "500_ket_luan/kho_khan.typ"
 == Ưu điểm
 #include "500_ket_luan/uu_diem.typ"
 == Nhược điểm

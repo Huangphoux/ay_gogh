@@ -3,10 +3,7 @@
 = Trang chủ
 - *Giao diện*:
 
-#figure(
-  image("../images/index.png", height: 50%),
-  caption: [Trang chủ],
-)
+Do kích cỡ hình ảnh quá khổ, kính mời bạn đọc xem thiết kế của #link("https://raw.githubusercontent.com/Huangphoux/ay_gogh/refs/heads/main/docs/bao_cao/400_xay_dung_ung_dung/images/index.png")[Trang chủ].
 
 - *Các thành phần của màn hình*:
 

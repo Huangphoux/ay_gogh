@@ -4,7 +4,7 @@
 - *Giao diện*:
 
 #figure(
-  image("../images/read.num.ease.png", height: 50%),
+  image("../images/read.num.ease.png", height: 55%),
   caption: [Trang đánh giá độ khó bài đọc],
 )
 

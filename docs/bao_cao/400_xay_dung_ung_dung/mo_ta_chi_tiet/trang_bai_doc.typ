@@ -3,10 +3,7 @@
 = Trang bài đọc
 - *Giao diện*:
 
-#figure(
-  image("../images/read.num.png", height: 50%),
-  caption: [Trang bài đọc],
-)
+Do kích cỡ hình ảnh quá khổ, kính mời bạn đọc xem thiết kế của #link("https://raw.githubusercontent.com/Huangphoux/ay_gogh/refs/heads/main/docs/bao_cao/400_xay_dung_ung_dung/images/read.num.png")[Trang bài đọc].
 
 - *Các thành phần của màn hình*:
 
