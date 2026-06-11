@@ -6,12 +6,14 @@ from math import ceil
 
 save_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "chapter")
 ngsl_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "ngsl", "NGSL_1.2_stats_modified.csv"
+    os.path.dirname(os.path.dirname(__file__)),
+    "ngsl",
+    "NGSL_1.2_stats_no-header_SUP.csv",
 )
 lemma_path = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),
     "ngsl",
-    "NGSL_1.2_lemmatized_for_teaching_modified.csv",
+    "NGSL_1.2_lemmatized_for_teaching_sup.csv",
 )
 skip_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "skip_list.txt")
 
@@ -93,7 +95,7 @@ def add_ngsl_level(fname):
         # f being busy being read by f.readlines() so has to make a new open()
 
         # for i in range(0, 5 + 1):
-            # post[f"lv{i}"] = lv[i] / sum
+        # post[f"lv{i}"] = lv[i] / sum
 
         post["ngsl"] = (lv[1] + lv[2] + lv[3] + lv[4] + lv[5]) / sum
 
