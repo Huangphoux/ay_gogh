@@ -18,7 +18,6 @@ lemma_path = os.path.join(
 skip_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "skip_list.txt")
 
 nlp = spacy.load("en_core_web_sm")
-# uv run spacy download en_core_web_sm
 words = set(nlp.vocab.strings)
 
 with open(ngsl_path, mode="r", encoding="utf-8") as f:

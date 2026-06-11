@@ -3,8 +3,7 @@ from db import DatabaseDict
 from relay import Relay
 import spacy
 
-nlp = spacy.load("en_core_web_sm")
-
+nlp = spacy.load("en_core_web_sm")  # uv run spacy download en_core_web_sm
 db = DatabaseDict()
 relay: Relay[dict] = Relay()
 

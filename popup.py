@@ -124,15 +124,16 @@ def wiktionary_view(word: str, num: int, context: str):
 
     definition = fetch_definition(word)
 
-    doc = nlp(context)
-    for token in doc:
-        if token.lemma_ == word:
-            pos = token.pos_
-            tag= token.tag_
+    if context:
+        doc = nlp(context)
+        for token in doc:
+            if token.lemma_ == word:
+                pos = token.pos_
+                tag= token.tag_
 
     front_part = (
         H2(f"Word: {word}"),
-        H2(f"Part of speech: {spacy.explain(tag)}"),
+        H2(f"Part of speech: {spacy.explain(tag)}") if context and tag else None,
         Input(type="hidden", id="front", name="front", value=word),
     )
 

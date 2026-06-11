@@ -306,9 +306,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     except IndexError:
         cards = None
 
-    if cards:
-        for card in cards:  # mark mined words
-            chap["content"] = mark_word(num, chap["content"], card)
+    # if cards:
+    #     for card in cards:  # mark mined words
+    #         chap["content"] = mark_word(num, chap["content"], card)
 
     show_aside = db.get(auth).item(
         "SELECT value FROM settings WHERE setting = 'show_aside'"
