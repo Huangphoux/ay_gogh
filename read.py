@@ -273,12 +273,10 @@ class MyRenderer(HTMLRenderer):
 
 def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
     if word:
-      doc=nlp(context)
-      for token in doc:
-          if token.text == word:
-              word = token.lemma_
-    
-    
+        doc = nlp(context)
+        for token in doc:
+            if token.text == word:
+                word = token.lemma_
 
     # execute for INSERT, query for SELECT
     # this one is app
@@ -421,15 +419,21 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         else None,
     )
 
-    mark_complete = Section(style="display: grid; place-items: center")(
-        Button(data_on_click=(patch(f"/read/{num}"), ";confetti();"))("Mark Complete")
+    mark_complete = Section(
+        style="display: grid; place-items: center; justify-items: stretch;"
+    )(
+        Button(data_on_click=(post(f"/read/{num}"), ";confetti();"))("Mark Complete")
         if not done
         else (
             Button(data_on_click=delete(f"/read/{num}"), _class="outline")(
                 "Undo Complete"
             ),
             P(_class="notice")("You have marked this chapter as Complete."),
-            A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
+            Div(style="display: flex; justify-content: space-between;")(
+                A(href=f"/read/{num - 1}")(f"Chapter {num - 1}"),
+                A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
+                A(href=f"/read/{num + 1}")(f"Chapter {num + 1}"),
+            ),
         )
     )
 
