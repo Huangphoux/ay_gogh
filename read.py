@@ -479,9 +479,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     )
 
 
-def publish(auth, num: int, word: str = "", bypass: int = 0):
+def publish(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
     # pointerup→open()→cqrs()→popup_view()
-    relay.publish(f"read.{auth}.{num}", dict(word=word, bypass=bypass))
+    relay.publish(f"read.{auth}.{num}", dict(word=word, bypass=bypass, context=context))
 
 
 @rt.patch("/{num:int}/save_toggles")
@@ -495,7 +495,7 @@ def save_toggles(auth, num: int, show_aside: int, show_mark: int):
     publish(auth, num)
 
 
-@rt.patch("/{num:int}")
+@rt.post("/{num:int}")
 def done(auth, num: int):
     db.get(auth).execute(
         "INSERT INTO chapter (number, done) VALUES (?, CURRENT_TIMESTAMP)", (num,)
