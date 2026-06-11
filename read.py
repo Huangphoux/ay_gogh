@@ -422,7 +422,10 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     mark_complete = Section(
         style="display: grid; place-items: center; justify-items: stretch;"
     )(
-        Button(data_on_click=(post(f"/read/{num}"), ";confetti();"))("Mark Complete")
+        Button(
+            data_on_click=(post(f"/read/{num}"), ";confetti();"),
+            popovertarget="level-up",
+        )("Mark Complete")
         if not done
         else (
             Button(data_on_click=delete(f"/read/{num}"), _class="outline")(
@@ -434,7 +437,11 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
                 A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
                 A(href=f"/read/{num + 1}")(f"Chapter {num + 1}"),
             ),
-        )
+        ),
+        Dialog(id="level-up", popover=True)(
+            P("You have level up!"),
+            Button(popovertarget="level-up", popovertargetaction="hide")("Close"),
+        ),
     )
 
     debug_signals = (

@@ -133,6 +133,15 @@ def profile_page(auth):
 
     return Main(
         H1(id="main-heading")(f"{auth}'s profile"),
+        Section(
+            H2("Your stats"),
+            Label(_for="progress"),
+            Progress(
+                id="progress",
+                max="160",
+                value=str(last_test["result"] + sum_done),
+            ),
+        ),
         Section(_class="profile")(
             test,
             read,
