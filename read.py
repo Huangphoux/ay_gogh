@@ -437,6 +437,12 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         style="width: 100%; position: sticky; top: 0; z-index: 2;",
         data_on_click="document.querySelector('#popup').togglePopover();",
     )("Toggle popup")
+    
+    confetti_script = (
+        Script(
+            src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.1.0/dist/confetti.min.js"
+        ),
+    )
 
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
@@ -445,6 +451,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
             dict(document=True),
         ),
     )(
+        confetti_script,
         cardinal,
         h1,
         popup_view(auth, num, word, bypass),

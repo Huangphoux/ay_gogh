@@ -141,6 +141,7 @@ p {
 
 details[popover] {
     max-width: 45rem;
+    max-height: 100dvh;
     width: 100dvw;
     transition: filter var(--transition-time);
 
@@ -150,6 +151,10 @@ details[popover] {
         &::backdrop {
             backdrop-filter: brightness(50%) grayscale(80%);
         }
+    }
+
+    &:not(:open){
+        filter: drop-shadow(10px 10px var(--accent));
     }
 
     /* this is the average laptop screen size assumed by Google */

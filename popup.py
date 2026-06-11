@@ -120,26 +120,6 @@ def wiktionary_view(word: str, num: int):
     definition = fetch_definition(word)
 
     front_part = (
-        Label(_for="front")("Word"),
-        Input(
-            type="text",
-            id="front",
-            name="front",
-            value=word,
-            required=True,
-            placeholder="Write the word you want to collect in here.",
-            style="width: 100%;",
-            data_on_input=(
-                js(
-                    f"if (evt.target.value !== \"\" )\
-                    {{ $word = evt.target.value; @get('/read/{num}/open') }};"
-                ),
-                dict(debounce=100),
-            ),
-        ),
-    )
-
-    front_part = (
         H2(f"Word: {word}"),
         Input(type="hidden", id="front", name="front", value=word),
     )
@@ -151,7 +131,7 @@ def wiktionary_view(word: str, num: int):
             name="back",
             placeholder="Write your definition in here.",
             required=True,
-            style="resize: none;",
+            style="resize: vertical; overflow: auto;",
             data_ignore_moprh=True,
         ),
     )
