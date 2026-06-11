@@ -437,7 +437,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         style="width: 100%; position: sticky; top: 0; z-index: 2;",
         data_on_click="document.querySelector('#popup').togglePopover();",
     )("Toggle popup")
-    
+
     confetti_script = (
         Script(
             src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.1.0/dist/confetti.min.js"
@@ -447,7 +447,12 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
         data_on_selectionchange=(
-            js("$word = document.getSelection().toString().trim()"),
+            js("""
+               let sel = document.getSelection();
+               $word = sel.toString().trim();
+               $context = sel.anchorNode;
+               console.log($context)
+            """),
             dict(document=True),
         ),
     )(

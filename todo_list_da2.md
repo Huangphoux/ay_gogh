@@ -7,3 +7,4 @@
 
 # Todo List
 - Bug, search Enter close popup
+- Select thì hiện popup action, chọn highlight hoặc tìm từ điển
