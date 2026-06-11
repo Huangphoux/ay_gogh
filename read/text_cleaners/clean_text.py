@@ -8,6 +8,7 @@ from add_frontmatter import add_frontmatter
 from remove_linebreak import remove_linebreak
 from add_ngsl_level import add_ngsl_level
 from fix_spelling import fix_spelling
+from split_paragraph import split_paragraph
 
 
 root_path = os.path.dirname(os.path.dirname(__file__))
@@ -43,6 +44,7 @@ def clean_text():
                 remove_linebreak,
                 fix_spelling,
                 add_ngsl_level,
+                split_paragraph,
             ]
 
             for step in steps:
