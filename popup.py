@@ -1,24 +1,31 @@
 from apswutils.db import NotFoundError
 from starhtml import *
-from shared import db, relay
+from shared import db, relay, nlp
 import requests
 import json
 from fsrs import Scheduler, Card, Rating
 from datetime import datetime, timezone
-import simplemma
 from humanize import precisedelta
+import spacy
 
 rt: APIRouter = APIRouter("/read")  # so you can have identical APIRouter
 
 
-def publish(auth, num: int, word: str = "", bypass: int = 0):
+def publish(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
     # pointerup→open()→cqrs()→popup_view()
-    relay.publish(f"read.{auth}.{num}", dict(word=word, bypass=bypass))
+    relay.publish(
+        f"read.{auth}.{num}",
+        dict(
+            word=word,
+            bypass=bypass,
+            context=context,
+        ),
+    )
 
 
 @rt.get("/{num:int}/open")
-def open(auth, num: int, word: str = "", bypass: int = 0):
-    publish(auth, num, word, bypass)
+def open(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
+    publish(auth, num, word, bypass, context)
 
 
 @rt.get("/{num:int}/close")
@@ -32,11 +39,9 @@ def close_save(auth, num: int, front: str, back: str):
     publish(auth, num)
 
 
-def fetch_definition(word: str = ""):
+def fetch_definition(word: str = "", context: str = ""):
     if not word:
         return None
-
-    word = simplemma.lemmatize(word, lang="en") if word else ""
 
     try:
         fetch = json.loads(
@@ -111,7 +116,7 @@ def bypass_btn(num: int, word: str = "", is_outlined: bool = False):
     )("Review anyway")
 
 
-def wiktionary_view(word: str, num: int):
+def wiktionary_view(word: str, num: int, context: str):
     try:
         lv = db.app.item("SELECT level FROM ngsl WHERE lemma = ?", (word,))
     except NotFoundError:
@@ -119,8 +124,15 @@ def wiktionary_view(word: str, num: int):
 
     definition = fetch_definition(word)
 
+    doc = nlp(context)
+    for token in doc:
+        if token.lemma_ == word:
+            pos = token.pos_
+            tag= token.tag_
+
     front_part = (
         H2(f"Word: {word}"),
+        H2(f"Part of speech: {spacy.explain(tag)}"),
         Input(type="hidden", id="front", name="front", value=word),
     )
 
@@ -322,7 +334,7 @@ def search_view(num: int):
     return popup_form(num, content)
 
 
-def popup_view(auth, num: int, word: str = "", bypass: int = 0):
+def popup_view(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
     if not word:  # default view
         return search_view(num)
 
@@ -355,7 +367,7 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0):
         card = None
 
     if not card:  # not in memory, hasn't mined yet
-        return wiktionary_view(word, num)
+        return wiktionary_view(word, num, context)
 
     if card["is_retired"]:
         return retired_view(num, card["front"], card["back"])

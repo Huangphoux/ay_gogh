@@ -1,7 +1,9 @@
 from starhtml import *
 from db import DatabaseDict
 from relay import Relay
+import spacy
 
+nlp = spacy.load("en_core_web_sm")
 
 db = DatabaseDict()
 relay: Relay[dict] = Relay()
@@ -34,7 +36,7 @@ def template(title: str, main, auth=None):
         H1(
             # style="cursor: pointer; user-select: none;",
             # data_on_click="evt.target.textContent=\
-                # $brand[Math.floor(Math.random()*$brand.length)]",
+            # $brand[Math.floor(Math.random()*$brand.length)]",
         )("Ay Gogh!"),
         Noscript(P("Enable JavaScript to ensure the best experience.")),
     )

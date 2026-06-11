@@ -2,12 +2,11 @@ from load_env import is_debug
 from test import get_last_test
 from apswutils.db import NotFoundError
 from starhtml import *
-from shared import db, relay, template
+from shared import db, relay, template, nlp
 import mistletoe
 from math import ceil
 from mistletoe.html_renderer import HTMLRenderer
 import re
-import simplemma
 from popup import popup_view
 
 rt: APIRouter = APIRouter("/read")
@@ -213,7 +212,13 @@ def chapter(auth, num: int, word: str = ""):
 async def cqrs(req, auth, num: int):
     async for _, data in relay.subscribe(f"read.{auth}.{num}"):
         yield elements(
-            chapter_main(auth, num, word=data["word"], bypass=data["bypass"]),
+            chapter_main(
+                auth,
+                num,
+                word=data["word"],
+                bypass=data["bypass"],
+                context=data["context"],
+            ),
             selector="main",
             use_view_transition=True,
         )
@@ -235,14 +240,13 @@ def mark_word(num: int, content: str, card: dict) -> str:
         if code_block:
             continue
 
-        tokens = simplemma.simple_tokenizer(line)
-        lemmas = simplemma.text_lemmatizer(line, lang="en")
+        doc = nlp(content)
         marked = []  # pass token if already marked
 
-        for j, lemma in enumerate(lemmas):
-            if card["front"] == lemma and tokens[j] not in marked:
+        for token in doc:
+            if card["front"] == token.lemma_ and token.text not in marked:
                 split[i] = re.sub(
-                    r"\b%s\b" % tokens[j],
+                    r"\b%s\b" % token.text,
                     Safe(
                         Span(
                             data_is_retired=card["is_retired"],
@@ -251,12 +255,12 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
                             data_on_pointerup=(click_showpopup, dict(stop=True)),
                             data_indicator="searching",
-                        )(tokens[j])
+                        )(token.text)
                     ),
                     split[i],  # why can't i use `line` here?
                 )
 
-                marked.append(tokens[j])
+                marked.append(token.text)
 
     return "\n".join(split)
 
@@ -267,8 +271,14 @@ class MyRenderer(HTMLRenderer):
         return Safe(Pre(_class="aside", data_show="$show_aside")(code))
 
 
-def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
-    word = simplemma.lemmatize(word, lang="en") if word else ""
+def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
+    if word:
+      doc=nlp(context)
+      for token in doc:
+          if token.text == word:
+              word = token.lemma_
+    
+    
 
     # execute for INSERT, query for SELECT
     # this one is app
@@ -360,7 +370,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
     )
 
     showpopup = js(
-        f"if ($word !== \"\" ) {{ @get('/read/{num}/open');\
+        f"if (!document.getSelection().isCollapsed ) {{ @get('/read/{num}/open');\
         document.querySelector('#popup').showPopover(); }};"
     )
 
@@ -450,7 +460,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
             js("""
                let sel = document.getSelection();
                $word = sel.toString().trim();
-               $context = sel.anchorNode;
+               $context = sel.anchorNode.textContent;
                console.log($context)
             """),
             dict(document=True),
@@ -459,7 +469,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0):
         confetti_script,
         cardinal,
         h1,
-        popup_view(auth, num, word, bypass),
+        popup_view(auth, num, word, bypass, context),
         debug_signals,
         toggles,
         popup_btn,
