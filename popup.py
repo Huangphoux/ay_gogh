@@ -104,7 +104,7 @@ def fetch_wiktionary(explain: str, word: str = "") -> dict | None:
     )["entries"]
 
     for entry in entries:
-        if entry["partOfSpeech"] in explain.lower():
+        if entry["partOfSpeech"] == explain:
             senses = entry["senses"]
             synonyms = entry["synonyms"]
             antonyms = entry["antonyms"]
@@ -126,7 +126,7 @@ def wiktionary_view(word: str, num: int, context: str):
     for token in doc:
         if token.lemma_ == word:
             pos = token.pos_
-            explain = spacy.explain(token.tag_)
+            explain = spacy.explain(token.pos_)
             break
 
     fetch = fetch_wiktionary(explain, word)
