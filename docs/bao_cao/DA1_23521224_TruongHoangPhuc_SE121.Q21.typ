@@ -63,7 +63,7 @@
       it.element.location(),
       it.indented(
         if it.element.body in h1 and it.element.body in phuluc {
-          "Phụ lục  " + it.prefix()
+          "Phụ lục " + it.prefix()
         } else if it.element.body in h1 and it.element.body not in irregular {
           "Chương " + it.prefix()
         } else if it.element.body in h1 and it.element.body in irregular {
