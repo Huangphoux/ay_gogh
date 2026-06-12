@@ -17,23 +17,14 @@
   } else { it.body })
 }
 
-// padding for table
-#set table(inset: 7pt)
-// header căn giữa
-#show table.cell.where(y: 0): it => table.cell(align: center, inset: 12pt)[#text(
-  weight: "bold",
-  it.body,
-)]
-// giảm line spacing trong bảng
-#show table: set par(leading: 0.5em)
-// table can be split into next page
-#show figure.where(kind: table): set block(breakable: true)
-// figure numbering by chapter
-#set figure(numbering: (..num) => numbering("1.1", counter(heading).get().first(), num.pos().first()))
-// caption của bảng nằm trên, còn lại nằm dưới
-#show figure.where(
-  kind: table,
-): set figure.caption(position: top)
+
+#set table(inset: 7pt) // padding for table
+#show table.cell.where(y: 0): it => table.cell(align: center, inset: 12pt)[
+  #text(weight: "bold", it.body) // header căn giữa
+]
+#show table: set par(leading: 0.5em) // giảm line spacing trong bảng
+#show figure.where(kind: table): set block(breakable: true) // table can be split into next page
+#show figure.where(kind: table): set figure.caption(position: top)// caption của bảng nằm trên, còn lại nằm dưới
 // in nghiêng (italic) chú thích
 #show figure.caption: set text(style: "italic")
 
@@ -94,6 +85,18 @@
 #include "000_mo_dau/loi_cam_on.typ"
 
 #align(center, outline(title: "MỤC LỤC", indent: 2em))
+// figure numbering by chapter
+#show heading.where(level: 1): it => {
+  counter(math.equation).update(0)
+  counter(figure.where(kind: image)).update(0)
+  counter(figure.where(kind: table)).update(0)
+  counter(figure.where(kind: raw)).update(0)
+  it
+}
+
+#set figure(
+  numbering: num => numbering("1.1", counter(heading).get().first(), num),
+)
 #align(center, outline(title: "DANH MỤC HÌNH", target: figure.where(kind: image)))
 #align(center, outline(title: "DANH MỤC BẢNG", target: figure.where(kind: table)))
 

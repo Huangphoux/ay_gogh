@@ -46,6 +46,6 @@ Ngoài ra, một lí do khác mà tác giả muốn thực hiện đề tài nà
         - FSRS: thuật toán lên lịch học tập biết thích ứng với thói quen của người dùng
       ],
     ),
-    caption: ["Bảng so sánh Duolingo với Ay Gogh!"],
+    caption: [Bảng so sánh Duolingo với Ay Gogh!],
   )
 ]
