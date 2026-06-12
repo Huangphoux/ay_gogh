@@ -219,7 +219,16 @@
   } else { it.body })
 }
 
-
+#show heading.where(level: 1): it => {
+  counter(math.equation).update(0)
+  counter(figure.where(kind: image)).update(0)
+  counter(figure.where(kind: table)).update(0)
+  counter(figure.where(kind: raw)).update(0)
+  it
+}
+#set figure(
+  numbering: num => numbering("A.1", counter(heading).get().first(), num),
+)
 = English by the Nature Method
 #include "200_kien_thuc_nen_tang/nature_method.typ"
 = New General Service List
