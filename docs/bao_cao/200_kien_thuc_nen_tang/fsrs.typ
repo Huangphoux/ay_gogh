@@ -2,7 +2,7 @@
   image("./static/fsrs.png", width: 80%),
   caption: [Trang web của thư viện Datastar.],
 )
-#set heading(offset: 2)
+#set heading(offset: 1)
 
 Free Spaced Repetition Scheduling Algorithm (FSRS, Thuật toán lên lịch ngắt quãng tự do) @fsrs là thuật toán lên lịch học tập thông minh được phát triển bởi Jarrett Ye. FSRS sử dụng các phương pháp Máy học để mô hình hoá các yếu tố ảnh hưởng đến trí nhớ và cho phép tối ưu các thông số để đáp ứng với nhu cầu học tập của mỗi người dùng.
 

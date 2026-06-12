@@ -3,7 +3,7 @@
   caption: [Trang bìa của quyển sách English by the Nature Method.],
 )
 
-#set heading(offset: 2)
+#set heading(offset: 1)
 
 English by the Nature Method @nature_method là một quyển sách được viết bởi Arthur Jensen, được ra mắt vào năm 1942, là một quyển sách dạy học tiếng Anh hoàn toàn bằng tiếng Anh. Độ khó tăng dần với mỗi chương của quyển sách. Mỗi chương sẽ giới thiệu từ vựng và ngữ pháp mới, kèm theo với các hình ảnh và chú thích dễ hiểu ở lề trang để hỗ trợ người học. Quyển sách sẽ giúp người học tích luỹ được 2300 từ trải qua 60 chương và tập trung vào tiếng Anh của nước Anh.
 
@@ -11,7 +11,7 @@ English by the Nature Method @nature_method là một quyển sách được vi�
 
 = Ưu điểm
 - *Tự học tiếng Anh miễn phí*: quyển sách được xuất bản năm 1942, đến nay đã được hết hạn bản quyền. Ai cũng có thể truy cập được sách trên Internet Archive.
-- *Học tiếng Anh bằng tiếng Anh*: không có phương pháp học nào hiệu quả hơn bằng việc chủ động tiếp xúc với các nội dung được viết bằng tiếng Anh. Quyển sách được viết hoàn toàn bằng tiếng Anh, giúp người đọc làm quen được với việc phải tiếp cận với một số lượng lớn từ tiếng Anh. 
+- *Học tiếng Anh bằng tiếng Anh*: không có phương pháp học nào hiệu quả hơn bằng việc chủ động tiếp xúc với các nội dung được viết bằng tiếng Anh. Quyển sách được viết hoàn toàn bằng tiếng Anh, giúp người đọc làm quen được với việc phải tiếp cận với một số lượng lớn từ tiếng Anh.
 
 = Nhược điểm
 - *Tính thời sự kém*: do quyển sách được viết vào những năm 1900, so với năm 2026, quyển sách đã thực sự quá lỗi thời với người học hiện tại, sử dụng các từ như `to-day`, `tram`, và `frock`.

@@ -2,7 +2,7 @@
   image("./static/ngsl.png", width: 80%),
   caption: [Trang web của NGSL.],
 )
-#set heading(offset: 2)
+#set heading(offset: 1)
 
 New General Service List (NGSL, Danh sách hỗ trợ tổng quát mới) @ngsl là một danh sách được tạo ra bởi Charles Browne và Brent Culligan, gồm 2809 từ quan trọng nhất trong tiếng Anh tổng quát và cuộc sống thường nhật của người học tiếng Anh. Các từ trong danh sách này chiếm đến trên trung bình 92% đa số văn bản tiếng Anh. Được phát triển từ năm 2013, phiên bản mới nhất của NGSL được phát hành vào tháng 4/2023.
 

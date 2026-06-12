@@ -37,12 +37,21 @@
   [KẾT LUẬN],
   [TÀI LIỆU THAM KHẢO],
   [PHỤ LỤC],
+  [English by the Nature Method],
+  [New General Service List],
+  [Free Spaced Repetition Scheduling Algorithm],
 )
 
 #let irregular = (
   [TÓM TẮT ĐỒ ÁN],
   [TÀI LIỆU THAM KHẢO],
   [PHỤ LỤC],
+)
+
+#let phuluc = (
+  [English by the Nature Method],
+  [New General Service List],
+  [Free Spaced Repetition Scheduling Algorithm],
 )
 
 // thêm chữ Chapter cho Heading 1
@@ -53,32 +62,22 @@
       // in đậm heading 1 trong mục lục
       it.element.location(),
       it.indented(
-        if it.element.body in h1 and it.element.body not in irregular {
+        if it.element.body in h1 and it.element.body in phuluc {
+          "Phụ lục  " + it.prefix()
+        } else if it.element.body in h1 and it.element.body not in irregular {
           "Chương " + it.prefix()
-        } else if it.element.body in h1 and it.element.body in irregular {} else { it.prefix() + ":" },
+        } else if it.element.body in h1 and it.element.body in irregular {
+          // nothing
+        } else {
+          it.prefix() + ":"
+        },
         it.inner(),
       ),
     ),
   )
 }
 
-// #show outline.entry.where(level: 1): it => {
-//   if it.element.func() == heading {
-//     text(
-//       weight: "bold",
-//       link(
-//         // in đậm heading 1 trong mục lục
-//         it.element.location(),
-//         it.indented(
-//           "Chương " + it.prefix(),
-//           it.inner(),
-//         ),
-//       ),
-//     )
-//   } else {
-//     it
-//   }
-// }
+
 
 
 #heading(outlined: false, "LỜI CẢM ƠN")
@@ -208,10 +207,22 @@
 = TÀI LIỆU THAM KHẢO
 #bibliography(title: none, "bib.bib")
 
-= PHỤ LỤC
-== English by the Nature Method
+#set heading(numbering: "A.1.")
+#counter(heading).update(0)
+
+#show heading.where(level: 1): it => {
+  pagebreak(weak: false) // Heading 1 nằm trên trang riêng
+  let count = counter(heading).get().at(0)
+  align(center, if count > 0 and count < 6 {
+    // Thêm chữ Chương vào Heading 1 trên trang riêng
+    ("Phụ lục " + counter(heading).display("A. ") + it.body)
+  } else { it.body })
+}
+
+
+= English by the Nature Method
 #include "200_kien_thuc_nen_tang/nature_method.typ"
-== New General Service List
+= New General Service List
 #include "200_kien_thuc_nen_tang/ngsl.typ"
-== Free Spaced Repetition Scheduling Algorithm
+= Free Spaced Repetition Scheduling Algorithm
 #include "200_kien_thuc_nen_tang/fsrs.typ"
