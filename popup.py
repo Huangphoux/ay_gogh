@@ -72,7 +72,7 @@ def popup_form(num: int, content):
             dict(window=True),
         ),
     )(
-        Summary(data_text="$searching ? 'Popup (Searching …)' : 'Popup'"),
+        Summary(data_text="$loading ? 'Popup (Loading …)' : 'Popup'"),
         Form(content),
     )
 
@@ -100,7 +100,7 @@ def close_btn(num: int, is_outlined: bool = False, is_save: bool = False):
             ),
         )
 
-    return btn(_class="outline" if is_outlined else None)(
+    return btn(_class="outline" if is_outlined else None, data_indicator="loading")(
         "Close", " & Save" if is_save else ""
     )
 
@@ -118,27 +118,62 @@ def bypass_btn(num: int, word: str = "", is_outlined: bool = False):
 
 def wiktionary_view(word: str, num: int, context: str):
     try:
-        lv = db.app.item("SELECT level FROM ngsl WHERE lemma = ?", (word,))
-    except NotFoundError:
-        lv = None
+        ngsl = list(
+            db.app.query("SELECT number, level FROM ngsl WHERE lemma = ?", (word,)),
+        )[0]
+    except IndexError:
+        ngsl = None
 
     definition = fetch_definition(word)
 
-    if context:
-        doc = nlp(context)
-        for token in doc:
-            if token.lemma_ == word:
-                pos = token.pos_
-                tag= token.tag_
+    doc = nlp(context) if context else nlp(word)
+    for token in doc:
+        if token.lemma_ == word:
+            pos = token.pos_
+            tag = token.tag_
 
-    front_part = (
-        H2(f"Word: {word}"),
-        H2(f"Part of speech: {spacy.explain(tag)}") if context and tag else None,
+    badges = Div(style="display: flex; gap: 1rem;")(
+        Button(type="button", popovertarget="tag")(pos),
+        Div(_class="notice", id="tag", popover=True)(
+            f"Part of speech: {spacy.explain(tag)}"
+        ),
+        Button(type="button", popovertarget="ngsl")(
+            f"LV{ngsl['level']}" if ngsl["level"] > 0 else "SUP"
+        )
+        if ngsl is not None
+        else None,
+        Div(_class="notice", id="ngsl", popover=True)(
+            Ul(
+                Li(f"#{ngsl['number']} of {ngsl['level'] * 562} most common words"),
+                Li(f"NGSL Level {ngsl['level']}"),
+            )
+            if ngsl is not None and ngsl["level"] > 0
+            else None,
+            Ul(
+                Li("This is a supplementary word."),
+                Li(
+                    "Days of the week, months of the year, \
+                    and numerical words are all supplementary words."
+                ),
+                Li(
+                    "These words are part of the NGSL but do not have frequency rankings."
+                ),
+            )
+            if ngsl is not None and ngsl["level"] == 0
+            else None,
+        ),
+    )
+
+    front_part = Div(
+        style="display: flex; justify-content: space-between; align-items: center;"
+    )(
+        H2(word),
         Input(type="hidden", id="front", name="front", value=word),
+        badges,
     )
 
     back_part = (
-        Label(_for="back")("Definition"),
+        Label(_for="back")("Your own definition"),
         Textarea(
             id="back",
             name="back",
@@ -149,28 +184,28 @@ def wiktionary_view(word: str, num: int, context: str):
         ),
     )
 
-    wiktionary_part = Details(
-        open=True, style="height: 20dvh; resize: vertical; overflow: auto;"
-    )(
-        Summary(f"Dictionary"),
-        Ul(
-            data_on_pointerup=(f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"),
-            data_indicator="searching",
-        )(
-            *(Li(d) for d in definition),
+    wiktionary_part = (
+        Details(
+            Summary(f"Wiktionary"),
+            Ul(
+                data_on_pointerup=(
+                    f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
+                ),
+                data_indicator="loading",
+            )(
+                *(Li(d) for d in definition),
+            ),
         )
         if definition
-        else P("Sorry, couldn't find the word in the dictionary."),
+        else None
     )
 
     buttons = Div(style="display: flex; gap: 1rem;")(
         close_btn(num, is_outlined=True),
-        Button(data_on_click=post(f"/read/{num}/save", contentType="form"))("Save"),
-        Span(style="display: grid; place-items: center;")(
-            f"✅ NGSL {f' Level {lv}' if lv > 0 else ''}"
-            if lv is not None
-            else f"❌ Not in NGSL"
-        ),
+        Button(
+            data_indicator="loading",
+            data_on_click=post(f"/read/{num}/save", contentType="form"),
+        )("Save"),
     )
 
     content = (front_part, back_part, wiktionary_part, buttons)
@@ -234,9 +269,10 @@ def retired_view(num: int, front: str, back: str):
 
     buttons = Div(style="display: flex; gap: 1rem;")(
         close_btn(num, is_outlined=True, is_save=True),
-        Button(data_on_click=delete(f"/read/{num}/retire", contentType="form"))(
-            "Unretire"
-        ),
+        Button(
+            data_on_click=delete(f"/read/{num}/retire", contentType="form"),
+            data_indicator="loading",
+        )("Unretire"),
     )
 
     content = (front_part, back_part, buttons)
@@ -274,10 +310,12 @@ This action is NOT reversible. Are you sure about this decision?"
         Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
             Button(
                 data_on_click=patch(f"/read/{num}/forgot", contentType="form"),
+                data_indicator="loading",
             )("I forgot!"),
             Button(
                 _class="outline",
                 data_on_click=patch(f"/read/{num}/remembered", contentType="form"),
+                data_indicator="loading",
             )("I remembered!"),
         ),
     )
@@ -286,17 +324,18 @@ This action is NOT reversible. Are you sure about this decision?"
         Summary("More actions"),
         Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
             Button(
-                title="Retire this word so you don't have to review it anymore.",
                 data_on_click=patch(
                     f"/read/{num}/retire",
                     contentType="form",
                 ),
+                data_indicator="loading",
             )("Retire"),
             Button(
                 _class="outline",
                 data_on_pointerdown=js(f"confirm('{delete_msg}')").if_(
                     (delete(f"/read/{num}/delete", contentType="form")), ""
                 ),
+                data_indicator="loading",
             )("Delete"),
         ),
     )
@@ -306,17 +345,17 @@ This action is NOT reversible. Are you sure about this decision?"
 
 
 def search_view(num: int):
-    buttons = Div(style="display: flex; gap: 1rem;", data_show="!$searching")(
+    buttons = Div(style="display: flex; gap: 1rem;", data_show="!$loading")(
         close_btn(num, is_outlined=True),
         Button(
             data_on_click=get(f"/read/{num}/open", contentType="form"),
-            data_indicator="searching",
+            data_indicator="loading",
         )("Search"),
     )
 
     content = (
-        P(data_show="$searching")("Searching the word in your memory …"),
-        Label(_for="word", data_show="!$searching")(
+        P(data_show="$loading")("Searching the word in your memory …"),
+        Label(_for="word", data_show="!$loading")(
             "Write the word you want to search in your memory here."
         ),
         Input(
@@ -327,7 +366,7 @@ def search_view(num: int):
             required=True,
             placeholder="e.g. hawk tuah",
             style="width: 100%;",
-            data_show="!$searching",
+            data_show="!$loading",
         ),
         buttons,
     )

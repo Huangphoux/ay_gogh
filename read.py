@@ -111,7 +111,6 @@ def read(auth, p: int = 0, all: int = 0):
                 )(
                     _class=(ease := get_ease(result, c["ngsl"])),
                     href=f"/read/{c['number']}/ease",
-                    title=f"You know {result * c['ngsl']:.2f}% of the words in chapter {c['number']}.",
                 )(ease.title())
                 if result is not None and progress == 100 and not c["done"]
                 else None,
@@ -254,7 +253,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_is_due=card["is_due"],
                             data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
                             data_on_pointerup=(click_showpopup, dict(stop=True)),
-                            data_indicator="searching",
+                            data_indicator="loading",
                         )(token.text)
                     ),
                     split[i],  # why can't i use `line` here?
@@ -372,7 +371,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         document.querySelector('#popup').showPopover(); }};"
     )
 
-    content = Section(data_on_pointerup=showpopup, data_indicator="searching")(
+    content = Section(data_on_pointerup=showpopup, data_indicator="loading")(
         Safe(
             mistletoe.markdown(chap["content"], MyRenderer),  # text section
         ),
