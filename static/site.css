@@ -186,8 +186,4 @@ div.notice[popover] {
     margin: 0;
     inset: auto;
     position-area: left;
-
-    @media (max-width: 500px) {
-        position-area: bottom;
-    }
 }

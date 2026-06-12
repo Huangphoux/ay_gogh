@@ -1,4 +1,3 @@
-from apswutils.db import NotFoundError
 from starhtml import *
 from shared import db, relay, nlp
 import requests
@@ -37,26 +36,6 @@ def close(auth, num: int):
 def close_save(auth, num: int, front: str, back: str):
     db.get(auth).execute("UPDATE deck SET back=? WHERE front=?", (back, front))
     publish(auth, num)
-
-
-def fetch_definition(word: str = "", context: str = ""):
-    if not word:
-        return None
-
-    try:
-        fetch = json.loads(
-            requests.get(f"https://freedictionaryapi.com/api/v1/entries/en/{word}").text
-        )["entries"][0]
-
-        definition = [
-            s["definition"]
-            for s in fetch["senses"]
-            if "(obsolete)" not in s["definition"]
-        ]
-    except IndexError:
-        definition = None
-
-    return definition
 
 
 def popup_form(num: int, content):
@@ -116,6 +95,25 @@ def bypass_btn(num: int, word: str = "", is_outlined: bool = False):
     )("Review anyway")
 
 
+def fetch_wiktionary(explain: str, word: str = "") -> dict | None:
+    if not word:
+        return None
+
+    entries = json.loads(
+        requests.get(f"https://freedictionaryapi.com/api/v1/entries/en/{word}").text
+    )["entries"]
+
+    for entry in entries:
+        if entry["partOfSpeech"] in explain.lower():
+            senses = entry["senses"]
+            synonyms = entry["synonyms"]
+            antonyms = entry["antonyms"]
+
+            return {"senses": senses, "synonyms": synonyms, "antonyms": antonyms}
+        else:
+            return None
+
+
 def wiktionary_view(word: str, num: int, context: str):
     try:
         ngsl = list(
@@ -124,19 +122,21 @@ def wiktionary_view(word: str, num: int, context: str):
     except IndexError:
         ngsl = None
 
-    definition = fetch_definition(word)
-
     doc = nlp(context) if context else nlp(word)
     for token in doc:
         if token.lemma_ == word:
             pos = token.pos_
-            tag = token.tag_
+            explain = spacy.explain(token.tag_)
+            break
+
+    fetch = fetch_wiktionary(explain, word)
+    senses = fetch["senses"] if fetch else None
+    synonyms = fetch["synonyms"] if fetch else None
+    antonyms = fetch["antonyms"] if fetch else None
 
     badges = Div(style="display: flex; gap: 1rem;")(
         Button(type="button", popovertarget="tag")(pos),
-        Div(_class="notice", id="tag", popover=True)(
-            f"Part of speech: {spacy.explain(tag)}"
-        ),
+        Div(_class="notice", id="tag", popover=True)(f"Part of speech: {explain}"),
         Button(type="button", popovertarget="ngsl")(
             f"LV{ngsl['level']}" if ngsl["level"] > 0 else "SUP"
         )
@@ -184,20 +184,52 @@ def wiktionary_view(word: str, num: int, context: str):
         ),
     )
 
-    wiktionary_part = (
-        Details(
+    wiktionary_part = Div(
+        Details(name="wiktionary")(
             Summary(f"Wiktionary"),
-            Ul(
+            Ol(
                 data_on_pointerup=(
                     f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
                 ),
                 data_indicator="loading",
             )(
-                *(Li(d) for d in definition),
+                *(
+                    (
+                        Li(sense["definition"]),
+                        Ul(
+                            Li(sense["examples"]),
+                        )
+                        if sense["examples"]
+                        else None,
+                    )
+                    for sense in senses
+                ),
             ),
         )
-        if definition
-        else None
+        if senses
+        else None,
+        Details(name="wiktionary")(
+            Summary(f"Synonyms"),
+            Ul(
+                data_on_pointerup=(
+                    f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
+                ),
+                data_indicator="loading",
+            )(*(Li(synonym) for synonym in synonyms)),
+        )
+        if synonyms
+        else None,
+        Details(name="wiktionary")(
+            Summary(f"Antonyms"),
+            Ul(
+                data_on_pointerup=(
+                    f"if ($word !== \"\" ) {{ @get('/read/{num}/open') }};"
+                ),
+                data_indicator="loading",
+            )(*(Li(antonym) for antonym in antonyms)),
+        )
+        if antonyms
+        else None,
     )
 
     buttons = Div(style="display: flex; gap: 1rem;")(
