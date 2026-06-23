@@ -11,4 +11,5 @@
 - `a cold`: đoán `cold` là tính từ
 - `anchorNode` lâu lâu bị `null`, không lấy textContent được
 - `explain` không nằm ở ngoài, ko có giá trị mặc định
+  - Biến `explain` trong code Python
 - Code blocks show line-by-line, instead of a whole

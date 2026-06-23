@@ -126,7 +126,7 @@ def wiktionary_view(word: str, num: int, context: str):
     for token in doc:
         if token.lemma_ == word:
             pos = token.pos_
-            explain = spacy.explain(token.pos_)
+            explain = spacy.explain(token.tag_)
             break
 
     fetch = fetch_wiktionary(explain, word)
@@ -284,7 +284,7 @@ def retired_view(num: int, front: str, back: str):
     )
 
     front_part = (
-        H2(f"Word: {front}"),
+        H2(front),
         Input(type="hidden", id="front", name="front", value=front),
     )
 
@@ -324,7 +324,7 @@ This action is NOT reversible. Are you sure about this decision?"
     )
 
     front_part = (
-        H2(f"Word: {front}"),
+        H2(front),
         Input(type="hidden", id="front", name="front", value=front),
     )
 

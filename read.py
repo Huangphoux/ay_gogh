@@ -1,3 +1,4 @@
+import simplemma
 from load_env import is_debug
 from test import get_last_test
 from apswutils.db import NotFoundError
@@ -39,7 +40,9 @@ def read(auth, p: int = 0, all: int = 0):
 
     chap = list(chap)
 
-    chap_done = list(db.get(auth).query("SELECT number FROM chapter WHERE done IS NOT NULL"))
+    chap_done = list(
+        db.get(auth).query("SELECT number FROM chapter WHERE done IS NOT NULL")
+    )
     completed_numbers = {c["number"] for c in chap_done}
 
     for c in chap:
@@ -239,13 +242,14 @@ def mark_word(num: int, content: str, card: dict) -> str:
         if code_block:
             continue
 
-        doc = nlp(content)
+        tokens = simplemma.simple_tokenizer(line)
+        lemmas = simplemma.text_lemmatizer(line, lang="en")
         marked = []  # pass token if already marked
 
-        for token in doc:
-            if card["front"] == token.lemma_ and token.text not in marked:
+        for j, lemma in enumerate(lemmas):
+            if card["front"] == lemma and tokens[j] not in marked:
                 split[i] = re.sub(
-                    r"\b%s\b" % token.text,
+                    r"\b%s\b" % tokens[j],
                     Safe(
                         Span(
                             data_is_retired=card["is_retired"],
@@ -254,13 +258,14 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
                             data_on_pointerup=(click_showpopup, dict(stop=True)),
                             data_indicator="loading",
-                        )(token.text)
+                        )(tokens[j])
                     ),
                     split[i],  # why can't i use `line` here?
+                    # because using line doesn't modify the item in the list, dumbass
                 )
 
-                marked.append(token.text)
-
+                marked.append(tokens[j])
+                
     return "\n".join(split)
 
 
@@ -310,9 +315,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     except IndexError:
         cards = None
 
-    # if cards:
-    #     for card in cards:  # mark mined words
-    #         chap["content"] = mark_word(num, chap["content"], card)
+    if cards:
+        for card in cards:  # mark mined words
+            chap["content"] = mark_word(num, chap["content"], card)
 
     show_aside = db.get(auth).item(
         "SELECT value FROM settings WHERE setting = 'show_aside'"
@@ -394,7 +399,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         ),
     )
 
-    lines: tuple[str] = tuple(filter(None, chap["content"].splitlines(True)))
+    lines = tuple(filter(None, chap["content"].splitlines(True)))
 
     content = Section(data_on_pointerup=showpopup, data_indicator="loading")(
         Safe(
