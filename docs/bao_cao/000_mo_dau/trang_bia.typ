@@ -23,7 +23,7 @@
     #v(1fr)
 
     #text(size: 16pt, weight: "bold")[
-      GIẢNG VIÊN HƯỚNG DẪN: ThS. Trần Thị Hồng Yến
+      GIẢNG VIÊN HƯỚNG DẪN: TS. Đỗ Thị Thanh Tuyền
     ]
 
     #v(1fr)
