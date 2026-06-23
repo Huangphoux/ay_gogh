@@ -39,9 +39,9 @@ def read(auth, p: int = 0, all: int = 0):
 
     chap = list(chap)
 
-    chap_done = list(db.get(auth).query("SELECT number, done FROM chapter"))
+    chap_done = list(db.get(auth).query("SELECT number FROM chapter WHERE done IS NOT NULL"))
+    completed_numbers = {c["number"] for c in chap_done}
 
-    completed_numbers = {uc["number"] for uc in chap_done}  # LLM comes up with this
     for c in chap:
         c["done"] = c["number"] in completed_numbers
 
@@ -281,10 +281,17 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     # this one is app
     chap = list(db.app.query("SELECT * FROM chapter WHERE number = ? ", (num,)))[0]
 
-    try:  # this one is user's "done"
-        done = db.get(auth).item("SELECT done FROM chapter WHERE number = ? ", (num,))
+    try:
+        progress: int = db.get(auth).item(
+            "SELECT progress FROM chapter WHERE number = ? ", (num,)
+        )
+        is_done: bool = (
+            db.get(auth).item("SELECT done FROM chapter WHERE number = ? ", (num,))
+            is not None
+        )
     except NotFoundError:
-        done = 0
+        progress: int = 1
+        is_done: bool = False
 
     try:
         cards = list(  # this one find all cards
@@ -363,7 +370,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         style=f"display:grid; place-items: center; text-align: center; view-transition-name: chap{num}",
     )(
         f"{chap['title']}",
-        Span(style=f"view-transition-name: done{num}")(" (DONE)") if done else None,
+        Span(style=f"view-transition-name: done{num}")(" (DONE)") if is_done else None,
     )
 
     showpopup = js(
@@ -371,10 +378,29 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         document.querySelector('#popup').showPopover(); }};"
     )
 
+    next_line = (
+        Button(
+            data_on_click=patch(f"/read/{num}"),
+            style="width: 100%; position: sticky; bottom: 0;",
+        )("Continue")
+        if not is_done
+        else (
+            P(_class="notice")("You have completed this chapter."),
+            Div(style="display: flex; justify-content: space-between;")(
+                A(href=f"/read/{num - 1}")(f"Chapter {num - 1}"),
+                A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
+                A(href=f"/read/{num + 1}")(f"Chapter {num + 1}"),
+            ),
+        ),
+    )
+
+    lines: tuple[str] = tuple(filter(None, chap["content"].splitlines(True)))
+
     content = Section(data_on_pointerup=showpopup, data_indicator="loading")(
         Safe(
-            mistletoe.markdown(chap["content"], MyRenderer),  # text section
+            mistletoe.markdown(lines[0 : progress + 1], MyRenderer),  # text section
         ),
+        next_line,
     )
 
     due_cards = (
@@ -416,31 +442,6 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         )
         if retired_cards
         else None,
-    )
-
-    mark_complete = Section(
-        style="display: grid; place-items: center; justify-items: stretch;"
-    )(
-        Button(
-            data_on_click=(post(f"/read/{num}"), ";confetti();"),
-            popovertarget="level-up",
-        )("Mark Complete")
-        if not done
-        else (
-            Button(data_on_click=delete(f"/read/{num}"), _class="outline")(
-                "Undo Complete"
-            ),
-            P(_class="notice")("You have marked this chapter as Complete."),
-            Div(style="display: flex; justify-content: space-between;")(
-                A(href=f"/read/{num - 1}")(f"Chapter {num - 1}"),
-                A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
-                A(href=f"/read/{num + 1}")(f"Chapter {num + 1}"),
-            ),
-        ),
-        Dialog(id="level-up", popover=True)(
-            P("You have level up!"),
-            Button(popovertarget="level-up", popovertargetaction="hide")("Close"),
-        ),
     )
 
     debug_signals = (
@@ -485,7 +486,6 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         popup_btn,
         content,
         before_complete,
-        mark_complete,
     )
 
 
@@ -505,15 +505,23 @@ def save_toggles(auth, num: int, show_aside: int, show_mark: int):
     publish(auth, num)
 
 
-@rt.post("/{num:int}")
-def done(auth, num: int):
-    db.get(auth).execute(
-        "INSERT INTO chapter (number, done) VALUES (?, CURRENT_TIMESTAMP)", (num,)
+@rt.patch("/{num:int}")
+def next_line(auth, num: int):
+    chap = list(db.app.query("SELECT * FROM chapter WHERE number = ? ", (num,)))[0]
+    lines: tuple[str] = chap["content"].splitlines()
+
+    progress: int = db.get(auth).item(
+        "SELECT progress FROM chapter WHERE number = ? ", (num,)
     )
-    publish(auth, num)
 
+    db.get(auth).execute(
+        "UPDATE chapter SET progress=? WHERE number=?", (progress + 2, num)
+    )
 
-@rt.delete("/{num:int}")
-def undone(auth, num: int):
-    db.get(auth).execute("DELETE FROM chapter WHERE number=?", (num,))
+    if progress >= len(lines):
+        db.get(auth).execute(
+            "UPDATE chapter SET done=CURRENT_TIMESTAMP WHERE number=?",
+            (num,),
+        )
+
     publish(auth, num)

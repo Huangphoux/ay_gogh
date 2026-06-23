@@ -145,18 +145,6 @@ details[popover] {
     width: 100dvw;
     transition: filter var(--transition-time);
 
-    &:open {
-        filter: none;
-
-        &::backdrop {
-            backdrop-filter: brightness(50%) grayscale(80%);
-        }
-    }
-
-    &:not(:open) {
-        filter: drop-shadow(10px 10px var(--accent));
-    }
-
     /* this is the average laptop screen size assumed by Google */
     @media (min-width: 1024px) {
         margin-top: 0;

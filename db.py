@@ -155,9 +155,15 @@ class DatabaseDict:
             self.user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS chapter (
                         number INTEGER PRIMARY KEY,
-                        done TEXT NOT NULL
+                        progress INTEGER NOT NULL,
+                        done TEXT
                     )
             """)
+            for i in range(1, 60 + 1):
+                self.user[name].execute(
+                    "INSERT OR IGNORE INTO chapter (number, progress) VALUES (?, ?)",
+                    (i, 1),
+                )
             # deck
             self.user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS deck (
@@ -206,12 +212,11 @@ class DatabaseDict:
                      1.6483, 0.6014, 1.8729, 0.5425, 0.0912, 0.0658, 0.1542",
                 ),
             )
-
+            # default settings
             self.user[name].execute(
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 ("show_mark", "1"),
             )
-            
             self.user[name].execute(
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 ("show_aside", "1"),
@@ -237,7 +242,7 @@ class DatabaseDict:
         """,  # Lê Minh Phát, (UTC) 2026-05-08 01:48:52
             ("c", 100, 18, 18, 20, 17, 16),
         ) if whose_test == "Phat" else None
-        
+
         self.user[name].execute(
             """
                 INSERT INTO test (day, form, progress, lv1, lv2, lv3, lv4, lv5)
