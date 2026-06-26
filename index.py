@@ -146,4 +146,5 @@ def profile_page(auth):
             test,
             read,
         ),
+        A(href="/wordle")("Wordle")
     )

@@ -151,6 +151,14 @@ class DatabaseDict:
                         lv5 INTEGER NOT NULL
                     )
             """)
+            # wordle
+            self.user[name].execute(""" 
+                    CREATE TABLE IF NOT EXISTS wordle (
+                        number INTEGER PRIMARY KEY,
+                        guess TEXT NOT NULL,
+                        is_submitted INTEGER NOT NULL
+                    )
+            """)
             # chapter
             self.user[name].execute(""" 
                     CREATE TABLE IF NOT EXISTS chapter (

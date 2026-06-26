@@ -1,3 +1,4 @@
+import wordle
 from index import hero_page, profile_page
 from load_env import is_debug
 from starhtml import *
@@ -70,7 +71,7 @@ test.rt.to_app(app)
 read.rt.to_app(app)
 popup.rt.to_app(app)
 settings.rt.to_app(app)
-
+wordle.rt.to_app(app)
 
 @rt
 def index(req, sess):
