@@ -175,3 +175,10 @@ div.notice[popover] {
     inset: auto;
     position-area: left;
 }
+
+.wordle td {
+    width: 10dvh;
+    height: 10dvh;
+    text-align: center;
+    font-size: 2rem;
+}

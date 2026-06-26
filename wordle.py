@@ -97,6 +97,7 @@ def wordle_main(auth, game_state: bool | None = None):
     debug = Details(f"Target: {target}") if is_debug else None
 
     table = Table(
+        _class="wordle",
         data_on_keydown=(
             js("""
                let charCode  = evt.keyCode;
@@ -112,7 +113,7 @@ def wordle_main(auth, game_state: bool | None = None):
             dict(window=True, debounce=200),
         )
         if game_state is None
-        else None
+        else None,
     )(
         Tbody(
             *(
@@ -126,7 +127,10 @@ def wordle_main(auth, game_state: bool | None = None):
         )
     )
 
-    new_word = Button(data_on_click=delete("/wordle/new"))("New Word")
+    new_word = Button(
+        data_on_click=delete("/wordle/new"),
+        disabled=True if game_state is None else False,
+    )("New Word")
 
     end_game_text: str
     if game_state is True:
@@ -138,10 +142,10 @@ def wordle_main(auth, game_state: bool | None = None):
 
     return Main(data_init=get("/wordle/cqrs"))(
         h1,
-        debug,
-        table,
         end_game,
         new_word,
+        table,
+        debug,
     )
 
 
