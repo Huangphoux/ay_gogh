@@ -76,7 +76,6 @@ def color_row(guess: str, target: str, is_submitted: int = 1) -> list[FT]:
                 Td(style=f"background-color: {color};" if is_submitted else "")("")
             )
 
-    print(row)
     return row
 
 
