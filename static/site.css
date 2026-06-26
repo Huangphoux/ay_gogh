@@ -153,13 +153,11 @@ details[popover] {
 
 .profile {
     display: grid;
-    grid-auto-flow: column;
-    align-items: stretch;
-    gap: 2rem;
+    /* grid-auto-flow: column;
+    align-items: stretch; */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
-    @media (max-width: 500px) {
-        grid-auto-flow: row;
-    }
+    gap: 3rem;
 
     & section {
         border: var(--border-width) solid var(--border);

@@ -105,11 +105,11 @@ def profile_page(auth):
             )
         ),
         P(_class="notice")(
-            "As a new user, you should take a test to measure your core vocabulary knowledge."
+            "As a new user, you should take a test to measure your core vocabulary knowledge!"
         )
         if is_last_finished(auth) is None
         else P(style="text-align: center;")(
-            f"You know {(last_test['result'] / 100):.0%} of NGSL words."
+            f"You know {(last_test['result'] / 100):.0%} of NGSL words!"
         ),
     )
 
@@ -128,7 +128,12 @@ def profile_page(auth):
                 else f"/read/?p={ceil(chap_done_latest / 10) - 1}"
             )(f"Read", f" ({sum_done / 60:.0%})" if sum_done else None)
         ),
-        P(style="text-align: center;")(f"Progress: {sum_done} out of 60 chapters."),
+        P(style="text-align: center;")(f"Progress: {sum_done} out of 60 chapters!"),
+    )
+
+    wordle = Section(
+        H2(style=f"view-transition-name: wordle")(A(href="/wordle")("NGSL Wordle")),
+        P(style="text-align: center;")(f"Play a game of Wordle using only NGSL words!"),
     )
 
     return Main(
@@ -142,9 +147,5 @@ def profile_page(auth):
                 value=str(last_test["result"] + sum_done),
             ),
         ),
-        Section(_class="profile")(
-            test,
-            read,
-        ),
-        A(href="/wordle")("Wordle")
+        Section(_class="profile")(test, read, wordle),
     )

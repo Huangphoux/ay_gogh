@@ -10,7 +10,7 @@ rt: APIRouter = APIRouter("/wordle")
 
 @rt.get("/")
 def wordle(auth):
-    return template(f"Wordle", auth=auth, main=wordle_main(auth))
+    return template(f"NGSL Wordle", wordle_main(auth), auth)
 
 
 @rt.get("/cqrs")
@@ -65,9 +65,11 @@ def color_row(guess: str, target: str, is_submitted: int = 1) -> list[FT]:
             #   color = "gray"
 
             row.append(
-                Td(style=f"background-color: {color};" if is_submitted else "")(
-                    guess[i]
-                )
+                Td(
+                    style=f"background-color: {color}; color: light-dark(var(--text),var(--bg));"
+                    if is_submitted
+                    else ""
+                )(guess[i])
             )
         except IndexError:
             row.append(
@@ -94,7 +96,19 @@ def wordle_main(auth, game_state: bool | None = None):
         style=f"view-transition-name: wordle",
     )(f"NGSL Wordle")
 
-    debug = Details(f"Target: {target}") if is_debug else None
+    new_word = (
+        Button(data_on_click=delete("/wordle/new"))("New Word")
+        if game_state is not None
+        else None
+    )
+
+    end_game_text: str
+    if game_state is True:
+        end_game_text = "You won!"
+    elif game_state is False:
+        end_game_text = f"You lost! The word was {target}"
+
+    end_game = P(_class="notice")(end_game_text) if game_state is not None else None
 
     table = Table(
         _class="wordle",
@@ -110,7 +124,7 @@ def wordle_main(auth, game_state: bool | None = None):
                
                if (evt.key === 'Backspace') { @put(`/wordle/backspace`) };
                """),
-            dict(window=True, debounce=200),
+            dict(window=True, debounce=100),
         )
         if game_state is None
         else None,
@@ -127,18 +141,7 @@ def wordle_main(auth, game_state: bool | None = None):
         )
     )
 
-    new_word = Button(
-        data_on_click=delete("/wordle/new"),
-        disabled=True if game_state is None else False,
-    )("New Word")
-
-    end_game_text: str
-    if game_state is True:
-        end_game_text = "You won!"
-    elif game_state is False:
-        end_game_text = f"You lost! The word was {target}"
-
-    end_game = P(_class="notice")(end_game_text) if game_state is not None else None
+    debug = Details(Summary("Target word"), target) if is_debug else None
 
     return Main(data_init=get("/wordle/cqrs"))(
         h1,
