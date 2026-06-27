@@ -56,7 +56,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
         Link(rel="icon", href="https://fav.farm/📖"),  # favicon
         Link(rel="stylesheet", href="https://cdn.simplecss.org/simple.min.css"),
         
-        Link(rel="stylesheet", href="/site.css"),
+        Link(rel="stylesheet", href="/global.css"),
     ),
     sess_https_only=not is_debug,  # set Secure flag on cookies
     same_site="strict",

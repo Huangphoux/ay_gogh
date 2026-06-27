@@ -265,7 +265,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
                 )
 
                 marked.append(tokens[j])
-                
+
     return "\n".join(split)
 
 
@@ -273,6 +273,26 @@ class MyRenderer(HTMLRenderer):
     def render_block_code(self, token):  # code block → aside
         code = self.escape_html_text(token.children[0].content)
         return Safe(Pre(_class="aside", data_show="$show_aside")(code))
+
+
+def merge_code_blocks(lines: list[str]) -> list[str]:
+    is_open: bool = False
+    code_open: int = 0
+    code_close: int = 0
+
+    for i, line in enumerate(lines):
+        if not is_open and "```" == line:
+            is_open = True
+            code_open = i
+            continue
+
+        if is_open and "```" in line:
+            is_open = False
+            code_close = i + 1
+            lines[code_open:code_close] = ["\n".join(lines[code_open:code_close])]
+
+    print(lines)
+    return lines
 
 
 def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
@@ -386,7 +406,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     next_line = (
         Button(
             data_on_click=patch(f"/read/{num}"),
-            style="width: 100%; position: sticky; bottom: 0;",
+            style="width: 100%; position: sticky; bottom: 0; z-index: 2;",
         )("Continue")
         if not is_done
         else (
@@ -399,13 +419,16 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         ),
     )
 
-    lines = tuple(filter(None, chap["content"].splitlines(True)))
+    lines: list[str] = merge_code_blocks(
+        list(filter(None, chap["content"].splitlines(False)))
+    )
 
     content = Section(data_on_pointerup=showpopup, data_indicator="loading")(
         Safe(
-            mistletoe.markdown(lines[0 : progress + 1], MyRenderer),  # text section
+            mistletoe.markdown(
+                "\n\n".join(lines[0 : progress + 1]), MyRenderer
+            ),  # text section
         ),
-        next_line,
     )
 
     due_cards = (
@@ -490,6 +513,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         toggles,
         popup_btn,
         content,
+        next_line,
         before_complete,
     )
 
@@ -513,14 +537,17 @@ def save_toggles(auth, num: int, show_aside: int, show_mark: int):
 @rt.patch("/{num:int}")
 def next_line(auth, num: int):
     chap = list(db.app.query("SELECT * FROM chapter WHERE number = ? ", (num,)))[0]
-    lines: tuple[str] = chap["content"].splitlines()
+    
+    lines: list[str] = merge_code_blocks(
+        list(filter(None, chap["content"].splitlines(False)))
+    )
 
     progress: int = db.get(auth).item(
         "SELECT progress FROM chapter WHERE number = ? ", (num,)
     )
 
     db.get(auth).execute(
-        "UPDATE chapter SET progress=? WHERE number=?", (progress + 2, num)
+        "UPDATE chapter SET progress=? WHERE number=?", (progress + 1, num)
     )
 
     if progress >= len(lines):
