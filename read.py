@@ -261,7 +261,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_is_retired=card["is_retired"],
                             data_is_new_day=card["is_new_day"],
                             data_is_due=card["is_due"],
-                            data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
+                            data_attr_style=f"$colorblind && 'background: initial; text-decoration: underline;'",
                             data_on_pointerup=(show_popup(num, True), dict(stop=True)),
                             data_indicator="loading",
                         )(tokens[j])
@@ -353,46 +353,23 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     except IndexError:
         cards = None
 
-    show_mark = db.get(auth).item(
-        "SELECT value FROM settings WHERE setting = 'show_mark'"
+    colorblind = db.get(auth).item(
+        "SELECT value FROM settings WHERE setting = 'colorblind'"
     )
 
-    # toggles = Details(data_ignore_morph=True)(
-    #     Summary("Toggles for changing visibility"),
-    #     Ul(
-    #         style="list-style-type: none; width: 100%",
-    #         data_signals=dict(show_mark=int(show_mark), show_aside=int(show_aside)),
-    #     )(
-    #         Li(
-    #             style="display: flex;",
-    #             data_on_change=patch(f"/read/{num}/save_toggles"),
-    #         )(
-    #             Input(
-    #                 type="checkbox",
-    #                 id="show_mark",
-    #                 name="show_mark",
-    #                 data_bind="show_mark",
-    #             ),
-    #             Label(_for="show_mark", style=" flex-shrink: 0; padding-left: 0.5rem")(
-    #                 "Show colorful highlights"
-    #             ),
-    #         ),
-    #         Li(
-    #             style="display: flex;",
-    #             data_on_change=patch(f"/read/{num}/save_toggles"),
-    #         )(
-    #             Input(
-    #                 type="checkbox",
-    #                 id="show_aside",
-    #                 name="show_aside",
-    #                 data_bind="show_aside",
-    #             ),
-    #             Label(_for="show_aside", style=" flex-shrink: 0; padding-left: 0.5rem")(
-    #                 "Show marginal explanations"
-    #             ),
-    #         ),
-    #     ),
-    # )
+    colorblind_mode = Div(style="display: flex;", data_ignore_morph=True)(
+        Input(
+            data_signals=dict(colorblind=int(colorblind)),
+            type="checkbox",
+            id="colorblind",
+            name="colorblind",
+            data_bind="colorblind",
+            data_on_click=patch(f"/read/{num}/save_toggles"),
+        ),
+        Label(_for="colorblind", style=" flex-shrink: 0; padding-left: 0.5rem")(
+            "Colorblind mode"
+        ),
+    )
 
     cardinal = Section(_class="cardinal", style="padding: 0; margin: 0;")(
         P(style=f"view-transition-name: num{num}")(
@@ -458,7 +435,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         for card in cards:  # mark mined words
             lines = [mark_word(num, line, card) for line in lines]
 
-    content = Section(data_on_pointerup=show_popup(num), data_indicator="loading", style="margin:0;")(
+    content = Section(
+        data_on_pointerup=show_popup(num), data_indicator="loading", style="margin-top:0;"
+    )(
         Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer))
     )  # text section
 
@@ -537,6 +516,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
             next_line,
             popup_btn,
         ),
+        colorblind_mode,
         complete_msg,
         before_complete,
         debug_signals,
@@ -549,9 +529,9 @@ def publish(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
 
 
 @rt.patch("/{num:int}/save_toggles")
-def save_toggles(auth, num: int, show_mark: int):
+def save_toggles(auth, num: int, colorblind: int):
     db.get(auth).execute(
-        "UPDATE settings SET value=? WHERE setting=?", (show_mark, "show_mark")
+        "UPDATE settings SET value=? WHERE setting=?", (colorblind, "colorblind")
     )
     publish(auth, num)
 
