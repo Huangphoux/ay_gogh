@@ -372,7 +372,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     )
 
     cardinal = Section(_class="cardinal", style="padding: 0; margin: 0;")(
-        P(style=f"view-transition-name: num{num}")(
+        P(
             f"Chapter {chap['number_word']} ({num})"
         ),
         P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
@@ -380,10 +380,10 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
 
     h1 = H1(
         id="main-heading",
-        style=f"display:grid; place-items: center; text-align: center; view-transition-name: chap{num}",
+        style=f"display: grid; place-items: center; text-align: center; grid-auto-flow: column;",
     )(
         f"{chap['title']}",
-        Span(style=f"view-transition-name: done{num}")(" (DONE)") if is_done else None,
+        Span("(DONE)") if is_done else None,
     )
 
     show_all_notes = (
@@ -509,6 +509,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         h1,
         popup_view(auth, num, word, bypass, context),
         content,
+        colorblind_mode,
         Div(
             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem;"
         )(
@@ -516,7 +517,6 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
             next_line,
             popup_btn,
         ),
-        colorblind_mode,
         complete_msg,
         before_complete,
         debug_signals,
