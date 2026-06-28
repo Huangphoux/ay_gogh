@@ -92,35 +92,24 @@ legend {
     background: aqua;
 }
 
-.aside {
-    display: inline;
-    position: relative;
-    width: 20dvw;
+section:has(pre) {
+    max-height: 50dvh;
+    overflow: auto;
+}
+
+section pre,
+dialog pre {
+    display: block;
+    width: fit-content;
+    margin: 5% 10% 5% 10%;
+    float: none;
+    margin: auto;
+
     transition: filter var(--transition-time);
 
     &:hover {
         z-index: 1;
         filter: drop-shadow(10px 10px var(--accent));
-    }
-    &:nth-of-type(even) {
-        margin-right: -22dvw;
-        float: right;
-    }
-    &:nth-of-type(odd) {
-        margin-left: -22dvw;
-        float: left;
-    }
-
-    /* this is where the viewport covers the notes */
-    @media (max-width: 1200px) {
-        &:nth-of-type(even),
-        &:nth-of-type(odd) {
-            display: block;
-            width: fit-content;
-            margin: 5% 10% 5% 10%;
-            float: none;
-            margin: auto;
-        }
     }
 }
 

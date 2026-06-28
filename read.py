@@ -6,7 +6,7 @@ from starhtml import *
 from shared import db, relay, template, nlp
 import mistletoe
 from math import ceil
-from mistletoe.html_renderer import HTMLRenderer
+from mistletoe.html_renderer import HtmlRenderer
 import re
 from popup import popup_view
 
@@ -275,13 +275,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
     return "\n".join(split)
 
 
-class MyRenderer(HTMLRenderer):
-    def render_block_code(self, token):  # code block → aside
-        code = self.escape_html_text(token.children[0].content)
-        return Safe(Pre(_class="aside", data_show="$show_aside")(code))
-
-
-def get_chapter_lines(num: int) -> list[str]:
+def get_lines(num: int) -> list[str]:
     chap: str = db.app.item("SELECT content FROM chapter WHERE number = ? ", (num,))
     lines: list[str] = list(filter(None, chap.splitlines()))
 
@@ -312,6 +306,11 @@ def get_chapter_lines(num: int) -> list[str]:
         i += 1
 
     return lines
+
+
+def get_notes(num: int) -> list[str]:
+    lines: list[str] = get_lines(num)
+    return [line for line in lines if "```" in line]
 
 
 def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
@@ -413,30 +412,57 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         Span(style=f"view-transition-name: done{num}")(" (DONE)") if is_done else None,
     )
 
+    show_all_notes = (
+        Button(popovertarget="popup_notes")("Show all notes"),
+        Dialog(
+            popover=True,
+            id="popup_notes",
+            style="width: 100%; height: 80%; overflow: auto;",
+        )(
+            Safe(mistletoe.markdown("\n".join(get_notes(num)), HtmlRenderer)),
+            Button(
+                popovertarget="popup_notes",
+                popovertargetaction="hide",
+                style="position: sticky; bottom: 0;",
+            )("Close"),
+        ),
+    )
+
     next_line = (
         Button(
-            data_on_click=patch(f"/read/{num}"),
-            style="width: 100%; position: sticky; bottom: 0; z-index: 2;",
+            data_on_click=(
+                js(f"""
+                    @patch("/read/{num}");
+                    const content = document.querySelector('section:has(pre)');
+                    content.scrollTo({{ left: 0, top: content.scrollHeight, behavior: 'instant',}});
+                """),
+            )
         )("Continue")
         if not is_done
-        else (
+        else None
+    )
+
+    complete_msg = (
+        (
             P(_class="notice")("You have completed this chapter."),
             Div(style="display: flex; justify-content: space-between;")(
                 A(href=f"/read/{num - 1}")(f"Chapter {num - 1}"),
                 A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
                 A(href=f"/read/{num + 1}")(f"Chapter {num + 1}"),
             ),
-        ),
+        )
+        if is_done
+        else None
     )
 
-    lines: list[str] = get_chapter_lines(num)
+    lines: list[str] = get_lines(num)
 
     if cards:
         for card in cards:  # mark mined words
             lines = [mark_word(num, line, card) for line in lines]
 
     content = Section(data_on_pointerup=show_popup(num), data_indicator="loading")(
-        Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), MyRenderer))
+        Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer))
     )  # text section
 
     due_cards = (
@@ -511,16 +537,17 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
             dict(document=True),
         ),
     )(
-        confetti_script,
         cardinal,
         h1,
         popup_view(auth, num, word, bypass, context),
-        debug_signals,
         toggles,
         popup_btn,
+        show_all_notes,
         content,
         next_line,
+        complete_msg,
         before_complete,
+        debug_signals,
     )
 
 
@@ -542,7 +569,7 @@ def save_toggles(auth, num: int, show_aside: int, show_mark: int):
 
 @rt.patch("/{num:int}")
 def next_line(auth, num: int):
-    lines: list[str] = get_chapter_lines(num)
+    lines: list[str] = get_lines(num)
 
     progress: int = db.get(auth).item(
         "SELECT progress FROM chapter WHERE number = ? ", (num,)
