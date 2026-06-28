@@ -92,8 +92,9 @@ legend {
     background: aqua;
 }
 
-section:has(pre) {
-    max-height: 50dvh;
+section[data-indicator] {
+    min-height: 50dvh;
+    height: 50dvh;
     overflow: auto;
 }
 

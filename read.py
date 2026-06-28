@@ -353,49 +353,46 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     except IndexError:
         cards = None
 
-    show_aside = db.get(auth).item(
-        "SELECT value FROM settings WHERE setting = 'show_aside'"
-    )
     show_mark = db.get(auth).item(
         "SELECT value FROM settings WHERE setting = 'show_mark'"
     )
 
-    toggles = Details(data_ignore_morph=True)(
-        Summary("Toggles for changing visibility"),
-        Ul(
-            style="list-style-type: none; width: 100%",
-            data_signals=dict(show_mark=int(show_mark), show_aside=int(show_aside)),
-        )(
-            Li(
-                style="display: flex;",
-                data_on_change=patch(f"/read/{num}/save_toggles"),
-            )(
-                Input(
-                    type="checkbox",
-                    id="show_mark",
-                    name="show_mark",
-                    data_bind="show_mark",
-                ),
-                Label(_for="show_mark", style=" flex-shrink: 0; padding-left: 0.5rem")(
-                    "Show colorful highlights"
-                ),
-            ),
-            Li(
-                style="display: flex;",
-                data_on_change=patch(f"/read/{num}/save_toggles"),
-            )(
-                Input(
-                    type="checkbox",
-                    id="show_aside",
-                    name="show_aside",
-                    data_bind="show_aside",
-                ),
-                Label(_for="show_aside", style=" flex-shrink: 0; padding-left: 0.5rem")(
-                    "Show marginal explanations"
-                ),
-            ),
-        ),
-    )
+    # toggles = Details(data_ignore_morph=True)(
+    #     Summary("Toggles for changing visibility"),
+    #     Ul(
+    #         style="list-style-type: none; width: 100%",
+    #         data_signals=dict(show_mark=int(show_mark), show_aside=int(show_aside)),
+    #     )(
+    #         Li(
+    #             style="display: flex;",
+    #             data_on_change=patch(f"/read/{num}/save_toggles"),
+    #         )(
+    #             Input(
+    #                 type="checkbox",
+    #                 id="show_mark",
+    #                 name="show_mark",
+    #                 data_bind="show_mark",
+    #             ),
+    #             Label(_for="show_mark", style=" flex-shrink: 0; padding-left: 0.5rem")(
+    #                 "Show colorful highlights"
+    #             ),
+    #         ),
+    #         Li(
+    #             style="display: flex;",
+    #             data_on_change=patch(f"/read/{num}/save_toggles"),
+    #         )(
+    #             Input(
+    #                 type="checkbox",
+    #                 id="show_aside",
+    #                 name="show_aside",
+    #                 data_bind="show_aside",
+    #             ),
+    #             Label(_for="show_aside", style=" flex-shrink: 0; padding-left: 0.5rem")(
+    #                 "Show marginal explanations"
+    #             ),
+    #         ),
+    #     ),
+    # )
 
     cardinal = Section(_class="cardinal", style="padding: 0; margin: 0;")(
         P(style=f"view-transition-name: num{num}")(
@@ -413,7 +410,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     )
 
     show_all_notes = (
-        Button(popovertarget="popup_notes")("Show all notes"),
+        Button(popovertarget="popup_notes", _class="outline")("Show all notes"),
         Dialog(
             popover=True,
             id="popup_notes",
@@ -433,11 +430,11 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
             data_on_click=(
                 js(f"""
                     @patch("/read/{num}");
-                    const content = document.querySelector('section:has(pre)');
-                    content.scrollTo({{ left: 0, top: content.scrollHeight, behavior: 'instant',}});
+                    const content = document.querySelector("section[data-indicator]");
+                    content.scroll({{top: 10000000, left: 0, behavior: "instant",}});
                 """),
             )
-        )("Continue")
+        )("Advance")
         if not is_done
         else None
     )
@@ -461,7 +458,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         for card in cards:  # mark mined words
             lines = [mark_word(num, line, card) for line in lines]
 
-    content = Section(data_on_pointerup=show_popup(num), data_indicator="loading")(
+    content = Section(data_on_pointerup=show_popup(num), data_indicator="loading", style="margin:0;")(
         Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer))
     )  # text section
 
@@ -515,15 +512,8 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
 
     popup_btn = Button(
         _class="outline",
-        style="width: 100%; position: sticky; top: 0; z-index: 2;",
         data_on_click="document.querySelector('#popup').togglePopover();",
     )("Toggle popup")
-
-    confetti_script = (
-        Script(
-            src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.1.0/dist/confetti.min.js"
-        ),
-    )
 
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
@@ -532,7 +522,6 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
                let sel = document.getSelection();
                $word = sel.toString().trim();
                $context = sel.anchorNode.textContent;
-               console.log($context)
             """),
             dict(document=True),
         ),
@@ -540,11 +529,14 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         cardinal,
         h1,
         popup_view(auth, num, word, bypass, context),
-        toggles,
-        popup_btn,
-        show_all_notes,
         content,
-        next_line,
+        Div(
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem;"
+        )(
+            show_all_notes,
+            next_line,
+            popup_btn,
+        ),
         complete_msg,
         before_complete,
         debug_signals,
@@ -557,10 +549,7 @@ def publish(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
 
 
 @rt.patch("/{num:int}/save_toggles")
-def save_toggles(auth, num: int, show_aside: int, show_mark: int):
-    db.get(auth).execute(
-        "UPDATE settings SET value=? WHERE setting=?", (show_aside, "show_aside")
-    )
+def save_toggles(auth, num: int, show_mark: int):
     db.get(auth).execute(
         "UPDATE settings SET value=? WHERE setting=?", (show_mark, "show_mark")
     )

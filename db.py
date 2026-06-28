@@ -225,10 +225,6 @@ class DatabaseDict:
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                 ("show_mark", "1"),
             )
-            self.user[name].execute(
-                "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
-                ("show_aside", "1"),
-            )
 
             self.seed_user(name) if is_debug else None
 
