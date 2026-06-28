@@ -226,20 +226,26 @@ async def cqrs(req, auth, num: int):
         )
 
 
+def show_popup(num: int, is_click: bool = False):
+    get_clicked_word: str = "$word = evt.target.textContent;"
+
+    code = f"""
+            if ($word !== \"\" ) {{
+                @get('/read/{num}/open');\
+                document.querySelector('#popup').showPopover();
+            }};
+        """
+
+    return js((get_clicked_word if is_click else "") + code)
+
+
 def mark_word(num: int, content: str, card: dict) -> str:
-    showpopup = js(
-        f"if ($word !== \"\" ) {{ @get('/read/{num}/open');\
-        document.querySelector('#popup').showPopover(); }}; $word = ''"
-    )
-
-    click_showpopup = js(f"$word = evt.target.textContent; {showpopup}")
-
-    code_block: bool = False
+    is_code: bool = False
 
     for i, line in enumerate(split := (content.splitlines())):
         if line == "```":
-            code_block = not code_block
-        if code_block:
+            is_code = not is_code
+        if is_code:
             continue
 
         tokens = simplemma.simple_tokenizer(line)
@@ -256,7 +262,7 @@ def mark_word(num: int, content: str, card: dict) -> str:
                             data_is_new_day=card["is_new_day"],
                             data_is_due=card["is_due"],
                             data_attr_style=f"!$show_mark && 'background: initial; text-decoration: underline;'",
-                            data_on_pointerup=(click_showpopup, dict(stop=True)),
+                            data_on_pointerup=(show_popup(num, True), dict(stop=True)),
                             data_indicator="loading",
                         )(tokens[j])
                     ),
@@ -289,13 +295,13 @@ def get_chapter_lines(num: int) -> list[str]:
         if not is_open and "```" == lines[i]:
             is_open = True
             code_open = i
-            i+=1
+            i += 1
             continue
 
         if is_open and "```" == lines[i]:
             is_open = False
-            code_close = min(i + 1, total_lines) # do not go over len(lines)
-            
+            code_close = min(i + 1, total_lines)  # do not go over len(lines)
+
             # https://stackoverflow.com/a/1142879
             lines[code_open:code_close] = ["\n".join(lines[code_open:code_close])]
             total_lines = len(lines)
@@ -347,10 +353,6 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         )
     except IndexError:
         cards = None
-
-    if cards:
-        for card in cards:  # mark mined words
-            chap["content"] = mark_word(num, chap["content"], card)
 
     show_aside = db.get(auth).item(
         "SELECT value FROM settings WHERE setting = 'show_aside'"
@@ -411,11 +413,6 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         Span(style=f"view-transition-name: done{num}")(" (DONE)") if is_done else None,
     )
 
-    showpopup = js(
-        f"if (!document.getSelection().isCollapsed ) {{ @get('/read/{num}/open');\
-        document.querySelector('#popup').showPopover(); }};"
-    )
-
     next_line = (
         Button(
             data_on_click=patch(f"/read/{num}"),
@@ -434,7 +431,11 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
 
     lines: list[str] = get_chapter_lines(num)
 
-    content = Section(data_on_pointerup=showpopup, data_indicator="loading")(
+    if cards:
+        for card in cards:  # mark mined words
+            lines = [mark_word(num, line, card) for line in lines]
+
+    content = Section(data_on_pointerup=show_popup(num), data_indicator="loading")(
         Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), MyRenderer))
     )  # text section
 
@@ -446,8 +447,6 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
 
     retired_cards = [c for c in cards if c["is_retired"]] if cards else None
 
-    click_showpopup = js(f"$word = evt.target.textContent; {showpopup} $word = '';")
-
     before_complete = (
         Section(
             H2("Due words"),
@@ -455,7 +454,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
                 *(
                     Li(
                         style="user-select: none; cursor: pointer;",
-                        data_on_click=click_showpopup,
+                        data_on_click=show_popup(num, True),
                     )(c["front"])
                     for c in due_cards
                 )
@@ -469,7 +468,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
                 *(
                     Li(
                         style="user-select: none; cursor: pointer;",
-                        data_on_click=click_showpopup,
+                        data_on_click=show_popup(num, True),
                     )(c["front"])
                     for c in retired_cards
                 )
