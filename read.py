@@ -305,7 +305,6 @@ def get_chapter_lines(num: int) -> list[str]:
 
         i += 1
 
-    print(lines)
     return lines
 
 
