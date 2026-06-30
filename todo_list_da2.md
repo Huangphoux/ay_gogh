@@ -1,7 +1,8 @@
 # Đồ án 2
 
 - Tạo động lực: game, xếp hạng, huy hiệu
-    - [http-nu](https://http-nu.cross.stream/examples/2048/notes/why-is-this-so-addictive)
+    - Zeigarnik effect
+
 
 # Todo List
 

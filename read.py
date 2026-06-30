@@ -372,9 +372,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     )
 
     cardinal = Section(_class="cardinal", style="padding: 0; margin: 0;")(
-        P(
-            f"Chapter {chap['number_word']} ({num})"
-        ),
+        P(f"Chapter {chap['number_word']} ({num})"),
         P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
     )
 
@@ -436,7 +434,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
             lines = [mark_word(num, line, card) for line in lines]
 
     content = Section(
-        data_on_pointerup=show_popup(num), data_indicator="loading", style="margin-top:0;"
+        data_on_pointerup=show_popup(num),
+        data_indicator="loading",
+        style="margin-top:0;",
     )(
         Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer))
     )  # text section
@@ -494,6 +494,13 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         data_on_click="document.querySelector('#popup').togglePopover();",
     )("Toggle popup")
 
+    progress_bar = (
+        Label(_for="lines")(f"Progress ({progress}/{len(lines)}, {progress / len(lines):.2%}) :"),
+        Progress(id="lines", max=len(lines), value=progress)(
+            f"{progress / len(lines):.2%}"
+        ),
+    )
+
     return Main(
         data_init=get(url=f"/read/{num}/cqrs"),
         data_on_selectionchange=(
@@ -507,6 +514,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     )(
         cardinal,
         h1,
+        progress_bar,
         popup_view(auth, num, word, bypass, context),
         content,
         colorblind_mode,
