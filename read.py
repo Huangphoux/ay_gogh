@@ -400,16 +400,13 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         ),
     )
 
+    scroll_btm = js("""
+        const content = document.querySelector("section[data-indicator]");
+        content.scrollBy({left: 0, top: content.scrollHeight, behavior: "instant",});
+    """)
+
     next_line = (
-        Button(
-            data_on_click=(
-                js(f"""
-                    @patch("/read/{num}");
-                    const content = document.querySelector("section[data-indicator]");
-                    content.scroll({{top: 10000000, left: 0, behavior: "instant",}});
-                """),
-            )
-        )("Advance")
+        Button(data_on_click=(js(f"@patch('/read/{num}'); {scroll_btm}"),))("Advance")
         if not is_done
         else None
     )
@@ -437,6 +434,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         data_on_pointerup=show_popup(num),
         data_indicator="loading",
         style="margin-top:0;",
+        data_init=scroll_btm,
     )(
         Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer))
     )  # text section
@@ -495,7 +493,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     )("Toggle popup")
 
     progress_bar = (
-        Label(_for="lines")(f"Progress ({progress}/{len(lines)}, {progress / len(lines):.2%}) :"),
+        Label(_for="lines")(
+            f"Progress: {progress}/{len(lines)} = {progress / len(lines):.2%}"
+        ),
         Progress(id="lines", max=len(lines), value=progress)(
             f"{progress / len(lines):.2%}"
         ),
