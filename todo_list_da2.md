@@ -12,3 +12,4 @@
 - `anchorNode` lâu lâu bị `null`, không lấy textContent được
 - `explain` không nằm ở ngoài, ko có giá trị mặc định
     - Biến `explain` trong code Python
+- Colorblind mode

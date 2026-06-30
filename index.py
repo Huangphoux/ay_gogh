@@ -136,16 +136,34 @@ def profile_page(auth):
         P(style="text-align: center;")(f"Play a game of Wordle using only NGSL words!"),
     )
 
+    try:
+        incomplete_chaps = list(
+            db.get(auth).query(
+                "SELECT number, progress, lines FROM chapter WHERE progress<>1 AND done IS NULL"
+            )
+        )
+
+    except NotFoundError:
+        incomplete_chaps = None
+
+    zeigarnik = (
+        Section(_class="notice")(
+            Ul(
+                *(
+                    Li(
+                        A(href=f"/read/{chap['number']}")(f"Chapter {chap['number']}"),
+                        f" is {chap['progress'] / chap['lines']:.2%} complete",
+                    )
+                    for chap in incomplete_chaps
+                ),
+            )
+        )
+        if incomplete_chaps
+        else None
+    )
+
     return Main(
         H1(id="main-heading")(f"{auth}'s profile"),
-        Section(
-            H2("Your stats"),
-            Label(_for="progress"),
-            Progress(
-                id="progress",
-                max="160",
-                value=str(last_test["result"] + sum_done),
-            ),
-        ),
+        zeigarnik,
         Section(_class="profile")(test, read, wordle),
     )

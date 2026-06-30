@@ -100,13 +100,10 @@ def read(auth, p: int = 0, all: int = 0):
                     ),
                     A(
                         href=f"/read/{c['number']}",
-                        style=f"view-transition-name: chap{c['number']}",
-                    )(f"{c['title']}")
-                    if not c["done"]
-                    else A(
-                        href=f"/read/{c['number']}",
-                        style=f"color: var(--border); view-transition-name: done{c['number']}",
-                    )("(DONE)"),
+                        style=f"view-transition-name: chap{c['number']}"
+                        if not c["done"]
+                        else f"color: var(--border); view-transition-name: done{c['number']}",
+                    )(f"{c['title']}", " (DONE)" if c["done"] else ""),
                 ),
                 # Reading ease difficulty: Easy, Medium, Hard
                 A(
@@ -357,6 +354,16 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         "SELECT value FROM settings WHERE setting = 'colorblind'"
     )
 
+    if cards:
+        for card in cards:  # mark mined words
+            lines = [mark_word(num, line, card) for line in lines]
+
+    lines: list[str] = get_lines(num)
+
+    total_lines = db.get(auth).item("SELECT lines FROM chapter WHERE number=?", (num,))
+    if not total_lines:
+        total_lines = len(lines)
+
     colorblind_mode = Div(style="display: flex;", data_ignore_morph=True)(
         Input(
             data_signals=dict(colorblind=int(colorblind)),
@@ -378,10 +385,23 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
 
     h1 = H1(
         id="main-heading",
-        style=f"display: grid; place-items: center; text-align: center; grid-auto-flow: column;",
+        style=f"display: grid; place-items: center; text-align: center; grid-auto-flow: row;",
     )(
         f"{chap['title']}",
         Span("(DONE)") if is_done else None,
+    )
+
+    complete_msg = (
+        (
+            P(_class="notice")("You have completed this chapter."),
+            Div(style="display: flex; justify-content: space-between;")(
+                A(href=f"/read/{num - 1}")(f"Chapter {num - 1}"),
+                A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
+                A(href=f"/read/{num + 1}")(f"Chapter {num + 1}"),
+            ),
+        )
+        if is_done
+        else None
     )
 
     show_all_notes = (
@@ -405,35 +425,41 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         content.scrollBy({left: 0, top: content.scrollHeight, behavior: "instant",});
     """)
 
-    next_line = (
-        Button(data_on_click=(js(f"@patch('/read/{num}'); {scroll_btm}"),))("Advance")
-        if not is_done
-        else None
-    )
-
-    complete_msg = (
-        (
-            P(_class="notice")("You have completed this chapter."),
-            Div(style="display: flex; justify-content: space-between;")(
-                A(href=f"/read/{num - 1}")(f"Chapter {num - 1}"),
-                A(href=f"/read/?p={ceil(num / 10) - 1}")("Back to List"),
-                A(href=f"/read/{num + 1}")(f"Chapter {num + 1}"),
-            ),
-        )
-        if is_done
-        else None
-    )
-
-    lines: list[str] = get_lines(num)
-
-    if cards:
-        for card in cards:  # mark mined words
-            lines = [mark_word(num, line, card) for line in lines]
+    if not is_done:
+        if progress != total_lines:
+            next_line = Button(
+                data_on_click=(js(f"@patch('/read/{num}'); {scroll_btm}"),)
+            )("Advance")
+        else:
+            next_line = (
+                Script(
+                    src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.1.0/dist/confetti.min.js"
+                ),
+                Button(
+                    data_on_click=(
+                        js(f"""
+                        @patch('/read/{num}'); {scroll_btm}
+                        
+                        let positionList = [
+                            {{ x: window.innerWidth * 0.50, y: window.innerHeight * 0.60 }},
+                            {{ x: window.innerWidth * 0.25, y: window.innerHeight * 0.40 }},
+                            {{ x: window.innerWidth * 0.75, y: window.innerHeight * 0.30 }},
+                        ];
+                        
+                        for(let i = 0; i < positionList.length; i++) {{
+                            setTimeout(() => confetti({{ position: positionList[i] }}), i * 250);
+                        }}
+                    """),
+                    )
+                )("Mark Complete"),
+            )
+    else:
+        next_line = None
 
     content = Section(
         data_on_pointerup=show_popup(num),
         data_indicator="loading",
-        style="margin-top:0;",
+        style="margin:0;",
         data_init=scroll_btm,
     )(
         Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer))
@@ -493,12 +519,11 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     )("Toggle popup")
 
     progress_bar = (
-        Label(_for="lines")(
-            f"Progress: {progress}/{len(lines)} = {progress / len(lines):.2%}"
-        ),
-        Progress(id="lines", max=len(lines), value=progress)(
-            f"{progress / len(lines):.2%}"
-        ),
+        Progress(id="lines", max=total_lines, value=progress)(
+            f"{progress / total_lines:.2%}"
+        )
+        if not is_done
+        else None
     )
 
     return Main(
@@ -549,11 +574,12 @@ def next_line(auth, num: int):
     lines: list[str] = get_lines(num)
 
     progress: int = db.get(auth).item(
-        "SELECT progress FROM chapter WHERE number = ? ", (num,)
+        "SELECT progress FROM chapter WHERE number=? ", (num,)
     )
 
     db.get(auth).execute(
-        "UPDATE chapter SET progress=? WHERE number=?", (progress + 1, num)
+        "UPDATE chapter SET lines=?, progress=? WHERE number=?",
+        (len(lines), progress + 1, num),
     )
 
     if progress >= len(lines):

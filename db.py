@@ -164,6 +164,7 @@ class DatabaseDict:
                     CREATE TABLE IF NOT EXISTS chapter (
                         number INTEGER PRIMARY KEY,
                         progress INTEGER NOT NULL,
+                        lines INTEGER,
                         done TEXT
                     )
             """)
