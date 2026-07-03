@@ -378,7 +378,20 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         ),
     )
 
-    cardinal = Section(_class="cardinal", style="padding: 0; margin: 0;")(
+    cardinal = Section(
+        Style("""
+                me {
+                    padding: 0; margin: 0;
+                    display: grid;
+                    place-items: center;
+
+                    /* this is where the cardinal looks ugly */
+                    grid-auto-flow: column;
+                    @media (max-width: 500px) {
+                        grid-auto-flow: row;
+                    }
+                }
+        """),
         P(f"Chapter {chap['number_word']} ({num})"),
         P(f"The {chap['cardinal_word']} ({chap['cardinal']}) Chapter"),
     )
@@ -459,10 +472,10 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     content = Section(
         data_on_pointerup=show_popup(num),
         data_indicator="loading",
-        style="margin:0;",
+        style="margin:0; min-height: 50dvh; height: 50dvh; overflow: auto;",
         data_init=scroll_btm,
     )(
-        Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer))
+        Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer)),
     )  # text section
 
     due_cards = (

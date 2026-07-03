@@ -37,20 +37,6 @@ legend {
     padding: 3px 6px;
 }
 
-.skip-link {
-    position: absolute;
-    top: -4.5rem; /*  off screen */
-    left: 0;
-    z-index: 10000; /* nothing is in front */
-    padding: 1.5rem 1.5rem;
-
-    &:focus-visible {
-        /* on keyboard focus */
-        top: 0; /* bring into view */
-        border: var(--accent) 0.25rem solid;
-    }
-}
-
 .outline {
     border: solid var(--accent);
     color: var(--accent);
@@ -92,14 +78,7 @@ legend {
     background: aqua;
 }
 
-section[data-indicator] {
-    min-height: 50dvh;
-    height: 50dvh;
-    overflow: auto;
-}
-
-section pre,
-dialog pre {
+pre {
     display: block;
     width: fit-content;
     margin: 5% 10% 5% 10%;
@@ -112,57 +91,4 @@ dialog pre {
         z-index: 1;
         filter: drop-shadow(10px 10px var(--accent));
     }
-}
-
-.cardinal {
-    display: grid;
-    place-items: center;
-
-    /* this is where the cardinal looks ugly */
-    grid-auto-flow: column;
-    @media (max-width: 500px) {
-        grid-auto-flow: row;
-    }
-}
-
-details[popover] {
-    max-width: 45rem;
-    max-height: 100dvh;
-    width: 100dvw;
-    transition: filter var(--transition-time);
-
-    /* this is the average laptop screen size assumed by Google */
-    @media (min-width: 1024px) {
-        margin-top: 0;
-    }
-}
-
-.profile {
-    display: grid;
-    /* grid-auto-flow: column;
-    align-items: stretch; */
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-
-    gap: 3rem;
-
-    & section {
-        border: var(--border-width) solid var(--border);
-        padding: 0;
-        margin: 0;
-        text-align: center;
-    }
-}
-
-div.notice[popover] {
-    max-width: 80dvw;
-    margin: 0;
-    inset: auto;
-    position-area: left;
-}
-
-.wordle td {
-    width: 10dvh;
-    height: 10dvh;
-    text-align: center;
-    font-size: 2rem;
 }

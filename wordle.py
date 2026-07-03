@@ -110,7 +110,6 @@ def wordle_main(auth, game_state: bool | None = None):
     end_game = P(_class="notice")(end_game_text) if game_state is not None else None
 
     table = Table(
-        _class="wordle",
         data_on_keydown=(
             js("""
                let charCode  = evt.keyCode;
@@ -129,6 +128,14 @@ def wordle_main(auth, game_state: bool | None = None):
         else None,
     )(
         Tbody(
+            Style("""
+                    me td {
+                        width: 10dvh;
+                        height: 10dvh;
+                        text-align: center;
+                        font-size: 2rem;
+                    }
+            """),
             *(
                 Tr(
                     *color_row(
@@ -136,7 +143,7 @@ def wordle_main(auth, game_state: bool | None = None):
                     )
                 )
                 for row in guesses[1:]
-            )
+            ),
         )
     )
 

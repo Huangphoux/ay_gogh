@@ -69,10 +69,28 @@ def template(title: str, main, auth=None):
         ),
     )
 
+    skip_link = A(href="#main-heading", cls="skip-link")(
+        Style("""
+            me {
+                position: absolute;
+                top: -4.5rem;                               /* off screen */
+                left: 0;
+                z-index: 10000;                             /* nothing is in front */
+                padding: 1.5rem 1.5rem;
+
+                &:focus-visible {                           /* on keyboard focus */
+                    top: 0;                                 /* bring into view */
+                    border: var(--accent) 0.25rem solid;
+                }
+            }
+        """),
+        Strong("Jump to content"),
+    )
+
     return (
         Title(f"{title}: Ay Gogh!"),
         Body(
-            A(Strong("Jump to content"), href="#main-heading", cls="skip-link"),
+            skip_link,
             header,
             main,
             footer,

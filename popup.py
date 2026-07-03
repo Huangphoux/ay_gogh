@@ -51,6 +51,19 @@ def popup_form(num: int, content):
             dict(window=True),
         ),
     )(
+        Style("""
+                me {
+                    max-width: 45rem;
+                    max-height: 100dvh;
+                    width: 100dvw;
+                    transition: filter var(--transition-time);
+
+                    /* this is the average laptop screen size assumed by Google */
+                    @media (min-width: 1024px) {
+                        margin-top: 0;
+                    }
+                }
+        """),
         Summary(data_text="$loading ? 'Popup (Loading …)' : 'Popup'"),
         Form(content),
     )
@@ -135,6 +148,14 @@ def wiktionary_view(word: str, num: int, context: str):
     antonyms = fetch["antonyms"] if fetch else None
 
     badges = Div(style="display: flex; gap: 1rem;")(
+        Style("""
+        me [popover] {
+            max-width: 80dvw;
+            margin: 0;
+            inset: auto;
+            position-area: left;
+        }
+        """),
         Button(type="button", popovertarget="tag")(pos),
         Div(_class="notice", id="tag", popover=True)(f"Part of speech: {explain}"),
         Button(type="button", popovertarget="ngsl")(

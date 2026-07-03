@@ -163,7 +163,28 @@ def profile_page(auth):
     )
 
     return Main(
-        H1(id="main-heading")(f"{auth}'s profile"),
+        H1(id="main-heading")(f"Profile"),
         zeigarnik,
-        Section(_class="profile")(test, read, wordle),
+        Section(
+            Style("""
+                    me {
+                        display: grid;
+                        /* grid-auto-flow: column;
+                        align-items: stretch; */
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+                        gap: 3rem;
+
+                        & section {
+                            border: var(--border-width) solid var(--border);
+                            padding: 0;
+                            margin: 0;
+                            text-align: center;
+                        }
+                    }
+            """),
+            test,
+            read,
+            wordle,
+        ),
     )

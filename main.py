@@ -50,19 +50,17 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
             compression=[Compression.br, Compression.zstd, Compression.gzip],
         ),
     ),
-    static_path="static",
     # default_hdrs=False,
     hdrs=(  # keep / in href, if not, /auth/custom.css
         Link(rel="icon", href="https://fav.farm/📖"),  # favicon
-        Link(rel="stylesheet", href="https://cdn.simplecss.org/simple.min.css"),
-        
-        Link(rel="stylesheet", href="/global.css"),
+        Link(rel="stylesheet", href="/static/simple.min.css"),
+        Link(rel="stylesheet", href="/static/global.css"),
+        Script(src="/static/css-scope.js"),
     ),
     sess_https_only=not is_debug,  # set Secure flag on cookies
     same_site="strict",
     # .sesskey can be read/write by anyone
     # chmod 600 .sesskey to only be able to read/write by owner
-    datastar="cdn",
     inline_icons=True,
 )
 
@@ -72,6 +70,7 @@ read.rt.to_app(app)
 popup.rt.to_app(app)
 settings.rt.to_app(app)
 wordle.rt.to_app(app)
+
 
 @rt
 def index(req, sess):
@@ -83,20 +82,15 @@ def index(req, sess):
 
 
 if __name__ == "__main__":
-    print(
-        "You are currently in DEBUG mode.\n\
-The `db` folder will be DELETED after stopping the server.\n\
-You have been warned."
-    ) if is_debug else None
-
+    # uv run spacy download en_core_web_sm
+    
     serve(port=1984)
     # remember to add `server_header=False` to uvicorn.run
     # log_level="error" too
 
-    # Clean-up after exiting
+    if is_debug:
+        os.remove("./.sesskey")
+        shutil.rmtree("__pycache__")
 
-    os.remove("./.sesskey")
-    shutil.rmtree("__pycache__")
-
-    db.close_all()
-    shutil.rmtree("db") if is_debug else None
+        db.close_all()
+        shutil.rmtree("db")
