@@ -283,13 +283,13 @@ def get_lines(num: int) -> list[str]:
 
     i = 0
     while i != total_lines:
-        if not is_open and "```" == lines[i]:
+        if not is_open and lines[i] == "```":
             is_open = True
             code_open = i
             i += 1
             continue
 
-        if is_open and "```" == lines[i]:
+        if is_open and lines[i] == "```":
             is_open = False
             code_close = min(i + 1, total_lines)  # do not go over len(lines)
 
@@ -311,12 +311,6 @@ def get_notes(num: int) -> list[str]:
 
 
 def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
-    if word:
-        doc = nlp(context)
-        for token in doc:
-            if token.text == word:
-                word = token.lemma_
-
     # execute for INSERT, query for SELECT
     # this one is app
     chap = list(db.app.query("SELECT * FROM chapter WHERE number = ? ", (num,)))[0]
@@ -354,11 +348,11 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         "SELECT value FROM settings WHERE setting = 'colorblind'"
     )
 
+    lines: list[str] = get_lines(num)
+
     if cards:
         for card in cards:  # mark mined words
             lines = [mark_word(num, line, card) for line in lines]
-
-    lines: list[str] = get_lines(num)
 
     total_lines = db.get(auth).item("SELECT lines FROM chapter WHERE number=?", (num,))
     if not total_lines:
@@ -470,10 +464,18 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         next_line = None
 
     content = Section(
-        data_on_pointerup=show_popup(num),
+        style="margin:0; min-height: 20rlh; height: 20rlh; overflow: auto;",
         data_indicator="loading",
-        style="margin:0; min-height: 50dvh; height: 50dvh; overflow: auto;",
         data_init=scroll_btm,
+        data_on_pointerup=show_popup(num),
+        data_on_selectionchange=(
+            js("""
+               let sel = document.getSelection();
+               $word = sel.toString().trim();
+               $context = sel.anchorNode.parentNode.textContent;
+            """),
+            dict(document=True),
+        ),
     )(
         Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer)),
     )  # text section
@@ -543,17 +545,7 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         else None
     )
 
-    return Main(
-        data_init=get(url=f"/read/{num}/cqrs"),
-        data_on_selectionchange=(
-            js("""
-               let sel = document.getSelection();
-               $word = sel.toString().trim();
-               $context = sel.anchorNode.textContent;
-            """),
-            dict(document=True),
-        ),
-    )(
+    return Main(data_init=get(url=f"/read/{num}/cqrs"))(
         cardinal,
         h1,
         progress_bar,

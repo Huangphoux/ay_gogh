@@ -33,8 +33,10 @@ def close(auth, num: int):
 
 
 @rt.patch("/{num:int}/close")
-def close_save(auth, num: int, front: str, back: str):
-    db.get(auth).execute("UPDATE deck SET back=? WHERE front=?", (back, front))
+def close_save(auth, num: int, front: str, back: str, context: str):
+    db.get(auth).execute(
+        "UPDATE deck SET back=?, context=? WHERE front=?", (back, context, front)
+    )
     publish(auth, num)
 
 
@@ -127,22 +129,27 @@ def fetch_wiktionary(explain: str, word: str = "") -> dict | None:
             return None
 
 
-def wiktionary_view(word: str, num: int, context: str):
+def wiktionary_view(word: str, lemma: str, num: int, context: str):
     try:
         ngsl = list(
-            db.app.query("SELECT number, level FROM ngsl WHERE lemma = ?", (word,)),
+            db.app.query("SELECT number, level FROM ngsl WHERE lemma = ?", (lemma,)),
         )[0]
     except IndexError:
         ngsl = None
 
     doc = nlp(context) if context else nlp(word)
+    pos: str = ""
+    explain: str = ""
+
     for token in doc:
-        if token.lemma_ == word:
+        if token.lemma_ == lemma:
             pos = token.pos_
-            explain = spacy.explain(token.tag_)
+            explain = spacy.explain(token.pos_)
+
+            context = context.replace(word, f"*{word}*")
             break
 
-    fetch = fetch_wiktionary(explain, word)
+    fetch = fetch_wiktionary(explain, lemma)
     senses = fetch["senses"] if fetch else None
     synonyms = fetch["synonyms"] if fetch else None
     antonyms = fetch["antonyms"] if fetch else None
@@ -188,13 +195,22 @@ def wiktionary_view(word: str, num: int, context: str):
     front_part = Div(
         style="display: flex; justify-content: space-between; align-items: center;"
     )(
-        H2(word),
-        Input(type="hidden", id="front", name="front", value=word),
+        H2(lemma),
+        Input(type="hidden", id="front", name="front", value=lemma),
         badges,
     )
 
     back_part = (
-        Label(_for="back")("Your own definition"),
+        Label(_for="context")("Context"),
+        Textarea(
+            id="context",
+            name="context",
+            placeholder="Write the context of the word in here.",
+            required=True,
+            style="resize: vertical; overflow: auto;",
+            data_ignore_moprh=True,
+        )(context),
+        Label(_for="back")("Definition"),
         Textarea(
             id="back",
             name="back",
@@ -267,9 +283,6 @@ def wiktionary_view(word: str, num: int, context: str):
 
 def not_new_day_view(num: int, word: str):
     content = (
-        # P(
-        #     "※ Yellow background: the word can't be reviewed until tomorrow.",
-        # ),
         P("This word cannot be reviewed until tomorrow."),
         Div(style="display: flex; gap: 1rem; justify-content: space-between;")(
             close_btn(num),
@@ -299,18 +312,23 @@ def not_due_view(num: int, word: str, due: str):
     return popup_form(num, content)
 
 
-def retired_view(num: int, front: str, back: str):
-    small = Small(
-        " ※ Blue background: you don't have to review it anymore.",
-    )
-
+def retired_view(num: int, front: str, back: str, context: str):
     front_part = (
         H2(front),
         Input(type="hidden", id="front", name="front", value=front),
     )
 
     back_part = (
-        Label(_for="back")("Definition (Changeable, save using either buttons)"),
+        Label(_for="context")("Context"),
+        Textarea(
+            id="context",
+            name="context",
+            placeholder="Write the context of the word in here.",
+            required=True,
+            style="resize: vertical; overflow: auto;",
+            data_ignore_moprh=True,
+        )(context),
+        Label(_for="back")("Definition"),
         Textarea(
             id="back",
             name="back",
@@ -332,18 +350,7 @@ def retired_view(num: int, front: str, back: str):
     return popup_form(num, content)
 
 
-def due_view(num: int, front: str, back: str, bypass: int):
-    delete_msg = "You are about to delete this word off your memory. \
-This action is NOT reversible. Are you sure about this decision?"
-
-    small = (
-        Small(
-            "※ Red background: the word is due for a review.",
-        )
-        if not bypass
-        else None
-    )
-
+def due_view(num: int, front: str, back: str, context: str):
     front_part = (
         H2(front),
         Input(type="hidden", id="front", name="front", value=front),
@@ -351,7 +358,15 @@ This action is NOT reversible. Are you sure about this decision?"
 
     rate_part = Details(name="due")(
         Summary("Recall before reveal"),
-        Label(_for="back")("Definition (Changeable, save using either buttons)"),
+        Label(_for="context")("Context"),
+        Textarea(
+            id="context",
+            name="context",
+            placeholder="Write the context of the word in here.",
+            required=True,
+            style="resize: vertical; overflow: auto;",
+        )(context),
+        Label(_for="back")("Definition"),
         Textarea(
             id="back",
             name="back",
@@ -372,6 +387,9 @@ This action is NOT reversible. Are you sure about this decision?"
             )("I remembered!"),
         ),
     )
+
+    delete_msg = "You are about to delete this word off your memory. \
+This action is NOT reversible. Are you sure about this decision?"
 
     more_part = Details(name="due")(
         Summary("More actions"),
@@ -431,10 +449,16 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0, context: str = "
     if not word:  # default view
         return search_view(num)
 
+    doc = nlp(context) if word in context else nlp(word)
+    for token in doc:
+        if token.text == word:
+            lemma = token.lemma_
+
     if not word.isalpha():
         content = (
             P(
-                "You have not selected a single word. Select a single word to look up its definitions."
+                "You have not selected a single word. \
+                Select a single word to look up its definitions."
             ),
             close_btn(num),
         )
@@ -445,7 +469,7 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0, context: str = "
             db.get(auth).query(
                 """
                 SELECT
-                    front, back, due, last_review, is_retired,
+                    front, back, context, due, last_review, is_retired,
                     CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
                            -- datetime now is after due
                     CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) < 1) THEN 0 ELSE 1 END AS is_new_day
@@ -453,17 +477,17 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0, context: str = "
                 FROM deck
                 WHERE front = ?
                 """,
-                (word,),
+                (lemma,),
             ),
         )[0]
     except IndexError:
         card = None
 
     if not card:  # not in memory, hasn't mined yet
-        return wiktionary_view(word, num, context)
+        return wiktionary_view(word, lemma, num, context)
 
     if card["is_retired"]:
-        return retired_view(num, card["front"], card["back"])
+        return retired_view(num, card["front"], card["back"], card["context"])
 
     if not bypass and not card["is_new_day"]:
         return not_new_day_view(num, word)
@@ -471,7 +495,7 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0, context: str = "
     if not bypass and not card["is_due"]:
         return not_due_view(num, word, card["due"])
 
-    return due_view(num, card["front"], card["back"], bypass)
+    return due_view(num, card["front"], card["back"], card["context"])
 
 
 @rt.delete("/{num:int}/delete")
@@ -497,18 +521,19 @@ async def unretire(auth, num: int, front: str, back: str):
 
 
 @rt.post("/{num:int}/save")
-async def save(auth, num: int, front: str, back: str):
+async def save(auth, num: int, front: str, back: str, context: str):
     card = Card()
 
     db.get(auth).execute(
         """
-        INSERT INTO deck (id, front, back, state, step, stability, difficulty, due, last_review, is_retired)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO deck (id, front, back, context, state, step, stability, difficulty, due, last_review, is_retired)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             card.card_id,
             front,
             back,
+            context,
             card.state,
             card.step,
             card.stability,
@@ -524,16 +549,18 @@ async def save(auth, num: int, front: str, back: str):
 
 
 @rt.patch("/{num:int}/remembered")
-async def remembered(auth, num: int, front: str, back: str):
-    rate_card(auth, num, front, back, forgot=False)
+async def remembered(auth, num: int, front: str, back: str, context: str):
+    rate_card(auth, num, front, back, context, forgot=False)
 
 
 @rt.patch("/{num:int}/forgot")
-async def forgot(auth, num: int, front: str, back: str):
-    rate_card(auth, num, front, back, forgot=True)
+async def forgot(auth, num: int, front: str, back: str, context: str):
+    rate_card(auth, num, front, back, context, forgot=True)
 
 
-def rate_card(auth, num: int, front: str, back: str, forgot: bool = False):
+def rate_card(
+    auth, num: int, front: str, back: str, context: str, forgot: bool = False
+):
     query = list(
         db.get(auth).query(
             """
@@ -578,11 +605,12 @@ def rate_card(auth, num: int, front: str, back: str, forgot: bool = False):
     db.get(auth).execute(
         """
             UPDATE deck
-            SET back=?, state=?, step=?, stability=?, difficulty=?, due=?, last_review=?
+            SET back=?, context=?, state=?, step=?, stability=?, difficulty=?, due=?, last_review=?
             WHERE front=?
         """,
         (
             back,  # back
+            context,
             card.state,
             card.step,
             card.stability,
