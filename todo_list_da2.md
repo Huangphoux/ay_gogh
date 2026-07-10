@@ -4,6 +4,7 @@
     - Zeigarnik effect
 - Lưu ảnh vẽ vào DB
 - Read, search bar
+- Minification
 
 # Todo List
 - Bug, search Enter close popup

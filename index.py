@@ -152,7 +152,7 @@ def profile_page(auth):
                 *(
                     Li(
                         A(href=f"/read/{chap['number']}")(f"Chapter {chap['number']}"),
-                        f" is {chap['progress'] / chap['lines']:.2%} complete",
+                        f" is {chap['progress'] / chap['lines']:.0%} complete",
                     )
                     for chap in incomplete_chaps
                 ),
