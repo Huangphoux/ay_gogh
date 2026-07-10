@@ -371,9 +371,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
             id="colorblind",
             name="colorblind",
             data_bind="colorblind",
-            data_on_click=patch(f"/read/{num}/save_toggles"),
+            data_on_change=patch(f"/read/{num}/save_toggles"),
         ),
-        Label(_for="colorblind", style=" flex-shrink: 0; padding-left: 0.5rem")(
+        Label(_for="colorblind", style="flex-shrink: 0; padding-left: 0.5rem")(
             "Colorblind mode"
         ),
     )
@@ -577,7 +577,8 @@ def publish(auth, num: int, word: str = "", bypass: int = 0, context: str = ""):
 @rt.patch("/{num:int}/save_toggles")
 def save_toggles(auth, num: int, colorblind: int):
     db.get(auth).execute(
-        "UPDATE settings SET value=? WHERE setting=?", (colorblind, "colorblind")
+        "UPDATE settings SET value=? WHERE setting=?",
+        (colorblind, "colorblind"),
     )
     publish(auth, num)
 

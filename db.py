@@ -224,7 +224,7 @@ class DatabaseDict:
             # default settings
             self.user[name].execute(
                 "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
-                ("colorblind", "1"),
+                ("colorblind", "0"),
             )
 
             self.seed_user(name) if is_debug else None
