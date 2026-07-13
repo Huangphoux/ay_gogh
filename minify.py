@@ -41,7 +41,6 @@ class MinificationMiddleware:
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if self._is_handler_excluded(scope) or scope["type"] != "http":
             return await self.app(scope, receive, send)
-        headers = Headers(scope=scope)
         responder = MinificationResponder(self.app, self.minimum_size)
         await responder(scope, receive, send)
 
@@ -88,7 +87,15 @@ class MinificationResponder:
             elif not more_body:  # Standard response.
                 headers = MutableHeaders(raw=self.initial_message["headers"])
 
-                body = self._process(body)
+                if any(
+                    type in headers["Content-Type"]
+                    for type in (
+                        "text/html",
+                        "text/css",
+                        # "application/javascript",
+                    )
+                ):
+                    body = self._process(body)
 
                 headers["Content-Length"] = str(len(body))
                 message["body"] = body
@@ -110,7 +117,6 @@ class MinificationResponder:
         return minify_html.minify(
             minify_css=True,
             minify_js=True,
-            minify_doctype=True,
             code=body.decode(),
             allow_noncompliant_unquoted_attribute_values=True,
             allow_optimal_entities=True,
@@ -118,9 +124,6 @@ class MinificationResponder:
             keep_closing_tags=True,
             keep_html_and_head_opening_tags=True,
             keep_input_type_text_attr=True,
-            keep_ssi_comments=True,
-            preserve_brace_template_syntax=True,
-            preserve_chevron_percent_template_syntax=True,
             remove_bangs=True,
             remove_processing_instructions=True,
         ).encode()

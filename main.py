@@ -55,7 +55,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     # default_hdrs=False,
     hdrs=(  # keep / in href, if not, /auth/custom.css
         Link(rel="icon", href="https://fav.farm/📖"),  # favicon
-        Link(rel="stylesheet", href="/static/simple.min.css"),
+        Link(rel="stylesheet", href="/static/simple.css"),
         Link(rel="stylesheet", href="/static/global.css"),
         Script(src="/static/css-scope.js"),
     ),
