@@ -1,7 +1,10 @@
 """AGSI Minification Middleware build on top of Starlette.
 
 Code is based on GZipMiddleware shipped with Starlette,
-and BrotliMiddleware
+and BrotliMiddleware.
+
+The middleware should be below any other middleware that may encode your responses,
+such as Starlette’s GZipMiddleware
 """
 
 import re
@@ -10,8 +13,7 @@ from typing import List, Union, NoReturn
 from starlette.datastructures import Headers, MutableHeaders
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-import minify_html_onepass
-from charset_normalizer import from_bytes
+import minify_html
 
 
 class MinificationMiddleware:
@@ -105,10 +107,22 @@ class MinificationResponder:
             await self.send(message)
 
     def _process(self, body: bytes) -> bytes:
-        return minify_html_onepass.minify(
+        return minify_html.minify(
             minify_css=True,
             minify_js=True,
-            code=body.decode()
+            minify_doctype=True,
+            code=body.decode(),
+            allow_noncompliant_unquoted_attribute_values=True,
+            allow_optimal_entities=True,
+            allow_removing_spaces_between_attributes=True,
+            keep_closing_tags=True,
+            keep_html_and_head_opening_tags=True,
+            keep_input_type_text_attr=True,
+            keep_ssi_comments=True,
+            preserve_brace_template_syntax=True,
+            preserve_chevron_percent_template_syntax=True,
+            remove_bangs=True,
+            remove_processing_instructions=True,
         ).encode()
 
 
