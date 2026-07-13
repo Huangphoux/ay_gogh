@@ -169,16 +169,13 @@ def get_game_state(auth) -> bool | None:
 
 
 def get_last(auth, is_submitted: bool = False) -> dict[str, str]:
-    where: str = (
-        "is_submitted=0" if not is_submitted else "is_submitted=1 AND number<>0"
-    )
-
     return list(
         db.get(auth).query(
             f"""
-            SELECT MIN(number) AS number, guess
-            FROM wordle
-            WHERE {where}"""
+                SELECT {"MAX" if is_submitted else "MIN"}(number) AS number, guess
+                FROM wordle
+                WHERE {"is_submitted=0" if not is_submitted else "is_submitted=1 AND number<>0"}
+            """
         )
     )[0]
 
