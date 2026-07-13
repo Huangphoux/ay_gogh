@@ -1,3 +1,4 @@
+from minify import MinificationMiddleware
 import wordle
 from index import hero_page, profile_page
 from load_env import is_debug
@@ -45,6 +46,7 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
     if not is_debug
     else {},
     middleware=(
+        Middleware(MinificationMiddleware),
         Middleware(
             CompressionMiddleware,
             compression=[Compression.br, Compression.zstd, Compression.gzip],

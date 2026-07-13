@@ -84,7 +84,7 @@ class DatabaseDict:
         """)
 
         for i in range(1, 60 + 1):
-            with open(f"read/chapter/{i}.md", "r") as f:
+            with open(f"read/chapter/{i}.md", "r", encoding="utf-8") as f:
                 meta, content = frontmatter.parse(f.read())
 
                 self.app.execute(
