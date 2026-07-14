@@ -7,13 +7,16 @@ The middleware should be below any other middleware that may encode your respons
 such as Starlette’s GZipMiddleware
 """
 
+from rcssmin import cssmin
+from rjsmin import jsmin
+
 import re
 from typing import List, Union, NoReturn
 
-from starlette.datastructures import Headers, MutableHeaders
+from starlette.datastructures import MutableHeaders
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-import minify_html
+import minify_html_onepass
 
 
 class MinificationMiddleware:
@@ -87,15 +90,12 @@ class MinificationResponder:
             elif not more_body:  # Standard response.
                 headers = MutableHeaders(raw=self.initial_message["headers"])
 
-                if any(
-                    type in headers["Content-Type"]
-                    for type in (
-                        "text/html",
-                        "text/css",
-                        # "application/javascript",
-                    )
-                ):
+                if "text/html" in headers["Content-Type"]:
                     body = self._process(body)
+                if "text/css" in headers["Content-Type"]:
+                    body = self._process(body, is_css=True)
+                if "application/javascript" in headers["Content-Type"]:
+                    body = self._process(body, is_js=True)
 
                 headers["Content-Length"] = str(len(body))
                 message["body"] = body
@@ -113,19 +113,14 @@ class MinificationResponder:
             await self.send(self.initial_message)
             await self.send(message)
 
-    def _process(self, body: bytes) -> bytes:
-        return minify_html.minify(
-            minify_css=True,
-            minify_js=True,
-            code=body.decode(),
-            allow_noncompliant_unquoted_attribute_values=True,
-            allow_optimal_entities=True,
-            allow_removing_spaces_between_attributes=True,
-            keep_closing_tags=True,
-            keep_html_and_head_opening_tags=True,
-            keep_input_type_text_attr=True,
-            remove_bangs=True,
-            remove_processing_instructions=True,
+    def _process(self, body: bytes, is_css=False, is_js: bool = False) -> bytes:
+        if is_css:
+            return cssmin(body)
+        if is_js:
+            return jsmin(body)
+
+        return minify_html_onepass.minify(
+            minify_css=True, minify_js=True, code=body.decode()
         ).encode()
 
 

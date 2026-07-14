@@ -84,8 +84,6 @@ def index(req, sess):
 
 
 if __name__ == "__main__":
-    # uv run spacy download en_core_web_sm
-    
     serve(port=1984)
     # remember to add `server_header=False` to uvicorn.run
     # log_level="error" too

@@ -2,8 +2,15 @@ from starhtml import *
 from db import DatabaseDict
 from relay import Relay
 import spacy
+import subprocess
 
-nlp = spacy.load("en_core_web_sm")  # uv run spacy download en_core_web_sm
+try:
+    nlp = spacy.load("en_core_web_sm")  
+except OSError:
+    # Download the model automatically
+    subprocess.run(["uv", "run", "spacy", "download", "en_core_web_sm"])
+    nlp = spacy.load("en_core_web_sm")  
+
 db = DatabaseDict()
 relay: Relay[dict] = Relay()
 

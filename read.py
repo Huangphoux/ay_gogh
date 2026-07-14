@@ -3,7 +3,7 @@ from load_env import is_debug
 from test import get_last_test
 from apswutils.db import NotFoundError
 from starhtml import *
-from shared import db, relay, template, nlp
+from shared import db, relay, template
 import mistletoe
 from math import ceil
 from mistletoe.html_renderer import HtmlRenderer

@@ -4,7 +4,8 @@
     - Zeigarnik effect
 - Lưu ảnh vẽ vào DB
 - Read, search bar
-- Minification
+- Minification: rcssmin, rjsmin
+- Using `transition-delay` for `data-indicator` 
 
 # Todo List
 - Bug, search Enter close popup
