@@ -147,7 +147,8 @@ def profile_page(auth):
         incomplete_chaps = None
 
     zeigarnik = (
-        Section(_class="notice")(
+        Details(open=True)(
+            Summary("Incomplete chapters"),
             Ul(
                 *(
                     Li(
