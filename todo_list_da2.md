@@ -2,10 +2,10 @@
 
 - Tạo động lực: game, xếp hạng, huy hiệu
     - Zeigarnik effect
-- Lưu ảnh vẽ vào DB
 - Read, search bar
-- Minification: rcssmin, rjsmin
 - Using `transition-delay` for `data-indicator` 
+- Sidebar
+- [OverType](https://overtype.dev/)
 
 # Todo List
 - Bug, search Enter close popup

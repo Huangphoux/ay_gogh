@@ -180,7 +180,6 @@ class DatabaseDict:
                         front TEXT NOT NULL UNIQUE,
                         back TEXT NOT NULL,
                         context TEXT,
-                        picture TEXT,
                         state INTEGER NOT NULL,
                         step INTEGER,
                         stability REAL,

@@ -1,5 +1,3 @@
-
-
 # To-Do List
 
 - Show toàn bộ entry trong từ điển
@@ -27,12 +25,7 @@
 # Read
 
 - Progressive load từ điển Wiktionary: `data-ignore-morph`
-- Done toggle
 - CSV mỗi từ trong nguyên cả cuốn sách
-- Bỏ simplemma, dùng lemmatized and stats để kiểm tra
-- Chỉ tập trung từng câu: chia bài đọc ra thành từng câu nhỏ để có thể dễ dàng tập trung. Tách văn bản ra thành từng câu. Người đọc muốn đọc tiếp phải bấm nút để hiện câu tiếp theo.
-    - Bấm tiếp theo thì thêm câu tiếp theo vào section
-    - Load từng câu vào bộ nhớ. Khi người dùng bấm tiếp theo thì pop ở đầu mảng. Hàng đợi.
 - Standard Ebooks: tuyển chọn và giới thiệu cho người đọc các tác phẩm văn học đình đám được viết bằng tiếng Anh. Người đọc có thể chủ động tìm đọc ở ngoài hệ thống để không cần phải phụ thuộc vào kết nối mạng, hoặc có thể đọc và thu thập từ vựng ngay thẳng trong hệ thống.
 - Khi không có JS, popup là một trang riêng
 - Width slider: [Pipulate](https://pipulate.com/)
@@ -46,25 +39,14 @@
 - Giọng đọc:
     - [Speech Synthesis](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API#speech_synthesis)
 - Cân nhắc [Free Dictionary API](https://dictionaryapi.dev/)
-- spaCy: phân tích part of speech của từ bôi đen để lọc ra kết quả Wiktionary Parser
 - Show toàn bộ entry trong từ điển
 - CSS calc top của inset để popup giữa màn hình
 - Popup, bôi một từ trong dictionary, quay trở lại từ trước
 -
 
-# SRS
-
-- spaCy: yêu cầu phải tách mỗi câu một dòng trước
-- Kiểm tra độ dài khi gửi đến server
-
-# Auth
-
-- Khi không có JS, nút đăng xuất chuyển hướng người dùng đến trang để hỏi muốn đăng xuất không.
-
 # Setting
 
-- Tối ưu thông số
-    - Chỉ một optimizer được chạy trong cả hệ thống
+- Tối ưu thông số: Chỉ một optimizer được chạy trong cả hệ thống
 
 # Code
 

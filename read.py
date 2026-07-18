@@ -344,10 +344,6 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     except IndexError:
         cards = None
 
-    colorblind = db.get(auth).item(
-        "SELECT value FROM settings WHERE setting = 'colorblind'"
-    )
-
     lines: list[str] = get_lines(num)
 
     if cards:
@@ -357,6 +353,10 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     total_lines = db.get(auth).item("SELECT lines FROM chapter WHERE number=?", (num,))
     if not total_lines:
         total_lines = len(lines)
+
+    colorblind = db.get(auth).item(
+        "SELECT value FROM settings WHERE setting = 'colorblind'"
+    )
 
     colorblind_mode = Div(style="display: flex;", data_ignore_morph=True)(
         Input(
