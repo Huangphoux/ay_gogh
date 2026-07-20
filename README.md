@@ -1,6 +1,9 @@
 # Ay Gogh!
 
-This repository contains a website dedicated to digitalize the book [English by the Nature Method](https://archive.org/details/english-by-the-nature-method/) (1942) by Authur Jensen, built using [StarHTML](https://starhtml.com/), [Datastar](https://data-star.dev/), and [SQLite](https://sqlite.org/). It demonstrates how to create a modern, reactive web application with server-side rendering and real-time updates.
+This repository contains a website dedicated to bring the book [English by the Nature Method](https://archive.org/details/english-by-the-nature-method/) (1942) by Authur Jensen to the modern age, built using [StarHTML](https://starhtml.com/), [Datastar](https://data-star.dev/), and [SQLite](https://sqlite.org/). It demonstrates how to create a modern, reactive web application with server-side rendering and real-time updates.
+
+![The Profile page of the Ay Gogh! website. There's a Test card, Read card, and NGSL Wordle card. Each card has a link to their respective page and a short description of the user's progress.](docs/profile.jpeg)
+
 
 ## Name origin
 
@@ -9,12 +12,17 @@ This repository contains a website dedicated to digitalize the book [English by 
 ## Features
 
 - Test your core vocabulary with [NGSLT](https://www.newgeneralservicelist.com/ngslt-nawlt)
-- Gauge reading ease of each chapter
-- Collect words in your target NGSL level
-- Schedule the reviews with [FSRS](https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler)
+- Gauge the reading ease of each chapter to your ability
+- Incremental reading by focus on each sentence one-at-a-time
+- Select a word to check its meanings, part of speech, synonyms, antonyms, and its [NGSL](https://www.newgeneralservicelist.com/new-general-service-list) level
+- Collect your favorite words then review them later with [FSRS](https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler)
 - Optimize the [algorithm](https://github.com/open-spaced-repetition/awesome-fsrs/wiki/ABC-of-FSRS) to match your style of learning
-- [HATEOAS](https://htmx.org/essays/hateoas/) and [HOWL](https://htmx.org/essays/hypermedia-on-whatever-youd-like/) with StarHTML
-- Interactive UI with Datastar
+- Play a game of Wordle using only NGSL words
+
+## Technical details
+- [HATEOAS](https://htmx.org/essays/hateoas/) with StarHTML
+- [HOWL](https://htmx.org/essays/hypermedia-on-whatever-youd-like/) with Python
+- Server-driven interactive UI with Datastar
 - Single Tenant databases with SQLite
 
 ## Prerequisites
