@@ -1,3 +1,4 @@
+from apsw import SQLError, Connection
 from apswutils import Database
 from passlib.context import CryptContext
 import csv
@@ -25,11 +26,12 @@ class DatabaseDict:
                 )
         """)
 
-        self.insert_forms()
-        self.insert_chapters()
-        self.insert_ngsl_words()
-
-        self.seed_app() if is_debug else None
+        with Connection("db/app.db"):
+            self.insert_forms()
+            self.insert_chapters()
+            self.insert_chapters_search()
+            self.insert_ngsl_words()
+            self.seed_app() if is_debug else None
 
     def insert_forms(self):  # Tables for storing NGSLT form a, b, c
 
@@ -103,6 +105,30 @@ class DatabaseDict:
                         meta["ngsl"],
                     ),
                 )
+
+    def insert_chapters_search(self):
+        self.app.execute(f"""
+            CREATE VIRTUAL TABLE IF NOT EXISTS chapter_search USING FTS5(
+                    number, title, content
+            );
+        """)  # oh it's because I forgot IF NOT EXISTS
+
+        self.app.execute(
+            """
+            INSERT INTO chapter_search
+            SELECT number, title, content FROM chapter;
+            """
+        )
+        
+        """
+        Okay so, the `chapter` table rarely have any commands (CQRS) being done on it,
+        so I don't need to create triggers for it.
+        
+        `content=` doesn't automatically populate the FTS5 table
+        
+        https://sqlite.org/forum/forumpost/42fa5191fac3462b862e3f7087a06c83207e09ff01d6d6af0dbfe41d7be342d4
+        https://stackoverflow.com/questions/69980854/sqlite-fts5-match-is-returning-nothing
+        """
 
     def insert_ngsl_words(self):  # Table for storing ngsl word level
         self.app.execute(
@@ -199,36 +225,38 @@ class DatabaseDict:
                         review_duration INTEGER
                     )
             """)
-            # settings
-            self.user[name].execute("""
-                    CREATE TABLE IF NOT EXISTS settings (
-                        id INTEGER PRIMARY KEY,
-                        setting TEXT UNIQUE NOT NULL,
-                        value TEXT NOT NULL
-                    )
-            """)
-            # desired_retention
-            self.user[name].execute(
-                "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
-                ("desired_retention", 0.8),
-            )
-            # parameters
-            self.user[name].execute(
-                "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
-                (
-                    "parameters",  # defaults from https://github.com/open-spaced-repetition/py-fsrs#usage
-                    "0.212, 1.2931, 2.3065, 8.2956, 6.4133, 0.8334, 3.0194, \
-                     0.001, 1.8722, 0.1666, 0.796, 1.4835, 0.0614, 0.2629, \
-                     1.6483, 0.6014, 1.8729, 0.5425, 0.0912, 0.0658, 0.1542",
-                ),
-            )
-            # default settings
-            self.user[name].execute(
-                "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
-                ("colorblind", "0"),
-            )
 
-            self.seed_user(name) if is_debug else None
+            with Connection(f"db/{name}.db"):
+                # settings
+                self.user[name].execute("""
+                        CREATE TABLE IF NOT EXISTS settings (
+                            id INTEGER PRIMARY KEY,
+                            setting TEXT UNIQUE NOT NULL,
+                            value TEXT NOT NULL
+                        )
+                """)
+                # desired_retention
+                self.user[name].execute(
+                    "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
+                    ("desired_retention", 0.8),
+                )
+                # parameters
+                self.user[name].execute(
+                    "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
+                    (
+                        "parameters",  # defaults from https://github.com/open-spaced-repetition/py-fsrs#usage
+                        "0.212, 1.2931, 2.3065, 8.2956, 6.4133, 0.8334, 3.0194, \
+                        0.001, 1.8722, 0.1666, 0.796, 1.4835, 0.0614, 0.2629, \
+                        1.6483, 0.6014, 1.8729, 0.5425, 0.0912, 0.0658, 0.1542",
+                    ),
+                )
+                # default settings
+                self.user[name].execute(
+                    "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
+                    ("colorblind", "0"),
+                )
+
+                self.seed_user(name) if is_debug else None
 
         return self.user[name] if name else self.app
 

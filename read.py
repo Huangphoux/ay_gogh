@@ -119,11 +119,66 @@ def read(auth, p: int = 0, all: int = 0):
         ),
     )
 
-    main = Main(h1, pagination, chapters, show_all)
+    main = Main(h1, search_box(),pagination, chapters , show_all)
 
     return template(
         f"Read, {p * 10 + 1} to {(p + 1) * 10}" if not all else "Read All", main, auth
     )
+
+
+def search_box(q: str = ""):
+    return Search(
+        Form(action="/read/search")(
+            Label(_for="query")("Search for a word in every chapter"),
+            Input(type="search", id="query", name="q", value=q),
+            Button(type="submit")("Search"),
+        )
+    )
+
+
+@rt.get("/search")
+def search(auth, q: str = ""):
+
+    h1 = H1(id="main-heading")(f"Search in chapters")
+
+    rows = (
+        list(
+            db.app.query(
+                """
+                SELECT DISTINCT number, snippet(chapter_search, -1, '<b>', '</b>', '...', 20) as Snippet
+                FROM chapter_search(?)
+                ORDER BY rank
+        """,
+                (q,),
+            )
+        )
+        if q
+        else []
+    )
+
+    table = Table(
+        Thead(
+            Tr(
+                Th(scope="col")("Chapter"),
+                Th(scope="col")("Snippets"),
+            )
+        ),
+        Tbody(
+            *(
+                Tr(
+                    Th(scope="row")(
+                        A(href=f"/read/{row['number']}")(f"Chapter {row['number']}")
+                    ),
+                    Td(Safe(row["Snippet"])),
+                )
+                for row in rows
+            ),
+        ),
+    ) if q else None
+
+    main = Main(h1, search_box(q), table)
+
+    return template(f"Read, Search{f': {q}' if q else ''}", auth=auth, main=main)
 
 
 @rt.get("/{num:int}/ease")

@@ -77,9 +77,7 @@ wordle.rt.to_app(app)
 @rt
 def index(req, sess):
     auth = sess.get("auth", None)
-
     main = hero_page() if not is_signed_in(req, sess) else profile_page(auth)
-
     return template("Home", main, auth)
 
 
