@@ -60,9 +60,8 @@ def popup_form(num: int, content):
                     width: 100dvw;
                     transition: filter var(--transition-time);
 
-                    /* this is the average laptop screen size assumed by Google */
-                    @media (min-width: 1024px) {
-                        margin-top: 0;
+                    @media lg {
+                        margin-top: 0; /* if screen big, stick to top*/
                     }
                 }
         """),

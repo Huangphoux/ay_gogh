@@ -119,7 +119,25 @@ def read(auth, p: int = 0, all: int = 0):
         ),
     )
 
-    main = Main(h1, search_box(),pagination, chapters , show_all)
+    flex = Div(
+        Style("""
+            me {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                flex-direction: column;
+                
+                @media md {
+                    flex-direction: row;
+                }
+            }
+        """),
+        pagination,
+        search_box(),
+    )
+
+    main = Main(h1, flex, chapters, show_all)
 
     return template(
         f"Read, {p * 10 + 1} to {(p + 1) * 10}" if not all else "Read All", main, auth
@@ -128,11 +146,18 @@ def read(auth, p: int = 0, all: int = 0):
 
 def search_box(q: str = ""):
     return Search(
+        Style("""
+            me {
+                position: sticky;
+                top: 0;
+                background-color: var(--bg);
+            }
+        """),
         Form(action="/read/search")(
             Label(_for="query")("Search for a word in every chapter"),
             Input(type="search", id="query", name="q", value=q),
             Button(type="submit")("Search"),
-        )
+        ),
     )
 
 
@@ -147,7 +172,7 @@ def search(auth, q: str = ""):
                 """
                 SELECT DISTINCT number, snippet(chapter_search, -1, '<b>', '</b>', '...', 20) as Snippet
                 FROM chapter_search(?)
-                ORDER BY rank
+                ORDER BY number
         """,
                 (q,),
             )
@@ -156,25 +181,29 @@ def search(auth, q: str = ""):
         else []
     )
 
-    table = Table(
-        Thead(
-            Tr(
-                Th(scope="col")("Chapter"),
-                Th(scope="col")("Snippets"),
-            )
-        ),
-        Tbody(
-            *(
+    table = (
+        Table(
+            Thead(
                 Tr(
-                    Th(scope="row")(
-                        A(href=f"/read/{row['number']}")(f"Chapter {row['number']}")
-                    ),
-                    Td(Safe(row["Snippet"])),
+                    Th(scope="col")("Chapter"),
+                    Th(scope="col")("Snippets"),
                 )
-                for row in rows
             ),
-        ),
-    ) if q else None
+            Tbody(
+                *(
+                    Tr(
+                        Th(scope="row")(
+                            A(href=f"/read/{row['number']}")(f"Chapter {row['number']}")
+                        ),
+                        Td(Safe(row["Snippet"])),
+                    )
+                    for row in rows
+                ),
+            ),
+        )
+        if q
+        else None
+    )
 
     main = Main(h1, search_box(q), table)
 
@@ -431,14 +460,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         Style("""
                 me {
                     padding: 0; margin: 0;
-                    display: grid;
-                    place-items: center;
-
-                    /* this is where the cardinal looks ugly */
-                    grid-auto-flow: column;
-                    @media (max-width: 500px) {
-                        grid-auto-flow: row;
-                    }
+                    display: flex;
+                    justify-content: space-around;
+                    flex-wrap: wrap;
                 }
         """),
         P(f"Chapter {chap['number_word']} ({num})"),

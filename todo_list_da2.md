@@ -4,6 +4,7 @@
     - Zeigarnik effect
 - Using `transition-delay` for `data-indicator` 
 - Sidebar
+- Read, Filter
 
 # Todo List
 - Bug, search Enter close popup
