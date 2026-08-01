@@ -51,31 +51,16 @@ legend {
     color: light-dark(var(--text), var(--bg));
 }
 
-:is([data-is-new-day], [data-is-due], [data-is-due], [data-is-retired]) {
-    color: light-dark(var(--text), var(--bg));
-    user-select: none;
-    cursor: pointer;
-}
-
-[data-is-due="1"],
 .hard {
     background: red;
 }
 
-[data-is-due="0"],
 .easy {
     background: lime;
 }
 
-[data-is-new-day="0"],
 .medium {
-    /* If not new day yet then doesn't matter due or not */
     background: gold;
-}
-
-[data-is-retired="1"] {
-    /* Retire mean no review, so don't show any other color */
-    background: aqua;
 }
 
 pre {

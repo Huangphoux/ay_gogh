@@ -5,6 +5,7 @@
 - Using `transition-delay` for `data-indicator` 
 - Sidebar
 - Read, Filter
+- Refactor `chapter_main` function
 
 # Todo List
 - Bug, search Enter close popup

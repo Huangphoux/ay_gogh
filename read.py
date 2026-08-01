@@ -174,7 +174,7 @@ def search(auth, q: str = ""):
                 FROM chapter_search(?)
                 ORDER BY number
         """,
-                (f"\"{q}\"",),
+                (f'"{q}"',),
             )
         )
         if q
@@ -207,7 +207,7 @@ def search(auth, q: str = ""):
 
     main = Main(h1, search_box(q), table)
 
-    return template(f"Read, Search{f'for \"{q}\"' if q else ''}", auth=auth, main=main)
+    return template(f"Read, Search{f'for "{q}"' if q else ''}", auth=auth, main=main)
 
 
 @rt.get("/{num:int}/ease")
@@ -511,10 +511,13 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         content.scrollBy({left: 0, top: content.scrollHeight, behavior: "instant",});
     """)
 
+    due_card_state = ('data-is-due="1"', 'data-is-new-day="1"', 'data-is-retired="0"')
+
     if not is_done:
         if progress != total_lines:
             next_line = Button(
-                data_on_click=(js(f"@patch('/read/{num}'); {scroll_btm}"),)
+                data_on_click=(js(f"@patch('/read/{num}'); {scroll_btm}"),),
+                disabled=all(state in lines[progress] for state in due_card_state),
             )("Advance")
         else:
             next_line = (
@@ -556,6 +559,18 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
             dict(document=True),
         ),
     )(
+        Style("""
+            :is([data-is-new-day], [data-is-due], [data-is-due], [data-is-retired]) {
+                color: light-dark(var(--text), var(--bg));
+                user-select: none;
+                cursor: pointer;
+            }
+            
+            [data-is-due="1"] { background: red; }
+            [data-is-due="0"] { background: lime; }
+            [data-is-new-day="0"] { background: gold; } /* If not new day yet then doesn't matter due or not */
+            [data-is-retired="1"] { background: aqua; } /* Retire mean no review, so don't show any other color */
+        """),
         Safe(mistletoe.markdown("\n\n".join(lines[0:progress]), HtmlRenderer)),
     )  # text section
 
