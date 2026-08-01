@@ -174,7 +174,7 @@ def search(auth, q: str = ""):
                 FROM chapter_search(?)
                 ORDER BY number
         """,
-                (q,),
+                (f"\"{q}\"",),
             )
         )
         if q

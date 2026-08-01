@@ -109,7 +109,8 @@ class DatabaseDict:
     def insert_chapters_search(self):
         self.app.execute(f"""
             CREATE VIRTUAL TABLE IF NOT EXISTS chapter_search USING FTS5(
-                    number, title, content
+                    number, title, content,
+                    tokenize="porter ascii tokenchars '-_'"
             );
         """)  # oh it's because I forgot IF NOT EXISTS
 
