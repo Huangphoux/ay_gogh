@@ -137,35 +137,66 @@ def profile_page(auth):
     )
 
     try:
-        incomplete_chaps = list(
+        chapter_sql = list(
             db.get(auth).query(
                 "SELECT number, progress, lines FROM chapter WHERE progress<>1 AND done IS NULL"
             )
         )
+        chapter_count = len(chapter_sql)
 
     except NotFoundError:
-        incomplete_chaps = None
+        chapter_sql = None
 
-    zeigarnik = (
-        Details(open=True)(
-            Summary("Incomplete chapters"),
+    incomplete_chapters = (
+        Details(
+            Summary(
+                f"You have {chapter_count} incomplete chapter{'s' if chapter_count > 1 else ''}."
+            ),
             Ul(
                 *(
                     Li(
                         A(href=f"/read/{chap['number']}")(f"Chapter {chap['number']}"),
                         f" is {chap['progress'] / chap['lines']:.0%} complete",
                     )
-                    for chap in incomplete_chaps
+                    for chap in chapter_sql
+                ),
+            ),
+        )
+        if chapter_sql
+        else None
+    )
+
+    try:
+        word_count = len(
+            list(
+                db.get(auth).query(
+                    """
+    SELECT
+        is_retired,
+        CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
+                -- datetime now is after due
+        CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) < 1) THEN 0 ELSE 1 END AS is_new_day
+                --  no last_review       &   it has been 24 hours
+    FROM deck
+    WHERE is_due=1 AND is_new_day=1 AND is_retired=0
+    """
                 ),
             )
         )
-        if incomplete_chaps
+
+    except IndexError:
+        word_count = None
+
+    due_words = (
+        P(_class="notice")(f"You have {word_count} word{'s' if word_count > 1 else ''} due today.")
+        if word_count
         else None
     )
 
     return Main(
         H1(id="main-heading")(f"Profile"),
-        zeigarnik,
+        incomplete_chapters,
+        due_words,
         Section(
             Style("""
                     me {
