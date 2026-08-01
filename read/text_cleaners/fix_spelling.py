@@ -15,6 +15,7 @@ def fix_spelling(fname):
         "To-morrow": "Tomorrow",
         "to-night": "tonight",
         "To-night": "Tonight",
+        "(<": "(",
     }
 
     for k, v in dict.items():

@@ -207,7 +207,7 @@ def search(auth, q: str = ""):
 
     main = Main(h1, search_box(q), table)
 
-    return template(f"Read, Search{f': {q}' if q else ''}", auth=auth, main=main)
+    return template(f"Read, Search{f'for \"{q}\"' if q else ''}", auth=auth, main=main)
 
 
 @rt.get("/{num:int}/ease")

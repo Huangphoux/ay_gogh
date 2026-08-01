@@ -16,7 +16,7 @@ from typing import List, Union, NoReturn
 from starlette.datastructures import MutableHeaders
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-import minify_html_onepass
+import minify_html
 
 
 class MinificationMiddleware:
@@ -119,8 +119,15 @@ class MinificationResponder:
         if is_js:
             return jsmin(body)
 
-        return minify_html_onepass.minify(
-            minify_css=True, minify_js=True, code=body.decode()
+        return minify_html.minify(
+            minify_css=True,
+            minify_js=True,
+            code=body.decode(),
+            keep_closing_tags=True,
+            keep_html_and_head_opening_tags=True,
+            remove_processing_instructions=True,
+            keep_input_type_text_attr=True,
+            allow_removing_spaces_between_attributes=True
         ).encode()
 
 
