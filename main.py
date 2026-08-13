@@ -58,6 +58,10 @@ app, rt = star_app(  # SessionMiddleware arguments are also in star_app
         Link(rel="stylesheet", href="/static/simple.css"),
         Link(rel="stylesheet", href="/static/global.css"),
         Script(src="/static/css-scope.js"),
+        Meta(
+            http_equiv="Content-Security-Policy",
+            content="script-src 'self' 'unsafe-eval';",
+        ),  # allow `unsafe-eval` for Datastar
     ),
     sess_https_only=not is_debug,  # set Secure flag on cookies
     same_site="strict",

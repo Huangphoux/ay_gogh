@@ -108,27 +108,48 @@ class MinificationResponder:
 
         elif message_type == "http.response.body":
             # Remaining body in streaming response.
+
+            # body: bytes = message.get("body", b"")
+
+            # splitted: list[str] = body.decode().split("\n")
+
+            # minified = self._process(
+            #     "\n".join(
+            #         line[15:] for line in splitted if line.startswith("data: elements")
+            #     )
+            # )
+
+            # minified = "\n".join("data: elements " + line for line in minified.split("\n"))
+
+            # message["body"] = ("\n".join(splitted[:3]) +"\n" + minified).encode()
+
+            # print(message["body"])
+
             await self.send(message)
         else:
             await self.send(self.initial_message)
             await self.send(message)
 
-    def _process(self, body: bytes, is_css=False, is_js: bool = False) -> bytes:
+    def _process(self, body, is_css=False, is_js: bool = False):
         if is_css:
             return cssmin(body)
         if is_js:
             return jsmin(body)
 
-        return minify_html.minify(
+        is_bytes: bool = isinstance(body, bytes)
+
+        minified = minify_html.minify(
             minify_css=True,
             minify_js=True,
-            code=body.decode(),
+            code=body.decode() if is_bytes else body,
             keep_closing_tags=True,
             keep_html_and_head_opening_tags=True,
             remove_processing_instructions=True,
             keep_input_type_text_attr=True,
-            allow_removing_spaces_between_attributes=True
-        ).encode()
+            allow_removing_spaces_between_attributes=True,
+        )
+
+        return minified.encode() if is_bytes else minified
 
 
 async def unattached_send(message: Message) -> NoReturn:

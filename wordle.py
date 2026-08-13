@@ -89,7 +89,6 @@ def wordle_main(auth):
     h1 = H1(id="main-heading", style=f"view-transition-name: wordle")(f"NGSL Wordle")
 
     game_state = get_game_state(auth)
-    print(game_state)
 
     new_word = (
         Button(data_on_click=delete("/wordle/new"))("New Word")
