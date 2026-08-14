@@ -114,8 +114,9 @@ def profile_page(auth):
     )
 
     try:
+        # bug when two chapters are done in the same day
         chap_done_latest = db.get(auth).item(
-            "SELECT number FROM chapter WHERE done=(SELECT MAX(done) FROM chapter)"
+            "SELECT MAX(number) FROM chapter WHERE done=(SELECT MAX(done) FROM chapter)"
         )
     except NotFoundError:
         chap_done_latest = None

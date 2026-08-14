@@ -3,6 +3,7 @@
 - Minify streaming response
 - Daily Streak: đọc xong 1 bài
 - Minigame "Điền từ vào ngữ cảnh": dựa vào các từ đã được mined
+- Test FSRS có cân nhắc đã qua ngày mai chưa
 
 # My Todo list
 

@@ -688,7 +688,7 @@ def next_line(auth, num: int):
 
     if progress >= len(lines):
         db.get(auth).execute(
-            "UPDATE chapter SET done=CURRENT_TIMESTAMP WHERE number=?",
+            "UPDATE chapter SET done=CURRENT_DATE WHERE number=?",
             (num,),
         )
 
