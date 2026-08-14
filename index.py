@@ -90,6 +90,55 @@ def hero_page():
     )
 
 
+def is_streak_broke(auth) -> bool | None:
+    # it has been a white since you last read
+    # None: no book has been read yet
+    
+    try:
+        return (
+            db.get(auth).item("""
+                SELECT JULIANDAY('now') - JULIANDAY(done)
+                FROM chapter
+                WHERE done=(SELECT MAX(done) FROM chapter)
+            """)
+            > 1
+        )
+    except NotFoundError:
+        return None
+
+
+def get_streak(auth) -> int:
+    try:
+        if is_streak_broke(auth) is True or is_streak_broke(auth) is None:
+            streak = 0
+        else:  # https://stackoverflow.com/questions/44056555/find-longest-streak-in-sqlite
+            streak = (
+                db.get(auth).item("""
+            WITH streak AS (
+                SELECT
+                    done,
+                    (
+                        SELECT COUNT(*)
+                        FROM chapter AS c1
+                        WHERE c1.done < c2.done AND JULIANDAY(c2.done) - JULIANDAY(c1.done)=1
+                    ) AS str
+                FROM chapter AS c2
+            )
+            
+            SELECT str
+            FROM streak
+            ORDER BY DATE(done) DESC
+            LIMIT 1
+            """)
+                or 0
+            ) + 1  # first day of the streak is 0
+
+    except Exception as e:
+        streak = 0
+
+    return streak
+
+
 def profile_page(auth):
     last_test = get_last_test(auth)
 
@@ -189,13 +238,25 @@ def profile_page(auth):
         word_count = None
 
     due_words = (
-        P(_class="notice")(f"You have {word_count} word{'s' if word_count > 1 else ''} due today.")
+        P(_class="notice")(
+            f"You have {word_count} word{'s' if word_count > 1 else ''} due today."
+        )
         if word_count
         else None
     )
 
+    streak = (
+        P("Your streak: ", get_streak(auth)),
+        P(
+            "You broke your streak! 😢 Try to make a habit of reading every day, will ya?"
+        )
+        if is_streak_broke(auth)
+        else P("Finish at least a chapter every day to make a streak!"),
+    )
+
     return Main(
         H1(id="main-heading")(f"Profile"),
+        streak,
         incomplete_chapters,
         due_words,
         Section(
