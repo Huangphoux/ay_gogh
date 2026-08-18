@@ -288,20 +288,17 @@ def profile_page(auth):
     streak = Div(
         Style("""
             me {
-                display: grid;
-                max-height: fit-content;
+                display: flex;
+                flex-wrap: wrap;
                 align-items: center;
-                grid-auto-flow: column;
-                gap: 1rem;
                 
-                @media md {
-                    grid-auto-flow: row;
-                    gap: 0;
+                & > * {
+                    flex: 1 1 30ch;
                 }
             }
         """),
-        P(
-            Style("me { font-size: 300%;  @media md { font-size: 500%; } }"),
+        Span(
+            Style("me { font-size: 500%; flex: 1;}"),
             f"🌹 {streak_count}" if streak_count > 0 else "🥀",
         ),
         P("Finish a chapter every day to keep the rose bloom!"),
@@ -309,19 +306,21 @@ def profile_page(auth):
 
     check_unfulfilled_medals(auth)
 
-    medals = db.get(auth).query(
-        "SELECT name, description, icon FROM medal WHERE is_fulfilled=1",
+    medals = list(
+        db.get(auth).query(
+            "SELECT name, description, icon FROM medal WHERE is_fulfilled=1",
+        )
     )
 
     medal_container = (
         Div(
             Style("""
-            me {
-                display: flex;
-                flex-wrap: nowrap;
-                gap: 1rem;
-            }
-        """),
+                me {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    gap: 1rem;
+                }
+            """),
             *(
                 medal_component(medal["name"], medal["description"], medal["icon"])
                 for medal in medals
@@ -332,25 +331,25 @@ def profile_page(auth):
     )
 
     return Main(
+        Style("""
+            me > section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                
+                & > * {
+                    flex: 1 1 30ch;
+                }
+            }
+        """),
         H1(id="main-heading")(f"Profile"),
         Section(
             Style("""
-                me {
-                    display: grid;
-                    grid-auto-flow: row;
-                    gap: 1rem;
-                    
-                    @media md {
-                        grid-auto-flow: column;
-                        grid-template-columns: 1fr 2fr;
-                    }
-                    
-                    & > div {
-                        border: var(--border-width) solid var(--border);
-                        padding: 1rem;
-                        margin: 0;
-                        text-align: center;
-                    }
+                me > div {
+                    border: var(--border-width) solid var(--border);
+                    padding: 1rem;
+                    margin: 0;
+                    text-align: center;
                 }
             """),
             streak,
@@ -360,17 +359,11 @@ def profile_page(auth):
         due_words,
         Section(
             Style("""
-                me {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-
-                    gap: 3rem;
-
-                    & section {
-                        border: var(--border-width) solid var(--border);
-                        padding: 1rem;
-                        margin: 0;
-                        text-align: center;
+                me section {
+                    border: var(--border-width) solid var(--border);
+                    padding: 1rem;
+                    margin: 0;
+                    text-align: center;
                     }
                 }
             """),

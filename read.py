@@ -459,7 +459,9 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
     cardinal = Section(
         Style("""
                 me {
-                    padding: 0; margin: 0;
+                    padding: 0;
+                    margin: 0;
+                    gap: 1rem;
                     display: flex;
                     justify-content: space-around;
                     flex-wrap: wrap;
@@ -647,8 +649,21 @@ def chapter_main(auth, num: int, word: str = "", bypass: int = 0, context: str =
         content,
         colorblind_mode,
         Div(
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem;"
-        )(
+            Style("""
+                me {
+                    display: flex;
+                    flex-direction: column;
+                    
+                    & > * {
+                        flex: 1;
+                    }
+                    
+                    @media sm {
+                        flex-direction: row;
+                        gap: 1rem;
+                    }
+                }
+            """),
             show_all_notes,
             next_line,
             popup_btn,
