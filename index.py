@@ -142,12 +142,20 @@ def get_streak(auth) -> int:
 def medal_component(name: str, description: str, icon: str):
     return Div(
         Style("""
-                display: flex;
-                flex-direction: column;
+            me {
+                display: grid;
+                grid-auto-flow: row;
                 gap: 1rem;
+                grid-template-rows: 1fr 2fr 1fr;
+                
+                border: var(--border-width) solid var(--border);
+                padding: 1rem;
+                margin: 0;
+                text-align: center;
+            }
         """),
         P(name),
-        P(chr(int(icon, 16))),
+        P(style="font-size: 300%")(chr(int(icon, 16))),
         Small(description),
     )
 
@@ -278,7 +286,24 @@ def profile_page(auth):
 
     streak_count: int = get_streak(auth)
     streak = Div(
-        P(style="font-size: 500%;")(f"🌹 {streak_count}" if streak_count > 0 else "🥀"),
+        Style("""
+            me {
+                display: grid;
+                max-height: fit-content;
+                align-items: center;
+                grid-auto-flow: column;
+                gap: 1rem;
+                
+                @media md {
+                    grid-auto-flow: row;
+                    gap: 0;
+                }
+            }
+        """),
+        P(
+            Style("me { font-size: 300%;  @media md { font-size: 500%; } }"),
+            f"🌹 {streak_count}" if streak_count > 0 else "🥀",
+        ),
         P("Finish a chapter every day to keep the rose bloom!"),
     )
 
@@ -288,20 +313,22 @@ def profile_page(auth):
         "SELECT name, description, icon FROM medal WHERE is_fulfilled=1",
     )
 
-    medal_container = Div(
-        Style("""
+    medal_container = (
+        Div(
+            Style("""
             me {
                 display: flex;
                 flex-wrap: nowrap;
-                gap: 3rem;
+                gap: 1rem;
             }
         """),
-        *(
-            medal_component(medal["name"], medal["description"], medal["icon"])
-            for medal in medals
+            *(
+                medal_component(medal["name"], medal["description"], medal["icon"])
+                for medal in medals
+            ),
         )
         if medals
-        else P("Your medals will be shown here. Goodhart's law."),
+        else None
     )
 
     return Main(
@@ -311,18 +338,19 @@ def profile_page(auth):
                 me {
                     display: grid;
                     grid-auto-flow: row;
-                }
-                
-                @media md {
-                    flex-direction: column;
-                    grid-template-columns: 1fr 2fr;
-                }
-                
-                & div {
-                    border: var(--border-width) solid var(--border);
-                    padding: 0;
-                    margin: 0;
-                    text-align: center;
+                    gap: 1rem;
+                    
+                    @media md {
+                        grid-auto-flow: column;
+                        grid-template-columns: 1fr 2fr;
+                    }
+                    
+                    & > div {
+                        border: var(--border-width) solid var(--border);
+                        padding: 1rem;
+                        margin: 0;
+                        text-align: center;
+                    }
                 }
             """),
             streak,
@@ -332,19 +360,19 @@ def profile_page(auth):
         due_words,
         Section(
             Style("""
-                    me {
-                        display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                me {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
-                        gap: 3rem;
+                    gap: 3rem;
 
-                        & section {
-                            border: var(--border-width) solid var(--border);
-                            padding: 0;
-                            margin: 0;
-                            text-align: center;
-                        }
+                    & section {
+                        border: var(--border-width) solid var(--border);
+                        padding: 1rem;
+                        margin: 0;
+                        text-align: center;
                     }
+                }
             """),
             test,
             read,

@@ -1,5 +1,6 @@
 # Đồ án 2
 
+- Bug: Streak, read 2 book in one day count as 0
 
 # My Todo list
 
