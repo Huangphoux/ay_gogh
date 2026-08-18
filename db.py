@@ -17,16 +17,17 @@ class DatabaseDict:
 
         os.makedirs("db", exist_ok=True)
         self.app: Database = Database(f"db/app.db", strict=True)
-        # Tables for storing user login infos
-        self.app.execute("""
-                CREATE TABLE IF NOT EXISTS user (
-                    id INTEGER PRIMARY KEY,
-                    name TEXT NOT NULL UNIQUE,
-                    pwd TEXT NOT NULL
-                )
-        """)
 
         with Connection("db/app.db"):
+            # Tables for storing user login infos
+            self.app.execute("""
+                    CREATE TABLE IF NOT EXISTS user (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT NOT NULL UNIQUE,
+                        pwd TEXT NOT NULL
+                    )
+            """)
+
             self.insert_forms()
             self.insert_chapters()
             self.insert_chapters_search()
@@ -120,7 +121,7 @@ class DatabaseDict:
             SELECT number, title, content FROM chapter;
             """
         )
-        
+
         """
         Okay so, the `chapter` table rarely have any commands (CQRS) being done on it,
         so I don't need to create triggers for it.
@@ -164,70 +165,71 @@ class DatabaseDict:
     def get(self, name: str = "app") -> Database:
         if name not in self.user:
             self.user[name] = Database(f"db/{name}.db", strict=True)
-            # test
-            self.user[name].execute(""" 
-                    CREATE TABLE IF NOT EXISTS test (
-                        number INTEGER PRIMARY KEY,
-                        day TEXT NOT NULL,
-                        form TEXT NOT NULL,
-                        progress INTEGER NOT NULL,
-                        lv1 INTEGER NOT NULL,
-                        lv2 INTEGER NOT NULL,
-                        lv3 INTEGER NOT NULL,
-                        lv4 INTEGER NOT NULL,
-                        lv5 INTEGER NOT NULL
-                    )
-            """)
-            # wordle
-            self.user[name].execute(""" 
-                    CREATE TABLE IF NOT EXISTS wordle (
-                        number INTEGER PRIMARY KEY,
-                        guess TEXT NOT NULL,
-                        is_submitted INTEGER NOT NULL
-                    )
-            """)
-            # chapter
-            self.user[name].execute(""" 
-                    CREATE TABLE IF NOT EXISTS chapter (
-                        number INTEGER PRIMARY KEY,
-                        progress INTEGER NOT NULL,
-                        lines INTEGER,
-                        done TEXT
-                    )
-            """)
-            for i in range(1, 60 + 1):
-                self.user[name].execute(
-                    "INSERT OR IGNORE INTO chapter (number, progress) VALUES (?, ?)",
-                    (i, 1),
-                )
-            # deck
-            self.user[name].execute(""" 
-                    CREATE TABLE IF NOT EXISTS deck (
-                        id INTEGER PRIMARY KEY,
-                        front TEXT NOT NULL UNIQUE,
-                        back TEXT NOT NULL,
-                        context TEXT,
-                        state INTEGER NOT NULL,
-                        step INTEGER,
-                        stability REAL,
-                        difficulty REAL,
-                        due TEXT NOT NULL, -- new cards due upon creation
-                        last_review TEXT,
-                        is_retired INTEGER NOT NULL CHECK (is_retired = 1 OR is_retired = 0)
-                    )
-            """)
-            # review_log
-            self.user[name].execute("""
-                    CREATE TABLE IF NOT EXISTS review_log (
-                        id INTEGER PRIMARY KEY,
-                        card_id INTEGER NOT NULL REFERENCES deck(id) ON DELETE CASCADE,
-                        rating INTEGER NOT NULL,
-                        review_datetime TEXT NOT NULL,
-                        review_duration INTEGER
-                    )
-            """)
 
             with Connection(f"db/{name}.db"):
+                # test
+                self.user[name].execute(""" 
+                        CREATE TABLE IF NOT EXISTS test (
+                            number INTEGER PRIMARY KEY,
+                            day TEXT NOT NULL,
+                            form TEXT NOT NULL,
+                            progress INTEGER NOT NULL,
+                            lv1 INTEGER NOT NULL,
+                            lv2 INTEGER NOT NULL,
+                            lv3 INTEGER NOT NULL,
+                            lv4 INTEGER NOT NULL,
+                            lv5 INTEGER NOT NULL
+                        )
+                """)
+                # wordle
+                self.user[name].execute(""" 
+                        CREATE TABLE IF NOT EXISTS wordle (
+                            number INTEGER PRIMARY KEY,
+                            guess TEXT NOT NULL,
+                            is_submitted INTEGER NOT NULL
+                        )
+                """)
+                # chapter
+                self.user[name].execute(""" 
+                        CREATE TABLE IF NOT EXISTS chapter (
+                            number INTEGER PRIMARY KEY,
+                            progress INTEGER NOT NULL,
+                            lines INTEGER,
+                            done TEXT
+                        )
+                """)
+                for i in range(1, 60 + 1):
+                    self.user[name].execute(
+                        "INSERT OR IGNORE INTO chapter (number, progress) VALUES (?, ?)",
+                        (i, 1),
+                    )
+                # deck
+                self.user[name].execute(""" 
+                        CREATE TABLE IF NOT EXISTS deck (
+                            id INTEGER PRIMARY KEY,
+                            front TEXT NOT NULL UNIQUE,
+                            back TEXT NOT NULL,
+                            context TEXT,
+                            state INTEGER NOT NULL,
+                            step INTEGER,
+                            stability REAL,
+                            difficulty REAL,
+                            due TEXT NOT NULL, -- new cards due upon creation
+                            last_review TEXT,
+                            is_retired INTEGER NOT NULL CHECK (is_retired = 1 OR is_retired = 0)
+                        )
+                """)
+                # review_log
+                self.user[name].execute("""
+                        CREATE TABLE IF NOT EXISTS review_log (
+                            id INTEGER PRIMARY KEY,
+                            card_id INTEGER NOT NULL REFERENCES deck(id) ON DELETE CASCADE,
+                            rating INTEGER NOT NULL,
+                            review_datetime TEXT NOT NULL,
+                            review_duration INTEGER
+                        )
+                """)
+
                 # settings
                 self.user[name].execute("""
                         CREATE TABLE IF NOT EXISTS settings (
@@ -258,6 +260,51 @@ class DatabaseDict:
                 )
 
                 self.seed_user(name) if is_debug else None
+
+                self.user[name].execute("""
+                        CREATE TABLE IF NOT EXISTS medal (
+                            id INTEGER PRIMARY KEY,
+                            name TEXT NOT NULL UNIQUE,
+                            description TEXT NOT NULL,
+                            icon TEXT NOT NULL, -- emoji hex code
+                            requirement INTEGER NOT NULL,
+                            is_fulfilled INTEGER NOT NULL,
+                            table_name TEXT NOT NULL,
+                            column_name TEXT NOT NULL
+                        )
+                """)
+
+                self.user[name].execute(
+                    """
+                    INSERT OR IGNORE INTO medal (name, description, icon, requirement, is_fulfilled, table_name, column_name)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        "The Bookworm",
+                        "Read 30 chapters",
+                        "1F4D6",
+                        30 if not is_debug else 2,
+                        0,
+                        "chapter",
+                        "done",
+                    ),
+                )
+
+                self.user[name].execute(
+                    """
+                    INSERT OR IGNORE INTO medal (name, description, icon, requirement, is_fulfilled, table_name, column_name)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        "The Collector",
+                        "Collect 1000 words",
+                        "1F50D",
+                        1000 if not is_debug else 2,
+                        0,
+                        "deck",
+                        "id",
+                    ),
+                )
 
         return self.user[name] if name else self.app
 

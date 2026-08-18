@@ -93,7 +93,7 @@ def hero_page():
 def is_streak_broke(auth) -> bool | None:
     # it has been a white since you last read
     # None: no book has been read yet
-    
+
     try:
         return (
             db.get(auth).item("""
@@ -137,6 +137,37 @@ def get_streak(auth) -> int:
         streak = 0
 
     return streak
+
+
+def medal_component(name: str, description: str, icon: str):
+    return Div(
+        Style("""
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+        """),
+        P(name),
+        P(chr(int(icon, 16))),
+        Small(description),
+    )
+
+
+def check_requirement(auth, name: str, requirement: int, table: str, column: str):
+    if db.get(auth).item(f"SELECT COUNT({column}) FROM {table}") == requirement:
+        db.get(auth).execute("UPDATE medal SET is_fulfilled=? WHERE name=?", (1, name))
+
+
+def check_unfulfilled_medals(auth):
+    for medal in db.get(auth).query(
+        "SELECT name, requirement, table_name, column_name FROM medal WHERE is_fulfilled=0",
+    ):
+        check_requirement(
+            auth,
+            medal["name"],
+            medal["requirement"],
+            medal["table_name"],
+            medal["column_name"],
+        )
 
 
 def profile_page(auth):
@@ -245,26 +276,64 @@ def profile_page(auth):
         else None
     )
 
-    streak = (
-        P("Your streak: ", get_streak(auth)),
-        P(
-            "You broke your streak! 😢 Try to make a habit of reading every day, will ya?"
+    streak_count: int = get_streak(auth)
+    streak = Div(
+        P(style="font-size: 500%;")(f"🌹 {streak_count}" if streak_count > 0 else "🥀"),
+        P("Finish a chapter every day to keep the rose bloom!"),
+    )
+
+    check_unfulfilled_medals(auth)
+
+    medals = db.get(auth).query(
+        "SELECT name, description, icon FROM medal WHERE is_fulfilled=1",
+    )
+
+    medal_container = Div(
+        Style("""
+            me {
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 3rem;
+            }
+        """),
+        *(
+            medal_component(medal["name"], medal["description"], medal["icon"])
+            for medal in medals
         )
-        if is_streak_broke(auth)
-        else P("Finish at least a chapter every day to make a streak!"),
+        if medals
+        else P("Your medals will be shown here. Goodhart's law."),
     )
 
     return Main(
         H1(id="main-heading")(f"Profile"),
-        streak,
+        Section(
+            Style("""
+                me {
+                    display: grid;
+                    grid-auto-flow: row;
+                }
+                
+                @media md {
+                    flex-direction: column;
+                    grid-template-columns: 1fr 2fr;
+                }
+                
+                & div {
+                    border: var(--border-width) solid var(--border);
+                    padding: 0;
+                    margin: 0;
+                    text-align: center;
+                }
+            """),
+            streak,
+            medal_container,
+        ),
         incomplete_chapters,
         due_words,
         Section(
             Style("""
                     me {
                         display: grid;
-                        /* grid-auto-flow: column;
-                        align-items: stretch; */
                         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
                         gap: 3rem;
