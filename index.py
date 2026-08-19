@@ -90,53 +90,42 @@ def hero_page():
     )
 
 
-def is_streak_broke(auth) -> bool | None:
-    # it has been a white since you last read
+def get_days_since_last_read(auth) -> int | None:
     # None: no book has been read yet
 
     try:
-        return (
-            db.get(auth).item("""
-                SELECT JULIANDAY('now') - JULIANDAY(done)
-                FROM chapter
-                WHERE done=(SELECT MAX(done) FROM chapter)
-            """)
-            > 1
-        )
+        return db.get(auth).item("""
+            SELECT DISTINCT JULIANDAY('now') - JULIANDAY(done)
+            FROM chapter
+            WHERE done=(SELECT MAX(done) FROM chapter)
+        """)
+
     except NotFoundError:
         return None
 
 
 def get_streak(auth) -> int:
-    try:
-        if is_streak_broke(auth) is True or is_streak_broke(auth) is None:
-            streak = 0
-        else:  # https://stackoverflow.com/questions/44056555/find-longest-streak-in-sqlite
-            streak = (
-                db.get(auth).item("""
-            WITH streak AS (
-                SELECT
-                    done,
-                    (
-                        SELECT COUNT(*)
-                        FROM chapter AS c1
-                        WHERE c1.done < c2.done AND JULIANDAY(c2.done) - JULIANDAY(c1.done)=1
-                    ) AS str
-                FROM chapter AS c2
+    days_since_last_read: int | None = get_days_since_last_read(auth)
+
+    if days_since_last_read is None:
+        return 0
+    else:
+        if days_since_last_read == 0:  # 2 books in the same day, start a new streak
+            pass
+        if days_since_last_read == 1:  # it's the next day
+            db.get("auth").execute(
+                "UPDATE settings SET value=value+1 WHERE setting=?", ("streak",)
             )
-            
-            SELECT str
-            FROM streak
-            ORDER BY DATE(done) DESC
-            LIMIT 1
-            """)
-                or 0
-            ) + 1  # first day of the streak is 0
+        if days_since_last_read > 1:  # streak broke
+            db.get("auth").execute(
+                "UPDATE settings SET value=0 WHERE setting=?", ("streak",)
+            )
 
-    except Exception as e:
-        streak = 0
-
-    return streak
+        return int(
+            db.get("auth").item(
+                "SELECT value FROM settings WHERE setting=?", ("streak",)
+            )
+        )
 
 
 def medal_component(name: str, description: str, icon: str):
@@ -145,8 +134,7 @@ def medal_component(name: str, description: str, icon: str):
             me {
                 display: grid;
                 grid-auto-flow: row;
-                gap: 1rem;
-                grid-template-rows: 1fr 2fr 1fr;
+                grid-template-rows: 1fr 0.5fr 1fr;
                 
                 border: var(--border-width) solid var(--border);
                 padding: 1rem;
@@ -319,6 +307,7 @@ def profile_page(auth):
                     display: flex;
                     flex-wrap: nowrap;
                     gap: 1rem;
+                    overflow: scroll;
                 }
             """),
             *(

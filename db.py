@@ -259,6 +259,12 @@ class DatabaseDict:
                     ("colorblind", "0"),
                 )
 
+                # streak
+                self.user[name].execute(
+                    "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
+                    ("streak", "0"),
+                )
+
                 self.seed_user(name) if is_debug else None
 
                 self.user[name].execute("""
