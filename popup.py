@@ -469,10 +469,10 @@ def popup_view(auth, num: int, word: str = "", bypass: int = 0, context: str = "
                 """
                 SELECT
                     front, back, context, due, last_review, is_retired,
-                    CASE WHEN datetime() > due THEN 1 ELSE 0 END AS is_due,
+                    CASE WHEN DATETIME() >= due THEN 1 ELSE 0 END AS is_due,
                            -- datetime now is after due
-                    CASE WHEN (last_review IS NULL AND julianday('now') - julianday(due) < 1) THEN 0 ELSE 1 END AS is_new_day
-                           --  no last_review       &   it has been 24 hours
+                    CASE WHEN (last_review IS NULL AND JULIANDAY('now') - JULIANDAY(due) < 1) THEN 0 ELSE 1 END AS is_new_day
+                           --  no last_review       &   it has NOT been 24 hours
                 FROM deck
                 WHERE front = ?
                 """,
