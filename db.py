@@ -264,6 +264,11 @@ class DatabaseDict:
                     "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, ?)",
                     ("streak", "0"),
                 )
+                
+                self.user[name].execute(
+                    "INSERT OR IGNORE INTO settings (setting, value) VALUES (?, CURRENT_DATE)",
+                    ("last_date",),
+                )
 
                 self.seed_user(name) if is_debug else None
 

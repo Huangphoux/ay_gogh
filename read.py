@@ -9,6 +9,7 @@ from math import ceil
 from mistletoe.html_renderer import HtmlRenderer
 import re
 from popup import popup_view
+from math import floor
 
 rt: APIRouter = APIRouter("/read")
 
@@ -707,4 +708,38 @@ def next_line(auth, num: int):
             (num,),
         )
 
+        update_streak(auth)
+
     publish(auth, num)
+
+
+def get_days_since_last_date(auth) -> int:
+    return floor(
+        db.get(auth).item(
+            "SELECT JULIANDAY('now') - JULIANDAY(value) FROM settings WHERE setting=?",
+            ("last_date",),
+        )
+    )
+
+
+def update_streak(auth):
+    # Julian day number: The number of days including fractional days
+    # this function runs after user have done reading a book
+
+    days_since_last_date: int = get_days_since_last_date(auth)
+
+    num_book_done: int = db.get(auth).item("SELECT COUNT(done) FROM chapter")
+
+    # first day finish a book, or next day finish a book
+    if days_since_last_date == 0 and num_book_done == 1 or days_since_last_date == 1:
+        db.get(auth).execute(
+            "UPDATE settings SET value=value+1 WHERE setting=?", ("streak",)
+        )
+
+    # finish a book after a while, or first day not read
+    if days_since_last_date > 1:
+        db.get(auth).execute("UPDATE settings SET value=1 WHERE setting=?", ("streak",))
+
+    db.get(auth).execute(
+        "UPDATE settings SET value=CURRENT_DATE WHERE setting=?", ("last_date",)
+    )

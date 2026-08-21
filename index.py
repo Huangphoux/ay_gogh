@@ -4,6 +4,7 @@ from shared import db
 from test import get_last_test
 from math import ceil
 from apswutils.db import NotFoundError
+from read import get_days_since_last_date
 
 rt: APIRouter = APIRouter("/")
 
@@ -88,44 +89,6 @@ def hero_page():
             last_chance,
         ),
     )
-
-
-def get_days_since_last_read(auth) -> int | None:
-    # None: no book has been read yet
-
-    try:
-        return db.get(auth).item("""
-            SELECT DISTINCT JULIANDAY('now') - JULIANDAY(done)
-            FROM chapter
-            WHERE done=(SELECT MAX(done) FROM chapter)
-        """)
-
-    except NotFoundError:
-        return None
-
-
-def get_streak(auth) -> int:
-    days_since_last_read: int | None = get_days_since_last_read(auth)
-
-    if days_since_last_read is None:
-        return 0
-    else:
-        if days_since_last_read == 0:  # 2 books in the same day, start a new streak
-            pass
-        if days_since_last_read == 1:  # it's the next day
-            db.get("auth").execute(
-                "UPDATE settings SET value=value+1 WHERE setting=?", ("streak",)
-            )
-        if days_since_last_read > 1:  # streak broke
-            db.get("auth").execute(
-                "UPDATE settings SET value=0 WHERE setting=?", ("streak",)
-            )
-
-        return int(
-            db.get("auth").item(
-                "SELECT value FROM settings WHERE setting=?", ("streak",)
-            )
-        )
 
 
 def medal_component(name: str, description: str, icon: str):
@@ -272,7 +235,13 @@ def profile_page(auth):
         else None
     )
 
-    streak_count: int = get_streak(auth)
+    if get_days_since_last_date(auth) > 1:
+        streak_count: int = 0
+    else:
+        streak_count: int = int(
+            db.get(auth).item("SELECT value FROM settings WHERE setting=?", ("streak",))
+        )
+
     streak = Div(
         Style("""
             me {
