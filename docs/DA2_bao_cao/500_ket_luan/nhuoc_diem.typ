@@ -1,0 +1,3 @@
+- *Độ trễ trong việc tra từ điển*: Do việc tra từ điển phụ thuộc vào API và tốc độ mạng, đôi khi người dùng có thể gặp độ trễ nhỏ khi chờ kết quả trả về.
+- *Phụ thuộc vào kết nối mạng*: hệ thống yêu cầu người dùng phải có kết nối mạng thì mới có thể sử dụng được các tính năng của hệ thống.
+- *Phân tích dạng gốc còn kém*: do chỉ gửi từ đơn lập thay vì cả câu nên việc phân tích dạng gốc của từ (lemma) còn kém.

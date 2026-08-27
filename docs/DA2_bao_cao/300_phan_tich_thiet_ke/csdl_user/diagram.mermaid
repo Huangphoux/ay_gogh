@@ -1,0 +1,47 @@
+classDiagram
+
+	class Test {
+		+INTEGER number
+		+TEXT day
+		+TEXT form
+		+INTEGER progress
+		+INTEGER lv1
+		+INTEGER lv2
+		+INTEGER lv3
+		+INTEGER lv4
+		+INTEGER lv5
+	}
+
+	class Chapter {
+		+INTEGER number
+		+TEXT done
+	}
+
+	class Deck {
+		+INTEGER id
+		+TEXT front
+		+TEXT back
+		+INTEGER state
+		+INTEGER step
+		+REAL stability
+		+REAL difficulty
+		+TEXT due
+		+TEXT last_review
+		+INTEGER is_retired
+	}
+
+	class ReviewLog {
+		+INTEGER id
+		+INTEGER card_id
+		+INTEGER rating
+		+TEXT review_datetime
+		+INTEGER review_duration
+	}
+
+	class Settings {
+		+INTEGER id
+		+TEXT setting
+		+TEXT value
+	}
+
+	ReviewLog --> Deck : card_id

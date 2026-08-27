@@ -1,0 +1,29 @@
+- *Quản lí tài khoản*:
+  - Đăng ký
+  - Đăng nhập
+  - Đăng xuất
+- *Kiểm tra vốn từ vựng*:
+  - Làm bài kiểm tra mới
+  - Tiếp tục bài kiểm tra chưa hoàn thành
+- *Đọc sách*:
+  - Truy cập bài đọc
+  - Xem phân tích độ khó bài đọc
+  - Đánh dấu hoàn thành bài đọc
+  - Huỷ đánh dấu hoàn thành bài đọc
+  - Hiện/ẩn đánh dấu các từ trong từ điển cá nhân
+  - Hiện/ẩn các chú thích trong bài đọc
+- *Thu thập từ vựng*:
+  - Tìm từ trong từ điển cá nhân
+  - Tìm nghĩa của từ trong từ điển trực tuyến
+  - Tìm từ khác trong khi đang hiển thị nghĩa của một từ
+  - Lưu từ vào từ điển cá nhân
+  - Bỏ qua ràng buộc thời gian và ôn từ vựng
+  - Đánh giá nhớ từ vựng
+  - Đánh giá quên từ vựng
+  - Hoãn việc ôn tập từ vựng
+  - Bỏ hoãn việc ôn tập từ vựng
+  - Xoá từ vựng khỏi từ điển cá nhân
+  - Ẩn ô tìm kiếm
+- *Chỉnh thông số thuật toán*:
+  - Chỉnh thông số Desired Retention
+  - Tối ưu các thông số thuật toán

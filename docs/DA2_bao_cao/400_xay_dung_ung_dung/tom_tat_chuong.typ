@@ -1,0 +1,3 @@
+_Chương này trình bày chi tiết quá trình hiện thực hóa trang web Ay Gogh!, tập trung vào việc xây dựng và hoàn thiện các giao diện người dùng dựa trên thiết kế đã đề ra. Nội dung bao gồm danh sách và mô tả chuyên sâu các trang cốt lõi như: Trang tiến độ học tập; Trang kiểm tra; Trang cài đặt; Trang danh sách các bài đọc; Trang đọc sách; Popup._
+
+_Bên cạnh yếu tố giao diện, chương này cũng làm rõ các logic xử lý sự kiện (Event Handling) và luồng dữ liệu (Data Flow) giữa các thành phần trong kiến trúc MVVM. Các kịch bản tương tác người dùng — từ việc chạm, vuốt, nhập liệu đến phản hồi của hệ thống — đều được phân tích kỹ lưỡng nhằm đảm bảo tính trực quan, sự mượt mà trong trải nghiệm và đáp ứng đầy đủ các yêu cầu chức năng về việc lĩnh hội ngôn ngữ._

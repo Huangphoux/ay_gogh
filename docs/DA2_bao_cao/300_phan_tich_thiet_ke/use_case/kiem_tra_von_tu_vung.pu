@@ -1,0 +1,14 @@
+@startuml Kiểm tra vốn từ vựng
+left to right direction
+
+actor "Người dùng" as user
+
+rectangle "Kiểm tra vốn từ vựng" {
+	usecase "Làm bài kiểm tra mới" as UC_NewTest
+	usecase "Tiếp tục bài kiểm tra chưa hoàn thành" as UC_ResumeTest
+}
+
+user --> UC_NewTest
+user --> UC_ResumeTest
+
+@enduml

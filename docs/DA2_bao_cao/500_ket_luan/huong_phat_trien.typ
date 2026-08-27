@@ -1,0 +1,5 @@
+- *Tiền xử lí các từ trong quyển sách*: do cả quyển sách chỉ sử dụng 2300 từ, ta có thể quét và tra từ điển từng từ, xong lưu kết quả vào cơ sở dữ liệu rồi truy vấn trực tiếp, cắt giảm được số lần phải tra từ điển bằng API qua mạng.
+- *Cải thiện giao diện*: có thể cải thiện giao diện bằng cách trình bày các liên kết thành các card kích thước to nhằm dễ bấm trên màn hình điện thoại, thêm các animation khi tương tác với giao diện, thêm hình ảnh để cho biết chủ đề xoay quanh từng chương.
+- *Giảm ràng buộc chặt chẽ*: Popup phải phụ thuộc vào luồng CQRS trong trang bài đọc để gửi thông tin truy vấn, nên tách popup ra thành một Web Component riêng để trong tương lai có thê rnhungs vào các trang bài đọc khác ngoài sách English by the Nature Method.
+- *Hệ thống xác thực hoàn chỉnh*: vì hệ thống xác thực cần phải đảm bảo tính bảo mật và an toàn cao, trong khi đồ án cần tập trung các business logic nhiều hơn, hệ thống xác thực ở thời điểm hiện tại rất thô sơ. Trong tương lai nên áp dụng Passkey để người dùng không cần quản lí mật khẩu và giảm khả năng bị bot tấn công.
+- *Progressive Web App*: cho phép người dùng cài đặt trang web như một ứng dụng trên điện thoại.

@@ -1,0 +1,49 @@
+flowchart LR
+  subgraph Client
+    B[Browser]
+  end
+
+  subgraph App[StarHTML Web App]
+    M[main.py
+    star_app + middleware]
+    R[Routes
+auth, read, test, settings, popup]
+    S[shared.py
+template + relay + db]
+    D[db.py
+DatabaseDict]
+  end
+
+  subgraph Data[Data and Storage]
+    ADB[(db/app.db)]
+    UDB[(db/<name>.db)]
+    CH[read/chapter/*.md]
+    NG[read/ngsl/NGSL_1.2_stats.csv]
+    TCSV[test/ngslt_*.csv]
+  end
+
+  subgraph Assets[Static Assets]
+    CSS[static/custom.css]
+    IMG[static/images]
+  end
+
+  subgraph External[External CDNs]
+    DS[Datastar CDN]
+    SC[Simple.css CDN]
+  end
+
+  B <--> |HTTP| M
+  B -->|GET /static| CSS
+  B -->|GET /static| IMG
+  B -->|GET| DS
+  B -->|GET| SC
+
+  M <--> R
+  R <--> S
+  S <--> D
+
+  D --> ADB
+  D --> UDB
+  D --> CH
+  D --> NG
+  D --> TCSV

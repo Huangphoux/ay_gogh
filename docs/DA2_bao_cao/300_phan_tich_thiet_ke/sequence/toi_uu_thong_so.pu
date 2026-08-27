@@ -1,0 +1,21 @@
+@startuml Tối ưu thông số
+
+actor User
+participant "Settings Page" as UI
+participant "Settings Router" as Settings
+participant "User DB" as DB
+participant "FSRS Optimizer" as Optimizer
+participant "Relay" as Relay
+
+User -> UI: click Optimize
+UI -> Settings: GET /settings/fsrs/optimize
+Settings -> DB: SELECT * FROM review_log
+DB --> Settings: review logs
+Settings -> Optimizer: compute_optimal_parameters(review_logs)
+Optimizer --> Settings: optimal_parameters
+Settings -> DB: UPDATE settings SET parameters
+Settings -> Relay: publish settings.{auth}.fsrs
+Relay -> UI: SSE /settings/fsrs/cqrs
+UI --> User: show "parameters optimized" notice
+
+@enduml

@@ -1,0 +1,2 @@
+- Nền tảng người dùng: Triển khai trên trình duyệt web để người dùng có thể truy cập hệ thống bằng mọi thiết bị.
+- Nền tảng quản trị/Backend: Hệ thống Server xử lý dữ liệu.
