@@ -15,10 +15,11 @@
 
     #v(0.5fr)
 
-    #text(size: 20pt, weight: "bold")[
-      ĐỒ ÁN 1 \
-      XÂY DỰNG WEBSITE HỖ TRỢ ĐỌC \
-      VÀ GHI NHỚ TỪ VỰNG TIẾNG ANH BẰNG AI]
+    #text(size: 16pt, weight: "bold")[
+      ĐỒ ÁN 2 \
+      PHÁT TRIỂN TRANG WEB HỖ TRỢ ĐỌC SÁCH \
+      VÀ GHI NHỚ TỪ VỰNG TIẾNG ANH \
+      BẰNG CÁC THUẬT TOÁN MÁY HỌC]
 
     #v(1fr)
 

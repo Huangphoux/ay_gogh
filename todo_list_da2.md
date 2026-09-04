@@ -1,3 +1,8 @@
+# Báo cáo
+- NCKH→Báo cáo
+- Chương 1, 2, 3 từ các mục B1, B2, B2.3
+- Chương 4 bổ sung dần số liệu thực nghiệm theo tiến độ làm sản phẩm.
+
 # Đồ án 2
 
 - Bug: Streak, read 2 book in one day count as 0

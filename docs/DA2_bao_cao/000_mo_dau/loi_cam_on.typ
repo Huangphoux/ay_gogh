@@ -1,7 +1,7 @@
 // copied from Nguyễn Lâm Thanh Triết – 22521531
 // maybe need to write my own
 
-Sau quá trình học tập và rèn luyện tại Khoa Công nghệ Phần mềm, Trường Đại học Công nghệ Thông tin - ĐHQG TP.HCM, em đã được trang bị những kiến thức và kỹ năng cần thiết để hoàn thành Đồ án 1.
+Sau quá trình học tập và rèn luyện tại Khoa Công nghệ Phần mềm, Trường Đại học Công nghệ Thông tin - ĐHQG TP.HCM, em đã được trang bị những kiến thức và kĩ năng cần thiết để hoàn thành Đồ án 2.
 
 Em xin gửi lời cảm ơn chân thành và sâu sắc đến TS. *Đỗ Thị Thanh Tuyền* vì sự tận tình hướng dẫn, định hướng tư duy và phương pháp làm việc khoa học trong suốt quá trình thực hiện đồ án. Trong quá trình tiếp cận các công nghệ mới, do còn hạn chế về kiến thức và kinh nghiệm, em không tránh khỏi những thiếu sót; những nhận xét và góp ý của cô là nguồn động viên và hành trang quý báu cho em trong học tập và công việc sau này.
 
