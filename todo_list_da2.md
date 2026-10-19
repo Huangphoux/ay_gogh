@@ -4,15 +4,13 @@
 - Chương 1, 2, 3 từ các mục B1, B2, B2.3
 - Chương 4 bổ sung dần số liệu thực nghiệm theo tiến độ làm sản phẩm.
 
-# Đồ án 2
-
-- Bug: Streak, read 2 book in one day count as 0
-
 # Bug list
 
 - Bug, search Enter close popup
-- `a cold`: đoán `cold` là tính từ
-- Tính năng lọc nghĩa chưa chưa hoàn chỉnh
+- Lỗi NLP
+- Bảng ánh xạ POS giữa các nhãn của spaCy sang nhãn tương ứng của API từ điển.
+    - Cơ chế Fallback: Nếu lọc theo POS trùng khớp mà không ra nghĩa, nới lỏng điều kiện để hiển thị tất cả các nghĩa phổ biến của từ, tránh để giao diện bị trống.
+- Tính năng cho người dùng tự click chỉnh lại loại từ trên UI
 
 # Using `transition-delay` for `data-indicator`
 

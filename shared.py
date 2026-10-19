@@ -5,11 +5,11 @@ import spacy
 import subprocess
 
 try:
-    nlp = spacy.load("en_core_web_sm")  
+    nlp = spacy.load("en_core_web_trf")
 except OSError:
     # Download the model automatically
-    subprocess.run(["uv", "run", "spacy", "download", "en_core_web_sm"])
-    nlp = spacy.load("en_core_web_sm")  
+    subprocess.run(["uv", "run", "spacy", "download", "en_core_web_trf"])
+    nlp = spacy.load("en_core_web_trf")
 
 db = DatabaseDict()
 relay: Relay[dict] = Relay()
