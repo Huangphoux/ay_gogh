@@ -3,3 +3,8 @@
 - *Thư viện Front-End*: Datastar, Simple.css
 - *Cơ sở dữ liệu*: SQLite
 - *Công cụ phát triển*: Visual Studio Code
+- *Tìm kiếm trong văn bản*: mô-đun mở rộng FTS5 của SQLite
+- *Phân tích ngôn ngữ tự nhiên*: spaCy
+- *Vốn từ vựng căn bản*: New General Service List
+- *Đánh giá vốn từ vựng và độ khó bài đọc*: New General Service List Test
+- *Lên lịch ôn tập từ vựng*: Free Spaced Repetition Scheduling Algorithm

@@ -136,17 +136,12 @@
 
 #include "200_kien_thuc_nen_tang/tom_tat_chuong.typ"
 
-== Python
-#include "200_kien_thuc_nen_tang/python.typ"
-== Datastar
-#include "200_kien_thuc_nen_tang/datastar.typ"
-== StarHTML
-#include "200_kien_thuc_nen_tang/starhtml.typ"
-== SQLite
-#include "200_kien_thuc_nen_tang/sqlite.typ"
-== Simple.css
-#include "200_kien_thuc_nen_tang/simplecss.typ"
-
+== English by the Nature Method
+#include "200_kien_thuc_nen_tang/nature_method.typ"
+== New General Service List
+#include "200_kien_thuc_nen_tang/ngsl.typ"
+== Free Spaced Repetition Scheduling Algorithm
+#include "200_kien_thuc_nen_tang/fsrs.typ"
 
 = PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
 
