@@ -117,15 +117,25 @@ def fetch_wiktionary(explain: str, word: str = "") -> dict | None:
         requests.get(f"https://freedictionaryapi.com/api/v1/entries/en/{word}").text
     )["entries"]
 
+    senses: list[str] | None = None
+    synonyms: list[str] | None = None
+    antonyms: list[str] | None = None
+
     for entry in entries:
-        if entry["partOfSpeech"] == explain:
+        if entry["partOfSpeech"].lower() in explain.lower():
             senses = entry["senses"]
             synonyms = entry["synonyms"]
             antonyms = entry["antonyms"]
+        # else:
+        #     return None
+        # this was stupid
+        # if it's not right the first time then the loop never goes to the next element
+    if not senses:
+        senses = entries[0]["senses"]
+        synonyms = entries[0]["synonyms"]
+        antonyms = entries[0]["antonyms"]
 
-            return {"senses": senses, "synonyms": synonyms, "antonyms": antonyms}
-        else:
-            return None
+    return {"senses": senses, "synonyms": synonyms, "antonyms": antonyms}
 
 
 def wiktionary_view(word: str, lemma: str, num: int, context: str):

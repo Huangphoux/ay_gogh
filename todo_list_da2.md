@@ -7,10 +7,9 @@
 # Bug list
 
 - Bug, search Enter close popup
-- Lỗi NLP
-- Bảng ánh xạ POS giữa các nhãn của spaCy sang nhãn tương ứng của API từ điển.
-    - Cơ chế Fallback: Nếu lọc theo POS trùng khớp mà không ra nghĩa, nới lỏng điều kiện để hiển thị tất cả các nghĩa phổ biến của từ, tránh để giao diện bị trống.
 - Tính năng cho người dùng tự click chỉnh lại loại từ trên UI
+- Highlight words in user's weakest level
+- https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
 
 # Using `transition-delay` for `data-indicator`
 
