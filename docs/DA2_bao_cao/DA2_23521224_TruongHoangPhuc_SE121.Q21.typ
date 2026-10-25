@@ -138,10 +138,17 @@
 
 == English by the Nature Method
 #include "200_kien_thuc_nen_tang/nature_method.typ"
-== New General Service List
+== New General Service List (NGSL)
 #include "200_kien_thuc_nen_tang/ngsl.typ"
-== Free Spaced Repetition Scheduling Algorithm
+== New General Service List Test (NGSLT)
+#include "200_kien_thuc_nen_tang/ngslt.typ"
+== Free Spaced Repetition Scheduling (FSRS) Algorithm
 #include "200_kien_thuc_nen_tang/fsrs.typ"
+== Mô-đun mở rộng FTS5 của SQLite
+#include "200_kien_thuc_nen_tang/fts5.typ"
+== spaCy
+#include "200_kien_thuc_nen_tang/spacy.typ"
+
 
 = PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
 
@@ -224,9 +231,4 @@
 #set figure(
   numbering: num => numbering("A.1", counter(heading).get().first(), num),
 )
-= English by the Nature Method
-#include "200_kien_thuc_nen_tang/nature_method.typ"
-= New General Service List
-#include "200_kien_thuc_nen_tang/ngsl.typ"
-= Free Spaced Repetition Scheduling Algorithm
-#include "200_kien_thuc_nen_tang/fsrs.typ"
+

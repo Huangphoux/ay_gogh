@@ -3,6 +3,8 @@
 - NCKH→Báo cáo
 - Chương 1, 2, 3 từ các mục B1, B2, B2.3
 - Chương 4 bổ sung dần số liệu thực nghiệm theo tiến độ làm sản phẩm.
+- Tại sao mình lại dời 3 cái kia xuống Phụ lục nhỉ?
+    - Trong buổi vấn đáp, cô yêu cầu mình dời 3 cái đó từ mục Công nghệ xuống Phụ lục
 
 # Bug list
 

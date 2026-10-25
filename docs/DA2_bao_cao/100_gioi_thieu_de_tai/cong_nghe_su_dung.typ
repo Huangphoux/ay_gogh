@@ -8,3 +8,4 @@
 - *Vốn từ vựng căn bản*: New General Service List
 - *Đánh giá vốn từ vựng và độ khó bài đọc*: New General Service List Test
 - *Lên lịch ôn tập từ vựng*: Free Spaced Repetition Scheduling Algorithm
+- *Bài đọc với độ khó tăng dần*: English by the Nature Method
