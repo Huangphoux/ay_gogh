@@ -1,11 +1,11 @@
 #figure(
   image("./static/fts5.png", width: 50%),
-  caption: [Trang bìa của quyển sách English by the Nature Method.],
+  caption: [Trang bìa của mô-đun mở rộng FTS5.],
 )
 
 #set heading(offset: 2)
 
-Mô-đun FTS5 của SQLite @fts5 là một mô-đun sử dụng bảng ảo để hỗ trợ cơ sở dữ liệu thêm tính năng tìm kiếm trong các văn bản số lượng lớn.
+Mô-đun mở rộng FTS5 của SQLite @fts5 là một mô-đun sử dụng bảng ảo để hỗ trợ cơ sở dữ liệu thêm tính năng tìm kiếm trong các văn bản số lượng lớn.
 
 Trong đồ án này, FTS5 được sử dụng để phát triển tính năng cho phép người dùng tìm kiếm từ vựng trong các bài đọc.
 

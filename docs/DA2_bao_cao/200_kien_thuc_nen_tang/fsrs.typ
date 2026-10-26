@@ -1,6 +1,6 @@
 #figure(
   image("./static/fsrs.png", width: 80%),
-  caption: [Trang web của thư viện Datastar.],
+  caption: [Trang web của thuật toán FSRS.],
 )
 #set heading(offset: 2)
 

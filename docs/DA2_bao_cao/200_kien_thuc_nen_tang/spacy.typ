@@ -1,18 +1,18 @@
 #figure(
-  image("./static/nature_method.jpg", width: 50%),
-  caption: [Trang bìa của quyển sách English by the Nature Method.],
+  image("static/spacy.png", width: 50%),
+  caption: [Trang bìa của thư viện spaCy.],
 )
 
 #set heading(offset: 2)
 
-English by the Nature Method @nature_method là một quyển sách được viết bởi Arthur Jensen, được ra mắt vào năm 1942, là một quyển sách dạy học tiếng Anh hoàn toàn bằng tiếng Anh. Độ khó tăng dần với mỗi chương của quyển sách. Mỗi chương sẽ giới thiệu từ vựng và ngữ pháp mới, kèm theo với các hình ảnh và chú thích dễ hiểu ở lề trang để hỗ trợ người học. Quyển sách sẽ giúp người học tích luỹ được 2300 từ trải qua 60 chương và tập trung vào tiếng Anh của nước Anh.
+spaCy @spacy là một thư viện Python cung cấp các tính năng hỗ trợ cho việc phân tích ngôn ngữ tự nhiên. Khác với Natural Language Toolkit (NLTK) được dùng cho mục đích giảng dạy và nghiên cứu, spaCy tập trung vào việc hỗ trợ phát triển các phần mềm cần các kĩ thuật phân tích ngôn ngữ tự nhiên.
 
-Đồ án này được phát triển để xoay quanh việc hỗ trợ đọc sách English by the Nature Method do cách duy nhất để đọc quyển sách hiện tại chỉ có là tệp PDF.
+Trong đồ án này, spaCy được sử dụng để phân tích từ loại của từ dựa trên ngữ cảnh, từ đó lọc ra các nghĩa không cần thiết của từ. Ngoài ra, spaCy còn được sử dụng trong việc phân tích số lượng từ NGSL trong một bài đọc.
 
 = Ưu điểm
-- *Tự học tiếng Anh miễn phí*: quyển sách được xuất bản năm 1942, đến nay đã được hết hạn bản quyền. Ai cũng có thể truy cập được sách trên Internet Archive.
-- *Học tiếng Anh bằng tiếng Anh*: không có phương pháp học nào hiệu quả hơn bằng việc chủ động tiếp xúc với các nội dung được viết bằng tiếng Anh. Quyển sách được viết hoàn toàn bằng tiếng Anh, giúp người đọc làm quen được với việc phải tiếp cận với một số lượng lớn từ tiếng Anh.
+- *Dễ sử dụng*: spaCy được thiết kế nhằm cung cấp các kĩ thuật phân tích ngôn ngữ tự nhiên cho những người không chuyên. Vì thế, việc cài đặt và sử dụng thư viện trở nên cực kì đơn giản.
+- *Hiệu suất nhanh chóng*: Thay vì sử dụng Python thuần để phát triển, spaCy sử dụng Cython để quản lí bộ nhớ trực tiếp giống ngôn ngữ C, từ đó cải thiện hiệu suất đáng kể so với việc chờ hệ thống dọn dẹp các dữ liệu thừa.
 
 = Nhược điểm
-- *Tính thời sự kém*: do quyển sách được viết vào những năm 1900, so với năm 2026, quyển sách đã thực sự quá lỗi thời với người học hiện tại, sử dụng các từ như `to-day`, `tram`, và `frock`.
-- *Khó tiếp cận*: do toàn bộ quyển sách được viết bằng tiếng Anh, đối với những người chưa có khả năng tự học thì sẽ rất khó tìm cách để sử dụng quyển sách hiệu quả.
+- *Không phù hợp cho mục đích nghiên cứu*: spaCy sử dụng các kĩ thuật phân tích tối tân nhất, vì thế không bao gồm các kĩ thuật đã quá lỗi thời. Từ đó, spaCy không phù hợp cho việc nghiên cứu và so sánh các kết quả nghiên cứu.
+
