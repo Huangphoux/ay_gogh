@@ -12,6 +12,7 @@
   - Huỷ đánh dấu hoàn thành bài đọc
   - Hiện/ẩn đánh dấu các từ trong từ điển cá nhân
   - Hiện/ẩn các chú thích trong bài đọc
+  - Tách văn bản thành từng dòng
 - *Thu thập từ vựng*:
   - Tìm từ trong từ điển cá nhân
   - Tìm nghĩa của từ trong từ điển trực tuyến
@@ -24,6 +25,17 @@
   - Bỏ hoãn việc ôn tập từ vựng
   - Xoá từ vựng khỏi từ điển cá nhân
   - Ẩn ô tìm kiếm
+  - Hiển thị các thông tin bổ ích của từ: từ loại, xếp hạng của từ trong NGSL, cấp độ NGSL của từ đó.
+  - Chắt lọc nghĩa của từ dựa trên từ loại.
+  - Cho phép người dùng lưu lại ngữ cảnh của từ.
 - *Chỉnh thông số thuật toán*:
   - Chỉnh thông số Desired Retention
   - Tối ưu các thông số thuật toán
+- *Trò chơi đoán từ*: Trò chơi đoán các từ trong danh sách NGSL.
+- *Các tính năng trò chơi hoá*:
+  - *Áp dụng hiệu ứng Zeigarnik*:
+    - Nhắc nhở người dùng về các chương đang đọc dở dang.
+    - Nhắc nhở người dùng các từ đang cần được ôn tập vào ngày đó.
+  - *Chuỗi ngày đọc liên tục*: ghi lại số ngày người dùng đọc liên tục không ngừng nghỉ.
+  - *Huy hiệu tán dương*: đánh dấu các cột mốc quan trọng bằng các huy hiệu, như đọc được 30 trên 60 chương, hoặc thu thập được 100 từ.
+- *Tìm từ trong các bài đọc*: người dùng có thể tìm các từ mà bản thân chưa nắm vững để thu thập vào từ điển của bản thân.

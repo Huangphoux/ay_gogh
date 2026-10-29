@@ -1,6 +1,6 @@
 #figure(
   image("./static/fsrs.png", width: 80%),
-  caption: [Trang web của thuật toán FSRS.],
+  caption: [Trang web của Free Spaced Repetition Scheduling Algorithm.],
 )
 #set heading(offset: 2)
 

@@ -1,6 +1,6 @@
 #figure(
   image("./static/ngslt.png", width: 80%),
-  caption: [Trang web của NGSLT.],
+  caption: [Trang web của New General Service List Test.],
 )
 #set heading(offset: 2)
 
