@@ -12,7 +12,7 @@
   - Đến một câu chứa từ cần phải ôn, người đọc cần trả lời trước khi tiếp tục đọc. Những từ này cũng sẽ được chuẩn bị ở cuối bài trước khi hoàn thành bài đọc để người học thực hiện việc ôn tập ngay trong bài đọc đó.
   - Người dùng có thể cho từ đó "nghỉ hưu" nếu người dùng không muốn ôn tập từ này nữa, nhưng vẫn muốn giữ từ đó trong từ điển cá nhân.
   - Hiển thị các thông tin bổ ích của từ: từ loại, xếp hạng của từ trong NGSL, cấp độ NGSL của từ đó.
-  - Chắt lọc nghĩa của từ dựa trên từ loại.
+  - Chắt lọc nghĩa của từ dựa trên phân tích từ loại của từ.
   - Cho phép người dùng lưu lại ngữ cảnh của từ.
 - *Chỉnh thông số thuật toán*: người học có thể tuỳ biến thuật toán lên lịch học tập để tăng tần suất ôn tập lên, hoặc tối ưu thông số để đáp ứng với thói quen học tập của người học.
 - *Trò chơi đoán từ*: người học có thể chơi trò chơi đoán từ, lấy cảm hứng từ trò chơi Wordle, đoán các từ trong danh sách từ vựng thông dụng NGSL, giúp củng cố năng lực nhận diện mặt chữ nhanh chóng.

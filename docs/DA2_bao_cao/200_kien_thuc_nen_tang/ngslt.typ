@@ -4,7 +4,7 @@
 )
 #set heading(offset: 2)
 
-New General Service List Test (NGSLT, Bài kiểm tra danh sách hỗ trợ tổng quát mới) @ngslt là một bài kiểm tra được tạo ra nhằm để chuẩn đoán năng lực nhận diện được mặt chữ của các từ trong NGSL. Được phát triển bởi Phil Bennett và Tim Stoeckel, NGSLT chia NGSL thành 5 cấp độ, mỗi cấp độ bao gồm 562 từ. Trong mỗi cấp độ, chọn ra 20 từ để đại diện cho độ khó trung bình của các từ trong cấp độ đấy. Ta dùng kết quả của mỗi cấp độ để đánh giá ngưỡng kiến thức của người học.
+New General Service List Test (NGSLT, Bài kiểm tra danh sách hỗ trợ tổng quát mới) @ngslt là một bài kiểm tra được tạo ra nhằm để chẩn đoán năng lực nhận diện được mặt chữ của các từ trong NGSL. Được phát triển bởi Phil Bennett và Tim Stoeckel, NGSLT chia NGSL thành 5 cấp độ, mỗi cấp độ bao gồm 562 từ. Trong mỗi cấp độ, chọn ra 20 từ để đại diện cho độ khó trung bình của các từ trong cấp độ đấy. Ta dùng kết quả của mỗi cấp độ để đánh giá ngưỡng kiến thức của người học.
 
 Trong đồ án này, NGSLT được sử dụng để kiểm tra vốn từ vựng căn bản của người dùng và sử dụng kết quả để đánh giá độ khó của bài đọc, kèm hướng dẫn người dùng nên tập trung vào việc cải thiện các cấp độ còn yếu.
 
