@@ -2,7 +2,7 @@
 = Chỉnh thông số thuật toán
 
 #figure(
-  image("/out/docs/bao_cao/300_phan_tich_thiet_ke/use_case/Chỉnh thông số thuật toán.png", height: 25%),
+  image("/out/docs/DA1_bao_cao/300_phan_tich_thiet_ke/use_case/Chỉnh thông số thuật toán.png", height: 25%),
   caption: [Sơ đồ Use Case Chỉnh sửa hồ sơ],
 )
 

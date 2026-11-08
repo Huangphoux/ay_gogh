@@ -1,7 +1,7 @@
 #set heading(level: 4)
 = Thu thập từ vựng
 #figure(
-  image("/out/docs/bao_cao/300_phan_tich_thiet_ke/use_case/Thu thập từ vựng.png", height: 70%),
+  image("/out/docs/DA1_bao_cao/300_phan_tich_thiet_ke/use_case/Thu thập từ vựng.png", height: 70%),
   caption: [Sơ đồ Use Case Thu thập từ vựng],
 )
 
