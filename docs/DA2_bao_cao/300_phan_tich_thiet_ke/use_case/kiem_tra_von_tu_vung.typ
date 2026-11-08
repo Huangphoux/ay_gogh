@@ -1,7 +1,7 @@
 #set heading(level: 4)
 = Kiểm tra vốn từ vựng
 #figure(
-  image("/out/docs/bao_cao/300_phan_tich_thiet_ke/use_case/Kiểm tra vốn từ vựng.png"),
+  image("/out/docs/DA1_bao_cao/300_phan_tich_thiet_ke/use_case/Kiểm tra vốn từ vựng.png"),
   caption: [Sơ đồ Use Case Kiểm tra vốn từ vựng],
 )
 

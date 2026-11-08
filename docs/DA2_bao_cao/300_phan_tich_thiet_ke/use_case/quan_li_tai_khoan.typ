@@ -2,7 +2,7 @@
 
 = Quản lí tài khoản
 #figure(
-  image("/out/docs/bao_cao/300_phan_tich_thiet_ke/use_case/Quản lý tài khoản.png"),
+  image("/out/docs/DA1_bao_cao/300_phan_tich_thiet_ke/use_case/Quản lý tài khoản.png"),
   caption: [Sơ đồ Use Case Quản lí tài khoản],
 )
 

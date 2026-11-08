@@ -1,0 +1,12 @@
+@startuml Trò chơi
+left to right direction
+
+actor "Người dùng" as user
+
+rectangle "Trò chơi" {
+	usecase "Trò chơi đoán từ" as UC_Wordle
+}
+
+user --> UC_Wordle
+
+@enduml

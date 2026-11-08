@@ -1,7 +1,7 @@
 #set heading(level: 4)
 = Đọc sách
 #figure(
-  image("/out/docs/bao_cao/300_phan_tich_thiet_ke/use_case/Đọc sách.png", height: 40%),
+  image("/out/docs/DA1_bao_cao/300_phan_tich_thiet_ke/use_case/Đọc sách.png", height: 40%),
   caption: [Sơ đồ Use Case Đọc sách],
 )
 
