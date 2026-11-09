@@ -1,7 +1,7 @@
 === Sơ đồ use case tổng quát của người dùng
 
 #figure(
-  image("/out/docs/DA2_bao_cao/300_phan_tich_thiet_ke/use_case/Tổng quát.png"),
+  image("/out/docs/DA2_bao_cao/300_phan_tich_thiet_ke/use_case/Tổng quát.png", height: 75%),
   caption: [Sơ đồ Use Case tổng quát của người dùng],
 )
 

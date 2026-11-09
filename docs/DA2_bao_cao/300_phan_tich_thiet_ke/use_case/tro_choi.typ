@@ -11,19 +11,19 @@
   table(
     columns: 2,
     align: (left, left),
-    [Use Case], [Chỉnh thông số thuật toán],
+    [Use Case], [Trò chơi],
     [Tác nhân chính], [User],
-    [Mô tả ngắn gọn], [Điều chỉnh Desired Retention và tối ưu các tham số.],
-    [Điều kiện tiên quyết], [Đã đăng nhập và có quyền chỉnh thông số.],
-    [Sự kiện kích hoạt], [Người dùng mở phần cài đặt thuật toán.],
-    [Điều kiện thực hiện], [Giá trị tham số trong phạm vi cho phép.],
+    [Mô tả ngắn gọn], [Trò chơi đoán các từ trong danh sách NGSL.],
+    [Điều kiện tiên quyết], [Đã đăng nhập.],
+    [Sự kiện kích hoạt], [Người dùng bấm vào mục Trò chơi.],
+    [Điều kiện thực hiện], [Có kết nối mạng khi truy cập.],
     [Luồng sự kiện chính],
     [
-      + Mở cài đặt.
-      + Chỉnh giá trị Desired Retention hoặc tham số khác.
-      + Hệ thống kiểm tra hợp lệ.
-      + Lưu và áp dụng cấu hình.
+      + Hiện trò chơi.
+      + Người dùng thử đoán từ qua 6 lần.
+      + Nếu qua 6 lần người dùng đoán không được, cho người dùng biết đáp án từ cần đoán.
+      + Hiện nút để người dùng đoán từ khác.
     ],
   ),
-  caption: [Bảng mô tả Use Case Chỉnh thông số thuật toán],
+  caption: [Bảng mô tả Use Case Trò chơi],
 )
