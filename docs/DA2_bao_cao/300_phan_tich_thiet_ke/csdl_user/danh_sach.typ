@@ -3,7 +3,7 @@
 = Sơ đồ cơ sở dữ liệu
 #figure(
   image("diagram.png"),
-  caption: [Sơ đồ cơ sở dữ liệu của hệ thống],
+  caption: [Sơ đồ cơ sở dữ liệu của người dùng],
 )
 
 = Danh sách các bảng dữ liệu
@@ -14,6 +14,8 @@
   (ten: "deck", dien_giai: "Thẻ từ vựng cho ôn tập"),
   (ten: "review_log", dien_giai: "Lịch sử ôn tập thẻ"),
   (ten: "settings", dien_giai: "Cấu hình người dùng"),
+  (ten: "wordle", dien_giai: "Kết quả trò chơi đoán từ"),
+  (ten: "medal", dien_giai: "Danh sách các huy hiệu"),
 )
 
 #figure(
@@ -25,7 +27,7 @@
       (str(i + 1), [#item.ten], [#item.dien_giai])
     },
   ),
-  caption: [Bảng mô tả các bảng dữ liệu của hệ thống],
+  caption: [Bảng mô tả các bảng dữ liệu của người dùng],
 )
 
 = Mô tả chi tiết các bảng dữ liệu

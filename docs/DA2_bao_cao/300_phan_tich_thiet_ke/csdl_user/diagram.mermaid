@@ -1,3 +1,9 @@
+---
+config:
+  theme: default
+  look: classic
+---
+
 classDiagram
 
 	class Test {
@@ -42,6 +48,23 @@ classDiagram
 		+INTEGER id
 		+TEXT setting
 		+TEXT value
+	}
+
+	class Wordle {
+		+INTEGER number
+		+TEXT guess
+		+INTEGER is_submitted
+	}
+
+	class Medal {
+		+INTEGER id
+		+TEXT name
+		+TEXT description
+		+INTEGER icon
+		+INTEGER requirement
+		+INTEGER is_fulfilled
+		+TEXT table_name
+		+TEXT column_name
 	}
 
 	ReviewLog --> Deck : card_id
