@@ -1,0 +1,18 @@
+@startuml Tính năng trò chơi hoá
+left to right direction
+
+actor "Người dùng" as user
+
+rectangle "Thu thập từ vựng" {
+	usecase "Nhắc nhở các chương đang đọc dở dang" as UC_IncompleteChapters
+	usecase "Nhắc nhở các từ đang cần được ôn tập vào ngày đó" as UC_DueWords
+	usecase "Chuỗi ngày đọc liên tục" as UC_ReadingStreak
+	usecase "Huy hiệu tán dương" as UC_RewardingBadges
+}
+
+user --> UC_IncompleteChapters
+user --> UC_DueWords
+user --> UC_ReadingStreak
+user --> UC_RewardingBadges
+
+@enduml
