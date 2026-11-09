@@ -1,0 +1,12 @@
+@startuml Tìm kiếm trong văn bản
+left to right direction
+
+actor "Người dùng" as user
+
+rectangle "Thu thập từ vựng" {
+	usecase "Tìm từ trong các bài đọc" as UC_FindWordInChapters
+}
+
+user --> UC_FindWordInChapters
+
+@enduml
